@@ -892,7 +892,7 @@ G13, G14, G22). Nenhum texto novo abaixo de 11 px (o artboard tinha 10 e 10,5 px
   de tabela da API em US$ (cache gravado 1,25× a entrada por 5 min e 2× por 1 h); tarefa = uma sessão (execução) com
   consumo; vídeo = subagente cujo 1.º pedido cita `videos/<slug>`; o Atlas soma a sessão principal e os ajudantes
   (`general-purpose`, `workflow-subagent`, `claude`, `Explore`, `Plan`). Cada resposta vale pela **última linha** do seu
-  `message.id` e cai no dia da 1.ª (PD21). **É um retrato com hora de corte** (23/10, 16:02:49, o mesmo do banco):
+  `message.id` e cai no dia da 1.ª (PD21). **É um retrato com hora de corte** (23/10, 16:00, o mesmo do banco):
   9,2 M tokens, **US$ 128,40**. No painel o número vem do banco — **dado novo para o `engenheiro-backend`
   sincronizar** (`handoff.md` §8). ElevenLabs (transcrição e música) fica de fora: sem medição.
 - **Câmbio**: saiu em 24/10 (custo em US$).

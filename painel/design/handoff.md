@@ -38,7 +38,7 @@ Refinamento, não redesign: nenhuma cor, fonte, raio ou espaço da marca mudou. 
 | **Modelo que rodou** | Equipe (linha, filtros, KPI "Agentes"), Visão geral (cartão de agente), Direção | o modelo vem dos registros (`message.model`), não de `agentes.modelo`: principal pelos tokens; com mais de um, `.k-modelo-mix` (chip + "92 % · +1", lista no `title` e em `k-sr-only`); sem registro, `.k-modelo-nada` "ainda não rodou". Filtro novo "Ainda não rodou" |
 | **Atraso de gravação só na Produção** | Calendário | já é assim: o calendário só marca gravação com data de hoje em diante |
 | **Biblioteca refeita** (acervo de estilos, canvas aprovado em 24/10) | `/biblioteca` | implemente pela maquete nova (`telas/biblioteca.*`): abas, looks (5, foto do autor), capas, legenda, fontes, animações, Armazenamento (só o que está no Mac: gravações + material) e Sistema, mais a **aba Sistema** (aprovada em 24/10: 3 cartões de modelo e as 11 ferramentas com nome · tipo · o que faz, de `painel/biblioteca.yaml` → `ferramentas` e `modelos`). Componentes novos no livro §15.2 ("Acervo de estilos"); saem `Material`/`Uso` (`.k-material*`, `.k-uso*`, `.k-busca-grande`) e as miniaturas de material (o PI66 deixa de existir). Imagens prontas em `telas/img/biblioteca/` |
-| **Números de tokens = os do banco** (PD21) | maquetes | última linha de cada resposta, dia da 1.ª, corte 23/10 16:02:49: 9,2 M, US$ 128,40 |
+| **Números de tokens = os do banco** (PD21) | maquetes | última linha de cada resposta, dia da 1.ª, corte 23/10 16:00: 9,2 M, US$ 128,40 |
 
 ## 0. O que mudou na versão 2 (23/10, tarde) — as 7 telas
 
@@ -334,5 +334,5 @@ portão como lista com o estado escrito no chip do mapa único; dica por foco e 
    `painel/design/telas/` e com a prévia do componente em `painel/design/previas/` (mesma largura: 1440 e 375).
    `scrollWidth` = largura da janela em todas.
 2. Os três estados vistos num servidor seu (o `portao-interface.md` diz como).
-3. `cmp` das cópias em `painel/web` (e o `verificacao/fidelidade.py` (só no estúdio de origem: compara com `painel/referencias/`, que não vem no repositório público)).
+3. `cmp` das cópias em `painel/web`. O `verificacao/fidelidade.py` fica só no estúdio de origem, porque compara com `painel/referencias/`, que não vem no repositório público.
 4. `npx tsc --noEmit`, `npx eslint src`, build em `.next-verificacao`.

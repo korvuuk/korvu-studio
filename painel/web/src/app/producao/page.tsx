@@ -12,7 +12,7 @@ import { BarraPagina, Secao } from "@/components/Pagina";
 import Vazio from "@/components/Vazio";
 import * as db from "@/lib/db";
 import { MAPA_PORTAO } from "@/lib/estados";
-import { data, dataDoSlug, dataHora, diaCurto, hora, PORTOES } from "@/lib/formato";
+import { data, dataDoSlug, dataHora, diaCurto, diaNoFuso, hora, PORTOES } from "@/lib/formato";
 import { agentes } from "@/lib/leituras";
 import { FASES, lerProducao, precisamDeAtencao, type Producao } from "@/lib/producao";
 import { Agendados, Gravados, Prontos, Publicados, Roteiros } from "./_componentes/Tabelas";
@@ -39,7 +39,12 @@ function metaDasFases(p: Producao) {
       n: roteiros.length, d: "Só o roteiro. Ainda não gravados.",
       m: [
         roteiros.length ? `${roteiros.filter((v) => p.roteiroDe(v.slug)?.pdf).length} com PDF` : "",
-        antigo ? `o mais antigo espera desde ${data(`${antigo}T12:00:00Z`)}` : "nenhum esperando",
+        // a data do slug é a gravação PREVISTA: só "espera desde" quando ela já passou
+        antigo
+          ? antigo < diaNoFuso(new Date())
+            ? `o mais antigo espera desde ${data(`${antigo}T12:00:00Z`)}`
+            : `o primeiro tem gravação prevista para ${data(`${antigo}T12:00:00Z`)}`
+          : "nenhum esperando",
       ].filter(Boolean).join(" · "),
     },
     gravados: { n: gravados.length, d: "Em edição e pós-produção.", m: gravados.length ? `${gravados.length} em pós-produção` : "Nenhum em edição agora" },

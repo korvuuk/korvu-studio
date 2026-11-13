@@ -143,7 +143,7 @@ então nada ficou congelado com o usage provisório.
 **Reconciliar** (`--ate <ISO>`: só as linhas dos registros até esse instante, inclusive; `--ate` e `--regra-do-script`
 gravam só num banco de teste — no banco do painel, por qualquer endereço deste Mac, só com `--seco`):
 `uv run python painel/trabalho/engenheiro-backend/reconciliar_tokens.py` monta bancos `painel_teste_rec_<pid>_*` e põe lado
-a lado, no corte de 23/10 15:02:49.958Z (janela 24/09–23/10):
+a lado, no corte de 23/10 15:00:00Z (janela 24/09–23/10):
 - **(a)** a regra do script (1.ª linha) × o `tokens-custos.py` com o mesmo corte: **os mesmos totais**, igual
   em total, modelo, departamento e nos 25 agentes — a leitura é a mesma;
 - **(b)** a regra do painel (última linha), o que o banco guarda: **os mesmos totais**;

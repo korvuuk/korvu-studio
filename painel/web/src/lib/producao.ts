@@ -217,7 +217,12 @@ export function precisamDeAtencao(p: Producao, agentes: db.Agente[], hoje = new 
     const hojeDia = diaNoFuso(hoje);
     const proximo = porData.find((v) => (dataDoSlug(v.slug) ?? "") >= hojeDia);
     const partes = [];
-    if (antigo) partes.push(`O mais antigo, ${antigo.nome}, espera desde ${diaCurto(dataDoSlug(antigo.slug)!).replace(/^\S+ /, "")}.`);
+    if (antigo) {
+      // a data do slug é a gravação PREVISTA: só "espera desde" quando ela já passou
+      const dia = dataDoSlug(antigo.slug)!;
+      const curto = diaCurto(dia).replace(/^\S+ /, "");
+      partes.push(dia < hojeDia ? `O mais antigo, ${antigo.nome}, espera desde ${curto}.` : `${antigo.nome} tem gravação prevista para ${curto}.`);
+    }
     if (proximo && proximo !== antigo) partes.push(`${proximo.nome} está previsto para ${relativo(diasEntre(hoje, dataDoSlug(proximo.slug)!))}.`);
     out.push({
       id: "roteiros", tom: "portao", icone: "camera",
