@@ -1,0 +1,60 @@
+{
+  "versao": 1,
+  "veredictos": [
+    {
+      "portao": "pauta",
+      "agente": "portao-pauta",
+      "resultado": "APROVADO",
+      "impressao": "71d9845b5e99",
+      "em": "2026-11-02T10:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-10-prompt-claro/qa/portoes/pauta-v1.md",
+      "arquivos": {
+        "material/dossie.md": "81da4678c48919d4dce182a2b974028f3139291e3027d7513e6b59dc3af0acb4",
+        "material/fontes.json": "66593c58cfdbcb6b4a0f0c5c94abf2bf9a4b24c97f2b389155e3e64d16357018"
+      }
+    },
+    {
+      "portao": "roteiro",
+      "agente": "revisor-de-roteiro",
+      "resultado": "APROVADO",
+      "impressao": "245c3ef1840e",
+      "em": "2026-11-05T15:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-10-prompt-claro/qa/portoes/roteiro-v1.md",
+      "arquivos": {
+        "roteiro.md": "arquivo:1e7dd43444fd4b10ad3338fed715f857b6d750b4dea06312cd703d19b6dc2b2f",
+        "material/prompt-em-tres-partes.pdf": "5026ecd98c73fecbcb7f4415d464942b980e264f16bf33f7e78c0b2a21ac344b"
+      }
+    },
+    {
+      "portao": "imagem",
+      "agente": "portao-imagem",
+      "resultado": "BLOQUEADO",
+      "impressao": "3830df2c4fdf",
+      "em": "2026-11-11T15:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 1,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-10-prompt-claro/qa/portoes/imagem-v1.md",
+      "arquivos": {
+        "brutos/extras/E02.png": "90aacd358e0beac6fccf727953cdadc36aad3176d8a211472353bf062b687c0d",
+        "capa/capa.png": "021eae2892564043de3e5c2a9aad2b2b645641c45b146ccab687d5b307308a8c"
+      },
+      "nota": "S1: título da capa em cima do rosto"
+    }
+  ]
+}

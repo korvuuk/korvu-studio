@@ -1,0 +1,457 @@
+<meta charset="utf-8">
+<title>Estúdio Korvu Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a mesma casca do Volume 2 (barra lateral escura com o índice, que vira "Menu" abaixo de 1024 px, e a área de
+   leitura em marfim), com títulos minúsculos e ponto final. Volume de fluxos: os diagramas de sequência da Meta são o
+   centro da página. Cores e fontes = tokens do "korvu. painel" (painel/design/tokens.css); o CSS-base é cópia do
+   gerador do painel (docs/painel/gerador/template.html), que não é alterado. */
+{{FONTES}}
+{{CSS_BASE}}
+{{CSS_DG}}
+
+/* ── acréscimos do Volume 1 ── */
+.wordmark{display:block;font:800 17px/1 var(--font-sans);letter-spacing:-.03em;color:var(--sidebar-ink);text-decoration:none;padding:6px 10px 6px}
+.wordmark .pt{color:var(--accent)}
+.wordmark .pn{color:var(--sidebar-ink-2);font-weight:600}
+.volumes{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 36px;padding:0;list-style:none}
+.volumes a{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:6px 14px;border-radius:var(--radius-pill);border:1px solid var(--line-strong);color:var(--ink);text-decoration:none;font:600 13px/18px var(--font-sans);background:var(--surface);transition:background var(--duracao-padrao)}
+.volumes a:hover{background:var(--surface-sunken)}
+.volumes a[aria-current="page"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.volumes a[aria-current="page"]::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.volumes .ext{font-weight:500;color:var(--ink-2)}
+.side .volumes-side{list-style:none;margin:0 0 6px;padding:0 10px;display:flex;flex-direction:column;gap:2px;font-size:12px;line-height:17px}
+.side .volumes-side a{color:var(--sidebar-ink-2);text-decoration:none}
+.side .volumes-side a:hover{color:var(--sidebar-ink)}
+.side .volumes-side b{color:var(--sidebar-ink);font-weight:600}
+.dg-alto .dg{min-width:900px}
+.figs{display:grid;gap:20px}
+.bloco .cadeia,.cadeia{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:10px 0 0;padding:0;list-style:none}
+.cadeia li{display:inline-flex;align-items:center;gap:6px;font:500 12px/18px var(--font-mono);padding:4px 10px;border-radius:6px;background:var(--surface);border:1px solid var(--line-strong)}
+.cadeia li + li::before{content:"→";color:var(--accent-text);font-family:var(--font-sans);margin-left:-2px;margin-right:4px}
+.cadeia li.forte{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.duas{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start}
+.bloco{padding:18px 20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.bloco h4{font-size:15px;line-height:21px;font-weight:600}
+.bloco p{margin:0;font-size:13px;line-height:20px;color:var(--ink-2)}
+.bloco ul,.bloco ol{margin:0;padding-left:18px;font-size:13px;line-height:20px;color:var(--ink-2);display:grid;gap:5px}
+.bloco b{color:var(--ink);font-weight:600}
+.lista-kv{margin:0;display:grid;gap:0}
+.lista-kv div{display:grid;grid-template-columns:minmax(0,200px) minmax(0,1fr);gap:16px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;line-height:19px}
+.lista-kv div:first-child{border-top:0}
+.lista-kv dt{color:var(--ink-2)}
+.lista-kv dd{margin:0}
+@media (max-width:640px){.lista-kv div{grid-template-columns:1fr;gap:2px}}
+.integ{display:grid;grid-auto-flow:row dense;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:16px;align-items:start}
+.integ .api .tipo .el{background:var(--accent-soft);border-color:transparent;color:var(--accent-ink)}
+.api-larga{grid-column:1/-1}
+@media (min-width:900px){.api-larga dl{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 24px}}
+.motores{margin:0;padding-left:18px;display:grid;gap:4px}
+.nao-integrado{list-style:none;margin:16px 0 0;padding:12px 16px;border:1px dashed var(--line-strong);border-radius:var(--radius-card);font-size:13px;line-height:19px;color:var(--ink-2)}
+.nao-integrado li::before{content:"○ ";color:var(--ink-2)}
+.chips{display:flex;flex-wrap:wrap;gap:4px}
+.agentes{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:0 24px;margin:0;padding:0;list-style:none}
+.agentes li{display:flex;flex-direction:column;gap:2px;padding:10px 0;border-top:1px solid var(--line);font-size:13px;line-height:19px;min-width:0}
+.agentes li b{font:600 12.5px/18px var(--font-mono)}
+.agentes li span{color:var(--ink-2)}
+.agentes li.portao b{color:var(--accent-text)}
+.portoes{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.reproduzir{counter-reset:s}
+.alerta-forte{border-color:var(--accent);background:var(--accent-soft)}
+.alerta-forte .ic{background:var(--accent);color:var(--on-accent)}
+.alerta-forte b,.alerta-forte p{color:var(--on-accent)}
+.alerta-forte code{background:transparent!important;border-color:var(--accent)!important;color:var(--on-accent)}
+.numeros-prod{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);overflow:hidden;width:max-content;max-width:100%;margin-top:16px}
+.numeros-prod div{padding:12px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.numeros-prod div:last-child{border-right:0}
+.numeros-prod b{font-size:22px;line-height:26px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.numeros-prod span{font-size:12px;color:var(--ink-2)}
+@media (max-width:640px){.numeros-prod{width:auto}.numeros-prod div{flex:1 1 40%;padding:10px 12px}}
+.tabela td.res{font:600 13px/19px var(--font-mono);white-space:nowrap}
+.tabela td.res.ok{color:var(--positive)}
+.tabela td.res.mal{color:var(--danger)}
+.capa-fig{margin-top:4px}
+.bloco .cadeia{padding:0;gap:6px}
+.jobs{min-width:980px}
+.jobs td code{overflow-wrap:normal;word-break:normal}
+.jobs td .lab{white-space:nowrap}
+.jobs td small{display:block;margin-top:4px}
+</style>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="casca">
+  <aside class="side" aria-label="Índice">
+    <a class="wordmark" href="#capa" aria-label="Korvu Studio, estúdio, início">Korvu Studio<span class="pt">.</span> <span class="pn">estúdio</span></a>
+    <p class="side-sub">documentação técnica · volume 1</p>
+    <ul class="volumes-side" aria-label="Volumes">
+      <li><b>Volume 1 · Estúdio</b> (esta página)</li>
+      <li><a href="{{URL_PAINEL}}">Volume 2 · Painel ↗</a></li>
+    </ul>
+    <p class="side-label">Seções</p>
+    {{NAV}}
+    <div class="side-foot"><b>Dossiê de 12/11/2026</b>tudo o que está aqui vem dele</div>
+  </aside>
+
+  <header class="topbar">
+    <a class="wordmark" href="#capa" aria-label="Korvu Studio, estúdio, início" style="padding:0">Korvu Studio<span class="pt">.</span> <span class="pn">estúdio</span></a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="gaveta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+  </header>
+  <nav class="gaveta" id="gaveta" hidden aria-label="Índice">{{NAV}}</nav>
+
+  <main id="conteudo">
+  <div class="miolo">
+
+  <nav aria-label="Volumes da documentação"><ul class="volumes">
+    <li><a href="#capa" aria-current="page">Volume 1 · Estúdio</a></li>
+    <li><a href="{{URL_PAINEL}}">Volume 2 · Painel <span class="ext">↗</span></a></li>
+  </ul></nav>
+
+  <!-- 1. CAPA -->
+  <section class="sec capa" id="capa">
+    <div class="capa-topo">
+      <div class="eyebrow"><span class="k-cap">Volume 1 · Estúdio</span><span class="selo">produção · integrações · automação local</span></div>
+      <h1>Korvu Studio<span class="pt">.</span> <span class="pn">estúdio</span></h1>
+      <p class="frase">Um estúdio de Reels sobre Inteligência Artificial que roda inteiro num Mac: do tema à publicação no Instagram e no Facebook, e depois a leitura das métricas, que volta para o roteirista. Quem trabalha são agentes do Claude Code, cada um com um papel, mais scripts Python rodados com <code>uv</code>.</p>
+      <p class="nao">O apresentador grava; o resto é automático, com dois pontos de parada humanos: a aprovação da EDL (o corte) e a ida para a fila (<code>06-publicar/</code>). Não há servidor nem n8n, Zapier, Make ou ManyChat: o orquestrador é o próprio macOS, com cinco jobs do <code>launchd</code>, e a conversa com a Meta é HTTP direto na Graph API.</p>
+      <ul class="selos" aria-label="A pilha">{{SELOS}}</ul>
+      <div class="contas" aria-label="O sistema em números">{{NUMEROS}}</div>
+    </div>
+    <figure class="fig capa-fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama do sistema inteiro, role para o lado">{{SVG_sistema}}</div>
+      <figcaption>O sistema inteiro: produção → pacote → fila → Meta → métricas → painel. Os números seguem um vídeo do fim da produção até as métricas. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/sistema.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div>
+      <div class="sub-cab" style="margin-top:12px"><h3>O caminho real de um dado: a palavra-chave até o direct</h3></div>
+      <ol class="passos">
+        <li><p>O roteirista escreve <code>cta_palavra</code> no <code>roteiro.md</code>; o <code>produtor-de-material</code> gera o PDF em <code>videos/&lt;slug&gt;/material/</code> (Chrome headless).</p></li>
+        <li><p>O <code>montar_pacote.py</code> leva só esse PDF para <code>05-render-pronto/&lt;slug&gt;/material/</code>.</p></li>
+        <li><p>O <code>publicador</code> escreve no <code>post.json</code> o campo <code>material = {palavra, arquivo, titulo, url: null}</code>.</p></li>
+        <li><p>Na hora, o <code>publicar.py</code> sobe o PDF para o R2 público e grava a URL em <code>post.material.url</code>; arquivo fora de <code>material/</code> é recusado.</p></li>
+        <li><p>Publicado o Reel, grava <code>dm-material.json</code> = <code>{palavra, media_id_instagram, material_url}</code>, que vai para <code>07-publicados/&lt;slug&gt;/</code>.</p></li>
+        <li><p>A cada 2 min o <code>responder_comentarios.py</code> lê esse arquivo, acha a palavra nos comentários, manda o direct com o link e depois responde em público.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- 2. META -->
+  <section class="sec" id="meta">
+    <div class="sec-cab">
+      <p class="k-cap">Como o sistema conversa com a Meta</p>
+      <h2>a API da Meta, passo a passo.</h2>
+      <p class="lead">Tudo pela Graph API, com <code>requests</code>, no caminho Facebook Login (<code>graph.facebook.com/v23.0</code>). O Instagram busca o arquivo por URL pública no R2; o Facebook recebe o arquivo do disco. A Meta não guarda o agendamento: a hora mora no <code>post.json</code>. Comentários são lidos por consulta a cada 2 minutos, sem webhook.</p>
+    </div>
+
+    <div class="duas">
+      <div class="card bloco"><h4>Pré-requisitos que o código espera</h4><ul>
+        <li>Conta do Instagram <b>profissional</b> (Criador ou Empresa) e <b>pública</b>: “comentário de conta privada não chega à API”.</li>
+        <li>O Instagram <b>ligado a uma Página do Facebook</b>.</li>
+        <li>Um app na Meta for Developers, caminho <b>Facebook Login</b> (host <code>graph.facebook.com</code>, versão por <code>META_GRAPH_VERSION</code>, padrão <code>v23.0</code>); quem configura é <b>administrador</b> do app.</li>
+        <li>O caminho “API do Instagram com login do Instagram” (<code>graph.instagram.com</code>, tokens <code>IGAA…</code>) <b>não</b> é o que o código usa.</li>
+      </ul></div>
+      <div class="card bloco"><h4>De onde a Meta busca o arquivo</h4><ul>
+        <li><b>Instagram, por URL:</b> o script sobe para o Cloudflare R2 (API S3 via boto3) e passa <code>video_url</code> + <code>cover_url</code> (capa PNG → JPEG) no Reel, <code>image_url</code> (JPEG qualidade 95) em cada slide. Antes, <code>HEAD</code> na URL exigindo HTTP 200.</li>
+        <li><b>Facebook, do disco:</b> “o robô do Facebook leva 403 da Cloudflare” no domínio público do R2 (13/10).</li>
+        <li><b>O PDF do material</b> também vai ao R2: é o link do direct.</li>
+      </ul></div>
+    </div>
+
+    <div class="sub-cab"><h3>1 · Publicar um Reel no Instagram</h3><p>contêiner → URL do R2 → status → publish</p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência do Reel no Instagram, role para o lado">{{SVG_meta-reel-instagram}}</div>
+      <figcaption>Setas laranja: pedidos do <code>publicar.py</code>. Tracejadas: respostas. Moldura: repetição. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-reel-instagram.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <p class="texto ink2" style="margin-top:12px;font-size:13px">Trial Reel: o campo <code>instagram.trial</code> do <code>post.json</code> (<code>null</code> ou <code>{"graduation_strategy": "MANUAL|SS_PERFORMANCE"}</code>) vai como <code>trial_params</code> no <code>POST /media</code>. Só existe no Instagram; no Facebook “sai normal”. O padrão vem de <code>trial_padrao</code> no calendário, hoje vazio (“Trial suspenso em 22/10”).</p>
+
+    <div class="sub-cab"><h3>2 · Publicar no Facebook</h3><p>o arquivo sobe do disco · Reel até 90 s, vídeo da Página acima</p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência do Facebook, role para o lado">{{SVG_meta-reel-facebook}}</div>
+      <figcaption>Dois caminhos pela duração do vídeo. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-reel-facebook.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>3 · Publicar um carrossel</h3><p>desde 09/11 · 3 a 10 slides</p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência do carrossel, role para o lado">{{SVG_meta-carrossel}}</div>
+      <figcaption>No Instagram por URL do R2; no Facebook, fotos não publicadas + um post no feed. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-carrossel.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>4 · Agendamento</h3><p>a hora no <code>post.json</code> + launchd de 15 min + regra das 6 h</p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência do agendamento, role para o lado">{{SVG_meta-agendamento}}</div>
+      <figcaption>A Meta não guarda o agendamento. <code>agendar</code> procura a vaga até 8 semanas à frente, pulando vagas já ocupadas; o fuso vem do calendário ou de <code>TZ_PUBLICACAO</code>. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-agendamento.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>5 · Comentário → direct com o PDF + resposta pública</h3><p>a cada 2 min · <code>/ordered_comments</code></p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência do comentário até o direct, role para o lado">{{SVG_meta-comentario-direct}}</div>
+      <figcaption>O direct sai primeiro, por <code>/{page-id}/messages</code> com o token da Página; a resposta pública só depois. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-comentario-direct.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>6 · Métricas aos 5 dias</h3><p>todo dia às 09:30</p></div>
+    <figure class="fig dg-alto">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Sequência das métricas, role para o lado">{{SVG_meta-metricas}}</div>
+      <figcaption>As métricas voltam para o roteirista por <code>_controle/aprendizados.md</code>. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/meta-metricas.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>Permissões</h3><p>nomes exatos e quem confere cada uma</p></div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Permissão</th><th>Para quê</th><th>Conferida por</th></tr></thead>
+      <tbody>{{PERMISSOES}}</tbody></table></div></div>
+
+    <div class="sub-cab"><h3>Token: tipo, validade e renovação</h3></div>
+    <div class="duas">
+      <div class="card bloco"><h4>Como obter</h4><ol>
+        <li>Graph API Explorer → escolher o app → gerar token com as permissões → escolher a Página e a conta do Instagram.</li>
+        <li>Access Token Debugger → “Estender token de acesso” → token de <b>usuário de longa duração (~60 dias)</b>.</li>
+        <li>Com ele, <code>GET me/accounts</code> → <code>id</code> da Página (<code>META_PAGE_ID</code>) e <code>access_token</code> da Página; tirado de um token longo, “normalmente <b>não expira</b>”.</li>
+        <li><code>GET {page-id}?fields=instagram_business_account</code> → <code>id</code> = <code>INSTAGRAM_USER_ID</code>.</li>
+        <li><code>INSTAGRAM_ACCESS_TOKEN</code> “pode ser o <b>mesmo</b> token da Página”.</li>
+      </ol></div>
+      <div class="notas">
+        <div class="nota alerta-forte"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></span><div><b>O token não renova sozinho.</b><p>Não há nenhuma chamada a <code>oauth/access_token</code> nem <code>fb_exchange_token</code> nos scripts. Os sinais são o aviso de “expira em menos de 7 dias” do <code>verificar-tokens</code> e o erro 190 (“token inválido ou expirado”). A renovação é manual, pelos passos 1 a 3.</p></div></div>
+        <div class="nota"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12l4 4 10-10"/></svg></span><div><b>Conferir sem publicar nada</b><p><code>uv run python scripts/publicar.py verificar-tokens</code> chama <code>/{ig-user-id}</code>, <code>/me</code>, <code>/{page-id}</code> e <code>/debug_token</code> e mostra validade, tipo, expiração e escopos em falta; faz <code>HEAD</code> no R2. Os valores saem mascarados (4 primeiros caracteres + tamanho).</p></div></div>
+        <div class="nota"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="10" width="14" height="10" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg></span><div><b>Segredos fora do log</b><p>Um filtro de logging tira os valores de <code>INSTAGRAM_ACCESS_TOKEN</code>, <code>META_PAGE_ACCESS_TOKEN</code>, <code>META_APP_SECRET</code>, <code>R2_SECRET_ACCESS_KEY</code> e <code>R2_ACCESS_KEY_ID</code> de qualquer mensagem. <code>--dry-run</code> percorre o fluxo inteiro e só imprime os pedidos.</p></div></div>
+      </div>
+    </div>
+
+    <div class="sub-cab"><h3>Erros conhecidos e limites</h3><p>o que já aconteceu e o que o código faz</p></div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Situação</th><th>O que o código faz</th></tr></thead>
+      <tbody>{{ERROS}}</tbody></table></div></div>
+
+    <div class="sub-cab" id="reproduzir"><h3>Para reproduzir</h3><p>configurar o app da Meta para outra conta</p></div>
+    <ol class="passos-inst">
+      <li><div><h4>Prepare a conta</h4><p>Instagram profissional e público, ligado a uma Página do Facebook. Você precisa ser administrador do app.</p></div></li>
+      <li><div><h4>Crie o app no caminho Facebook Login</h4><p>Meta for Developers. Peça as 10 permissões da tabela acima; <code>pages_manage_metadata</code> e <code>business_management</code> só “se a tela pedir”. A lista de 7 permissões do <code>ARQUITETURA.md</code> está incompleta: faltam <code>instagram_manage_insights</code>, <code>read_insights</code> e <code>pages_manage_engagement</code>.</p></div></li>
+      <li><div><h4>Gere o token e os IDs</h4><p>Os 5 passos de “Como obter”, acima. Guarde só no <code>.env</code> (nunca versionado).</p></div></li>
+      <li><div><h4>Preencha as variáveis</h4>
+        <div class="codigo"><button class="copiar" type="button" data-alvo="c-env">Copiar</button><pre id="c-env">INSTAGRAM_USER_ID=
+INSTAGRAM_ACCESS_TOKEN=
+META_PAGE_ID=
+META_PAGE_ACCESS_TOKEN=
+META_APP_ID=
+META_APP_SECRET=
+META_GRAPH_VERSION=v23.0      <span class="c"># opcional</span>
+R2_ACCOUNT_ID=
+R2_ACCESS_KEY_ID=
+R2_SECRET_ACCESS_KEY=
+R2_BUCKET_NAME=
+R2_PUBLIC_URL=
+TZ_PUBLICACAO=</pre></div></div></li>
+      <li><div><h4>Confira sem publicar</h4>
+        <div class="codigo"><button class="copiar" type="button" data-alvo="c-ver">Copiar</button><pre id="c-ver">uv run python scripts/publicar.py verificar-tokens
+uv run python scripts/responder_comentarios.py verificar
+uv run python scripts/metricas.py verificar
+uv run python scripts/publicar.py --due --dry-run</pre></div></div></li>
+      <li><div><h4>Se o direct não chegar a contas de fora</h4><p>Um app em “Acesso Padrão” pode só falar com quem tem papel no app. Se falhar, peça App Review de <code>instagram_manage_messages</code> e <code>instagram_manage_comments</code>. O dossiê não confirma se o app deste projeto passou por App Review.</p></div></li>
+      <li><div><h4>Primeiro post real só com confirmação</h4>
+        <div class="codigo"><button class="copiar" type="button" data-alvo="c-sim">Copiar</button><pre id="c-sim">uv run python scripts/publicar.py publicar &lt;slug&gt; --sim</pre></div></div></li>
+    </ol>
+  </section>
+
+  <!-- 3. AUTOMAÇÃO LOCAL -->
+  <section class="sec" id="automacao">
+    <div class="sec-cab">
+      <p class="k-cap">Tudo local, sem terceiros</p>
+      <h2>automação local.</h2>
+      <p class="lead">Cinco jobs do <code>launchd</code> chamam scripts locais em intervalos fixos. A fila é uma pasta, o estado é JSON no disco, a agenda é o macOS. Em vez de a Meta avisar por webhook, o script pergunta.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Linha do tempo de 24 horas, role para o lado">{{SVG_jobs-24h}}</div>
+      <figcaption>Um dia inteiro dos cinco jobs. O <code>launchctl list</code> mostra os 5 carregados. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/jobs-24h.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>O que cada job lê e escreve</h3></div>
+    <div class="card"><div class="rolagem"><table class="tabela jobs">
+      <thead><tr><th>Job (label) · script</th><th>Intervalo</th><th>Lê</th><th>Escreve</th><th>Log</th></tr></thead>
+      <tbody>{{JOBS}}</tbody></table></div></div>
+
+    <div class="sub-cab"><h3>Sem servidor, sem n8n, Zapier ou Make</h3></div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Comparação webhook e consulta periódica, role para o lado">{{SVG_sem-servidor}}</div>
+      <figcaption>Citações do <code>automacao-meta/ARQUITETURA.md</code> §1 e §4. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/sem-servidor.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="duas" style="margin-top:20px">
+      <div class="card bloco"><h4>Como é montado</h4><ul>
+        <li>Os <code>.plist</code> são <b>modelos</b>: <code>instalar.sh</code> troca <code>__UV__</code>, <code>__PROJETO__</code> e <code>__HOME__</code>, valida com <code>plutil -lint</code>, copia para <code>~/Library/LaunchAgents/</code> e carrega com <code>launchctl bootstrap</code> + <code>enable</code>.</li>
+        <li>Cada job roda <code>uv run --quiet python &lt;script&gt;</code> na raiz, com <code>ProcessType=Background</code>, <code>LANG=pt_BR.UTF-8</code> e <code>PYTHONUNBUFFERED=1</code>; saída e erro no mesmo log.</li>
+        <li>Forçar uma execução: <code>launchctl kickstart -k gui/$(id -u)/&lt;label&gt;</code>. Desinstalar: <code>scripts/launchd/desinstalar.sh [label]</code>.</li>
+        <li>Notificações: <code>osascript -e 'display notification …'</code> (som “Glass”), só no macOS.</li>
+        <li>O macOS protege <code>~/Documents</code>: se o log mostrar “Operation not permitted”, dê acesso a Pastas/Documentos ao binário do uv/python.</li>
+      </ul></div>
+      <div class="card bloco"><h4>Custo (só o que está escrito)</h4>
+        <dl class="lista-kv">
+          <div><dt>API da Meta + scripts próprios</dt><dd>“Grátis, sem limite de contatos”</dd></div>
+          <div><dt>ManyChat</dt><dd>descartado: “pago por contato”</dd></div>
+          <div><dt>ElevenLabs Music</dt><dd>“Exige plano pago (uso comercial)”</dd></div>
+          <div><dt>ElevenLabs Scribe e Sound Effects</dt><dd>mesma chave; valor não documentado</dd></div>
+          <div><dt>Cloudflare R2</dt><dd>não documentado</dd></div>
+          <div><dt>Claude Code</dt><dd>o painel estima a preço de tabela da API (Volume 2, tela Tokens)</dd></div>
+        </dl></div>
+    </div>
+  </section>
+
+  <!-- 4. EDIÇÃO -->
+  <section class="sec" id="edicao">
+    <div class="sec-cab">
+      <p class="k-cap">Do bruto ao pacote</p>
+      <h2>metodologia de edição.</h2>
+      <p class="lead">O corte segue o roteiro, linha a linha. A transcrição separa duas vozes, o alinhamento escolhe o melhor take, a EDL espera a aprovação humana, e só então o ffmpeg corta com zoom alternado. Depois vêm cor, Remotion, áudio a −14 LUFS, QA e pacote.</p>
+    </div>
+    <div class="duas" style="margin-bottom:20px">
+      <div class="card bloco"><h4>Antes de gravar</h4><ul>
+        <li>O roteiro vira <code>roteiro.json</code> (<code>parse_roteiro.py</code>), com linhas <code>L01…</code> e cenas extras <code>E01…</code>.</li>
+        <li><b>Método “ChatGPT monitor”:</b> o ChatGPT Voz, no alto-falante do celular, lê cada linha e o apresentador repete. O áudio tem duas vozes com o mesmo texto; o corte usa só a dele. Formatos: <code>teleprompter.txt</code> e <code>monitor-chatgpt.txt</code>.</li>
+        <li>Câmera em <b>V-Log</b>, 4K 25p 4:2:2 10-bit; o projeto inteiro roda a <b>25 fps</b> (<code>FPS_PROJETO</code>).</li>
+      </ul></div>
+      <div class="card bloco"><h4>Como o take é escolhido</h4><ul>
+        <li>Os takes só contam a voz dele e se separam por silêncio de pelo menos 1,5 s.</li>
+        <li><b>Escolhido = o último take limpo:</b> similaridade com a linha ≥ 0,80 e sem falso começo, recomeço, final cortado ou voz da IA por cima → [OK].</li>
+        <li>Similaridade a partir de 0,45, ou improviso que cobre ≥ 55 % da linha → [PARAFRASE]; abaixo disso → [FALTANDO]. Confiança &lt; 0,60 ou locutor incerto → [REVISAR].</li>
+        <li>Pontuação: similaridade 0,55 · cobertura 0,15 · fluência 0,10 · recência 0,10 · confiança 0,10.</li>
+</ul></div>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Fluxo dos 14 passos da edição, role para o lado">{{SVG_edicao}}</div>
+      <figcaption>Os 14 passos, com o script de cada um. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/edicao.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>Regras de corte</h3><p>constantes do <code>edl.py</code> (valores de 01/10; o <code>SKILL.md</code> ainda mostra os antigos)</p></div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Constante</th><th>Valor</th><th>O que faz</th></tr></thead>
+      <tbody>{{REGRAS_CORTE}}</tbody></table></div></div>
+    <p class="texto ink2" style="font-size:13px;margin-top:12px">Zoom: peças de câmera seguidas alternam 1.00 ↔ 1.12, com origem no rosto (Haar frontal do OpenCV; sem rosto, <code>50% 38%</code>). A divisão de arquivo da câmera não conta como corte, e o que foi editado à mão é respeitado. No render, as peças caem na grade de frames (40 ms a 25 fps), com alças de áudio de 15 ms e cruzamento linear de 30 ms.</p>
+    <div class="duas" style="margin-top:20px">
+      <div class="card bloco"><h4>Cor, a 16 bits por canal</h4>
+        <ul class="cadeia" aria-label="Cadeia de cor"><li>V-Log 10-bit</li><li>entrada V-Log → Rec.709</li><li>primária por take</li><li class="forte">LUT da marca</li><li>yuv420p bt709</li><li>grão (padrão 0)</li></ul>
+        <p>Por segmento, a 16 bits por canal. A primária mede cada take depois da entrada e leva todos ao mesmo alvo da LUT, com limite de ±0,5 stop e ±8 % por canal. Um único look de marca em todos os vídeos. Gravação de tela, prints, imagens e animações nunca recebem cor. Saída H.264 CRF 16; a cor vai antes do Remotion.</p></div>
+      <div class="card bloco"><h4>Áudio, sem perdas até o fim</h4>
+        <ul class="cadeia" aria-label="Cadeia de áudio"><li>WAV 24-bit</li><li>compressor 1,5:1</li><li class="forte">−14 LUFS</li><li>limitador: teto = alvo − 0,3 dB</li><li>AAC 256k</li></ul>
+        <p>Limiar do compressor = RMS da fala + 9 dB, ataque 30 ms, release 300 ms. O limitador roda a 192 kHz com teto 0,3 dB abaixo do alvo de true peak (−1,5 dBTP). Até 4 passadas corrigindo ganho e teto (tolerância ±0,3 LU). Nenhum EQ. Música em loop a −22 dB com ducking pela voz (<code>sidechaincompress</code>, ratio 8) e fade-out de 1,5 s. O vídeo não é recodificado.</p></div>
+    </div>
+    <div class="nota" style="margin-top:16px"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 8v5M12 16.5v.5"/><circle cx="12" cy="12" r="9"/></svg></span><div><b>QA automático (<code>qa_check.py</code>, dicionário <code>SPEC</code>) e um limite a conhecer</b><p>Reprova: resolução fora de 1080×1920, fps fora de <code>FPS_PROJETO</code> ±0,01 (25), codec que não seja H.264 High <code>yuv420p</code>, áudio que não seja AAC 48 kHz, duração fora de 3–900 s, sem faststart, &gt; 300 MB, &gt; 25 Mbps, loudness fora de −14 ±1 LUFS, true peak acima de −1,5 dBTP ou cena extra faltando. Só avisa: tags de cor, pretos ≥ 0,5 s, congelados ≥ 2 s, duração ±0,2 s da EDL, legendas × roteiro. O limite de 900 s é o de Reels da Meta, o mesmo do <code>publicar.py</code> (até 12/11 era 180 s).</p></div></div>
+  </section>
+
+  <!-- 5. INTEGRAÇÕES -->
+  <section class="sec" id="integracoes">
+    <div class="sec-cab">
+      <p class="k-cap">Um cartão por integração</p>
+      <h2>integrações.</h2>
+      <p class="lead">Só nomes de variáveis aparecem aqui; os valores ficam no <code>.env</code>, que nunca é versionado.</p>
+    </div>
+    <div class="nota portao" style="margin-bottom:16px"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12h3l2-6 4 12 2-6h5"/></svg></span><div><b>A ElevenLabs não baixa vídeo.</b><p>São três APIs dela, com uma chave só (<code>ELEVENLABS_API_KEY</code>): Scribe (transcrição), Music (trilha) e Sound Effects (efeitos). Quem baixa vídeo do YouTube é o <code>yt-dlp</code>.</p></div></div>
+    <div class="integ">{{INTEGRACOES}}</div>
+    <ul class="nao-integrado" aria-label="Ainda não integrado">{{NAO_INTEGRADO}}</ul>
+  </section>
+
+  <!-- 6. PIPELINE -->
+  <section class="sec" id="pipeline">
+    <div class="sec-cab">
+      <p class="k-cap">Do tema às métricas</p>
+      <h2>pipeline, agentes e portões.</h2>
+      <p class="lead">Regra: quem faz não aprova. Cada departamento tem um portão que audita e não constrói. O veredicto fica preso ao sha256 dos arquivos que o portão viu; arquivo mudado depois do APROVADO vence o veredicto e o portão roda de novo.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Pipeline de 20 etapas, role para o lado">{{SVG_pipeline}}</div>
+      <figcaption>As 20 etapas. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/pipeline.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>Como um portão decide</h3><p><code>scripts/portoes.py</code> → <code>portoes.json</code></p></div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Ciclo de um portão GAUNTLET, role para o lado">{{SVG_gauntlet}}</div>
+      <figcaption>S0/S1 bloqueiam, S2 vai para o backlog; teto de 3 voltas. <span class="arraste">Arraste para o lado.</span> <a href="diagramas/gauntlet.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>Os 5 portões do estúdio</h3><p>quem fiscalizam e que arquivos cobrem</p></div>
+    <div class="portoes">{{PORTOES}}</div>
+    <div class="sub-cab"><h3>Os 22 agentes do estúdio</h3><p>todos <code>model: opus</code>, em <code>.claude/agents/*.md</code></p></div>
+    <ul class="agentes">{{AGENTES}}</ul>
+  </section>
+
+  <!-- 7. TECNOLOGIA -->
+  <section class="sec" id="tecnologia">
+    <div class="sec-cab">
+      <p class="k-cap">A pilha</p>
+      <h2>tecnologia.</h2>
+      <p class="lead">Versões do <code>uv.lock</code>, do <code>remotion/package.json</code> e do que está instalado no Mac. O “por quê” só aparece quando está escrito no projeto.</p>
+    </div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Camada</th><th>Tecnologia</th><th>Versão</th><th>Por quê</th></tr></thead>
+      <tbody>{{TEC}}</tbody></table></div></div>
+  </section>
+
+  <!-- 8. QUALIDADE -->
+  <section class="sec" id="qualidade">
+    <div class="sec-cab">
+      <p class="k-cap">Testes rodados em 12/11/2026</p>
+      <h2>qualidade.</h2>
+      <p class="lead">Os testes da automação são scripts autônomos, sem rede: o proxy aponta para um endereço morto e a Meta e o R2 são simulados.</p>
+    </div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Teste</th><th>Comando</th><th>Resultado</th><th>Nota</th></tr></thead>
+      <tbody>{{TESTES}}</tbody></table></div></div>
+    <p class="texto ink2" style="font-size:13px;margin-top:12px">As 4 falhas da publicação esperam as vagas antigas do calendário, que mudou em 17/10 (já registrado em <code>tests/README.md</code>). Não foram rodados, porque pedem mídia e ffmpeg: <code>tests/check_synthetic.py</code> (edição; o README registra 47/47 e 28/28 no modo monitor), <code>tests/cor/test_cor.py</code> (65/65 no README) e <code>tests/test_cta_props.py</code> (11/11 no README).</p>
+    <div class="sub-cab"><h3>Em produção</h3><p>contado nas pastas, {{PERIODO}}</p></div>
+    <div class="numeros-prod">{{PRODUCAO}}</div>
+  </section>
+
+  <!-- 9. INSTALAR -->
+  <section class="sec" id="instalar">
+    <div class="sec-cab">
+      <p class="k-cap">Do zero</p>
+      <h2>instalar e reusar.</h2>
+      <p class="lead">Pré-requisitos: macOS (launchd, <code>osascript</code>, <code>sips</code>), Homebrew, <code>uv</code>, Python 3.12, ffmpeg + ffprobe, <code>yt-dlp</code>, Google Chrome (para o PDF), Node.js (Remotion) e Claude Code.</p>
+    </div>
+    <ol class="passos-inst">
+      <li><div><h4>Dependências</h4><div class="codigo"><button class="copiar" type="button" data-alvo="i-1">Copiar</button><pre id="i-1">uv sync
+uv sync --extra local   <span class="c"># opcional: transcrição local (mlx-whisper, Apple Silicon)</span>
+cd remotion &amp;&amp; npm install &amp;&amp; cd ..</pre></div></div></li>
+      <li><div><h4>Chaves</h4><p>Copie o modelo e preencha. Nunca versione o <code>.env</code>.</p><div class="codigo"><button class="copiar" type="button" data-alvo="i-2">Copiar</button><pre id="i-2">cp .env.example .env
+<span class="c"># ELEVENLABS_API_KEY · INSTAGRAM_* · META_* · R2_* · TZ_PUBLICACAO · FFMPEG_BIN · FFPROBE_BIN</span>
+uv run python scripts/verificar_setup.py</pre></div></div></li>
+      <li><div><h4>Conferir a Meta e o R2 (não publica nada)</h4><div class="codigo"><button class="copiar" type="button" data-alvo="i-3">Copiar</button><pre id="i-3">uv run python scripts/publicar.py verificar-tokens
+uv run python scripts/responder_comentarios.py verificar
+uv run python scripts/metricas.py verificar</pre></div></div></li>
+      <li><div><h4>Ensaio sem rede</h4><div class="codigo"><button class="copiar" type="button" data-alvo="i-4">Copiar</button><pre id="i-4">uv run python scripts/publicar.py --due --dry-run</pre></div></div></li>
+      <li><div><h4>Ligar os agendadores</h4><div class="codigo"><button class="copiar" type="button" data-alvo="i-5">Copiar</button><pre id="i-5">bash scripts/launchd/instalar.sh            <span class="c"># os quatro (o do contexto tem instalador próprio); ou só um: instalar.sh uk.korvu.comentarios</span>
+bash estudio-contexto/launchd/instalar.sh   <span class="c"># o índice de contexto (precisa do Postgres do painel)</span></pre></div></div></li>
+      <li><div><h4>Primeiro post real só com confirmação</h4><div class="codigo"><button class="copiar" type="button" data-alvo="i-6">Copiar</button><pre id="i-6">uv run python scripts/publicar.py publicar &lt;slug&gt; --sim</pre></div><p style="margin-top:8px">Desligar: <code>ativo: false</code> em <code>automacao-meta/respostas.yaml</code>, ou <code>bash scripts/launchd/desinstalar.sh &lt;label&gt;</code>.</p></div></li>
+    </ol>
+    <div class="sub-cab"><h3>Para usar fora do Korvu Studio: o que trocar</h3></div>
+    <div class="card"><div class="rolagem"><table class="tabela">
+      <thead><tr><th>Depende da estrutura do projeto</th><th>Onde mudar</th></tr></thead>
+      <tbody>{{REUSO}}</tbody></table></div></div>
+    <div class="card bloco" style="margin-top:16px"><h4>Reaproveitável como está</h4><ul>
+      <li>O cliente HTTP com retentativa e máscara de segredos (<code>Http</code>).</li>
+      <li>O upload ao R2 com <code>HEAD</code> de conferência.</li>
+      <li>Os fluxos de endpoints da Meta e o upload retomável do Facebook.</li>
+      <li>A leitura dupla <code>/ordered_comments</code> + <code>/comments</code>.</li>
+      <li>O padrão “plist modelo + <code>instalar.sh</code>”.</li>
+    </ul></div>
+  </section>
+
+  <footer class="rodape"><span>Documentação feita a partir do dossiê técnico de 12/11/2026, que cita o arquivo de origem de cada fato.</span><span><a href="{{URL_PAINEL}}">Volume 2 · Painel ↗</a></span></footer>
+  </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('menu-btn'),gav=document.getElementById('gaveta');
+  function fechar(){gav.hidden=true;btn.setAttribute('aria-expanded','false')}
+  btn.addEventListener('click',function(){var abrir=gav.hidden;gav.hidden=!abrir;btn.setAttribute('aria-expanded',String(abrir))});
+  gav.addEventListener('click',function(e){if(e.target.closest('a'))fechar()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!gav.hidden){fechar();btn.focus()}});
+  var links=[].slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var secoes=[].slice.call(document.querySelectorAll('main .sec'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(a){var on=a.getAttribute('href')==='#'+id;a.classList.toggle('ativo',on);if(on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')})}})},{rootMargin:'-30% 0px -60% 0px'});
+    secoes.forEach(function(s){io.observe(s)});
+  }
+  document.querySelectorAll('.copiar').forEach(function(b){b.addEventListener('click',function(){
+    var pre=document.getElementById(b.getAttribute('data-alvo')),txt=pre.innerText;
+    function marcar(m){b.textContent=m;setTimeout(function(){b.textContent='Copiar'},1600)}
+    function selecionar(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);marcar('Selecionado')}
+    try{navigator.clipboard.writeText(txt).then(function(){marcar('Copiado')},selecionar)}catch(e){selecionar()}
+  })});
+})();
+</script>

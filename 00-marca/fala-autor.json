@@ -1,0 +1,13 @@
+{
+  "_leia": "Como o apresentador fala de verdade. O align.py usa este arquivo para NÃO tratar o jeito dele como erro. Cresce a cada vídeo: quando aparecer uma troca nova na transcrição, acrescente aqui em vez de 'corrigir' a gravação. Perfil completo em 00-marca/voz-autor.md.",
+  "_regra": "Isto não muda o que aparece na legenda — a legenda segue o roteiro. Serve para o editor RECONHECER a fala e manter o take.",
+  "_formato": "Em `pronuncia`, a chave tem de ser UMA palavra (o align.py normaliza a chave e troca CADA token dela pelo alvo). Chave com mais de uma palavra ('a i', 'open ai') é um bug: 'a i' virava a→ia e i→ia, e todo artigo 'a' que o apresentador dizia virava 'ia' em qualquer roteiro com a palavra IA (Hassabis, Fei-Fei) — removido em 17/10. Nunca use como chave palavra comum (a, e, o, é, aí, um). O alvo tem de ser UMA palavra do roteiro. Acento não importa (o align compara sem acento: 'aí' = 'ai' — por isso 'ai' também é proibido como chave, mesmo que ele diga 'AI' em inglês). O que o ASR ouve como duas palavras ('E.A.', 'a ZAI') só entra pela parte rara ('ea', 'zai').",
+  "pronuncia": {
+    "pronto": "prompt"
+  },
+  "pronuncia_observada": {},
+  "gagueira": {},
+  "improviso": {},
+  "final_comido": {},
+  "fala_com_a_ia": {}
+}

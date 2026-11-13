@@ -1,0 +1,27 @@
+{
+  "versao": 1,
+  "veredictos": [
+    {
+      "portao": "publicacao",
+      "agente": "portao-publicacao",
+      "resultado": "APROVADO",
+      "impressao": "9e64400f775c",
+      "em": "2026-11-10T10:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "06-publicar/2026-11-06-planilha-com-ia/qa/portao-publicacao-v1.md",
+      "arquivos": {
+        "capa/capa.png": "b8c72b71f9a6f55cc90db45aca4b84cdfff48ac0c54ead09fe185d37459760be",
+        "material/dez-pedidos-de-planilha.pdf": "c5bb5f90dada7a871208b118ca5193aa29992ea6bdb9aa3c0c4099fd4b495e05",
+        "legenda-instagram.txt": "8127ac12378327df5fc919601640927540fdc53506502cdd663146b65a7c67c1",
+        "legenda-facebook.txt": "2d07345cb1493310dd531b484527c3c6d6bed3890d902b2547eb656dbe9bc7ee",
+        "post.json": "dd67d4d6e5650fcc4e761c4044682c7f2c9b03b665705547cb30be1f545b15d1",
+        "pacote.json": "f38a99fed3365ba7ef9875ffd0f2f4d4ba25ef5bd1f875c95530c1ecc98e5c67"
+      }
+    }
+  ]
+}

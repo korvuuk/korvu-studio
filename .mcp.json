@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "estudio-contexto": {
+      "command": "uv",
+      "args": ["--directory", "estudio-contexto", "run", "python", "-m", "contexto.servidor"],
+      "env": {
+        "HF_HUB_OFFLINE": "1",
+        "TOKENIZERS_PARALLELISM": "false"
+      }
+    }
+  }
+}

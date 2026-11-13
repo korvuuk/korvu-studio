@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300" width="1000" height="300" role="img" aria-label="Quem acessa o banco: o papel postgres (o sincronizador) escreve; service_role (o app) só lê; anon e authenticated não têm nenhum privilégio. RLS ligado em todas as tabelas, sem políticas.">
+<style>
+.dg-bg{fill:#f5f2e8}
+text{font-family:Geist,Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.dg-box{fill:#fbf9f4;stroke:#928874;stroke-width:1}
+.dg-soft{fill:#efebe0;stroke:#e4dfd2;stroke-width:1}
+.dg-dec{fill:#f5f2e8;stroke:#111111;stroke-width:1.5}
+.dg-ink{fill:#111111;stroke:#111111;stroke-width:1}
+.dg-hl{fill:#ffe8dc;stroke:none}
+.dg-zone{fill:none;stroke:#928874;stroke-width:1;stroke-dasharray:5 5}
+.dg-errb{fill:#fbe3df;stroke:#c2271b;stroke-width:1}
+.dg-okb{fill:#e3f0e4;stroke:#1e7a45;stroke-width:1}
+.dg-t{fill:#111111;font-size:13px;font-weight:600}
+.dg-s{fill:#6b6458;font-size:11px;font-weight:500}
+.dg-m{fill:#6b6458;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-mi{fill:#111111;font-size:12px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-fk{fill:#b33600;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-hlt{fill:#b33600;font-size:10.5px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-cap{fill:#6b6458;font-size:10.5px;font-weight:600;letter-spacing:.08em}
+.dg-lbl{fill:#6b6458;font-size:10.5px;font-weight:600}
+.dg-inkt{fill:#f5f2e8;font-size:13px;font-weight:600}
+.dg-inks{fill:#f5f2e8;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-errt{fill:#c2271b;font-size:12px;font-weight:600}
+.dg-errs{fill:#c2271b;font-size:10.5px;font-weight:500}
+.dg-okt{fill:#1e7a45;font-size:13px;font-weight:600}
+.dg-oks{fill:#1e7a45;font-size:10.5px;font-weight:500}
+.dg-acc{fill:none;stroke:#ff4d00;stroke-width:2;stroke-linejoin:round}
+.dg-ln{fill:none;stroke:#6b6458;stroke-width:1.25;stroke-linejoin:round}
+.dg-dash{fill:none;stroke:#6b6458;stroke-width:1.25;stroke-dasharray:5 4;stroke-linejoin:round}
+.dg-err{fill:none;stroke:#c2271b;stroke-width:1.25;stroke-dasharray:5 4}
+.dg-aha{fill:#ff4d00}
+.dg-ahn{fill:#6b6458}
+.dg-ahe{fill:#c2271b}
+.dg-num{fill:#ff4d00;stroke:#fbf9f4;stroke-width:2}
+.dg-numt{fill:#111111;font-size:11px;font-weight:700}
+</style>
+<defs><marker id="seg-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="seg-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="seg-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="dg-bg" x="0" y="0" width="1000" height="300"/>
+<rect class="dg-box" x="390" y="80" width="220" height="140" rx="10"/>
+<text class="dg-t" x="406" y="106">banco do painel</text>
+<text class="dg-s" x="406" y="128">32 tabelas · 10 views</text>
+<text class="dg-s" x="406" y="148">RLS ligado em todas</text>
+<text class="dg-s" x="406" y="168">0 políticas</text>
+<text class="dg-m" x="406" y="196">127.0.0.1:55322 / :55321</text>
+<rect class="dg-box" x="20" y="30" width="260" height="62" rx="10"/>
+<text class="dg-mi" x="36" y="55">postgres</text>
+<text class="dg-s" x="36" y="76">sincronizador · dono das tabelas</text>
+<path class="dg-acc" d="M280 61 H330 V120 H386" marker-end="url(#seg-a)"/>
+<text class="dg-lbl" x="305" y="52" text-anchor="middle">escreve</text>
+<rect class="dg-soft" x="20" y="190" width="260" height="80" rx="10"/>
+<text class="dg-t" x="36" y="214">o que for criado depois</text>
+<text class="dg-s" x="36" y="236">default privileges do postgres</text>
+<text class="dg-s" x="36" y="254">EXECUTE de PUBLIC revogado</text>
+<path class="dg-dash" d="M280 230 H330 V180 H386" marker-end="url(#seg-n)"/>
+<text class="dg-lbl" x="288" y="248">mesma regra</text>
+<rect class="dg-box" x="720" y="30" width="260" height="62" rx="10"/>
+<text class="dg-mi" x="736" y="55">service_role</text>
+<text class="dg-s" x="736" y="76">o app Next.js · só no servidor</text>
+<path class="dg-acc" d="M610 120 H660 V61 H716" marker-end="url(#seg-a)"/>
+<text class="dg-lbl" x="688" y="52" text-anchor="middle">só SELECT</text>
+<rect class="dg-errb" x="720" y="190" width="260" height="80" rx="10"/>
+<text class="dg-errt" x="736" y="214">anon · authenticated</text>
+<text class="dg-errs" x="736" y="236">nenhum privilégio</text>
+<text class="dg-errs" x="736" y="254">em tabela, sequência ou função</text>
+<path class="dg-err" d="M610 180 H660 V230 H716"/>
+<circle class="dg-errb" cx="660" cy="205" r="10"/>
+<path d="M655 200 L665 210 M665 200 L655 210" class="dg-err" style="stroke-dasharray:none;stroke-width:2"/>
+</svg>

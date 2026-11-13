@@ -1,0 +1,135 @@
+/* =====================================================================================================================
+   korvu. painel — MOVIMENTO v1 (03/11/2026)
+   Aplicação da skill `apple-design` (WWDC 2018, "Designing Fluid Interfaces") ao design system, sem mudar a marca:
+   nenhuma cor, fonte, raio ou espaço muda aqui — só COMO as peças respondem e aparecem.
+   Regras da skill que este arquivo segue:
+   §1  resposta no toque: o controle afunda no pointer-down (:active), não espera o clique terminar;
+   §7  consistência espacial: o popover nasce de quem o abriu (transform-origin no gatilho); a gaveta do celular
+       desce do topo, onde fica o botão "Menu";
+   §4  sem quique: curva que só desacelera (o "spring" com amortecimento 1,0), nada de overshoot em menu;
+   §11 só transform (scale/translate) e opacity — nada que force o navegador a refazer o layout;
+   §14 prefers-reduced-motion: reduce → nada afunda, nada desliza; a troca de cor dos estados continua e o popover
+       aparece num fade de 120 ms.
+   Os 9 tokens de movimento (5 do v1, 4 do v2) moram AQUI (não em tokens.css/tokens.json): são deste arquivo e só ele os usa.
+   Copie SEM MUDAR para painel/web/src/app/design/ (como tokens.css, componentes.css e acrescimos.css).
+   ===================================================================================================================== */
+
+:root{
+  --duracao-toque: 100ms;      /* afundar e voltar: curto o bastante para parecer físico, não animado */
+  --duracao-entrada: 160ms;    /* popover e gaveta aparecendo */
+  --curva-saida: cubic-bezier(.2, 0, 0, 1); /* chega rápido e assenta sem passar do ponto */
+  --toque-controle: .97;       /* botões, filtros, itens de menu */
+  --toque-superficie: .99;     /* cartões clicáveis: superfície grande afunda menos */
+}
+
+/* §1 — cada controle ganha `scale` na lista de transições (a lista repete as que já existiam em componentes.css e
+   acrescimos.css; este arquivo vem depois, então é a que vale). */
+.k-btn{transition:background var(--duracao-padrao),border-color var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-filtro{transition:background var(--duracao-padrao),color var(--duracao-padrao),border-color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-menu-btn{transition:background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-nav-item{transition:background var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-menu-item{transition:background var(--duracao-linha),scale var(--duracao-toque) var(--curva-saida)}
+.k-fase{transition:border-color var(--duracao-padrao),box-shadow var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-card.is-interactive{transition:border-color var(--duracao-padrao),box-shadow var(--duracao-padrao),background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-seg > button{transition:scale var(--duracao-toque) var(--curva-saida)}
+
+@media (prefers-reduced-motion:no-preference){
+  .k-btn:not([disabled]):active,
+  .k-filtro:active,
+  .k-seg > button:active,
+  .k-menu-btn:active,
+  .k-nav-item:not([aria-disabled="true"]):active,
+  .k-menu-item:active{scale:var(--toque-controle)}
+  .k-fase:active,
+  .k-card.is-interactive:active{scale:var(--toque-superficie)}
+
+  /* §7 — popovers nascem do gatilho: o sino e o "copiar o pedido" ficam à direita, a busca ocupa a largura toda. */
+  .kx-avisos-painel:not([hidden]),
+  .k-pedido.is-aberto > .k-menu{transform-origin:top right;animation:k-surge var(--duracao-entrada) var(--curva-saida)}
+  .kx-busca-pop{transform-origin:top center;animation:k-surge var(--duracao-entrada) var(--curva-saida)}
+}
+
+/* A gaveta só existe abaixo de 1024 px (acrescimos.css). */
+@media (max-width:1023px) and (prefers-reduced-motion:no-preference){
+  .k-shell.is-menu-open > .k-sidebar{animation:k-desce var(--duracao-entrada) var(--curva-saida)}
+}
+
+/* §14 — com menos movimento, o popover não cresce nem desliza: só aparece num fade curto (ajuda a ver o que abriu). */
+@media (prefers-reduced-motion:reduce){
+  .kx-avisos-painel:not([hidden]),
+  .k-pedido.is-aberto > .k-menu,
+  .kx-busca-pop{animation:k-aparece var(--duracao-linha) linear}
+}
+
+@keyframes k-surge{from{opacity:0;scale:.96}}
+@keyframes k-aparece{from{opacity:0}}
+@keyframes k-desce{from{opacity:0;translate:0 -8px}}
+
+/* =====================================================================================================================
+   MOVIMENTO v2 — os dados entram (04/11/2026), design-system.md §7.2
+   Pedido do autor: "quando você entra na página de desempenho, que o gráfico entra com animação… os números tenham
+   uma animação". Mesmas regras da skill: só transform/opacity/clip/traço, curva que só desacelera, nada quica, e
+   "menos movimento" desliga tudo (o dado aparece pronto). O número que conta é o components/Contador.tsx; quem está
+   abaixo da dobra espera chegar à tela (components/Revelar.tsx pausa e depois toca as animações).
+   ===================================================================================================================== */
+
+:root{
+  --duracao-pagina: 420ms;    /* o cartão entra */
+  --duracao-dado: 760ms;      /* barra cresce, arco gira, linha se revela (o Contador conta em 700 ms) */
+  --curva-dado: cubic-bezier(.22, 1, .36, 1); /* sai depressa e assenta devagar, sem passar do ponto */
+  --escalonar: 45ms;          /* atraso entre irmãos (cartões, barras, fatias) */
+}
+
+/* o ponto da mira (hover/foco no gráfico de linha) */
+.k-chart .kx-linha-ponto{fill:var(--surface);stroke:var(--accent);stroke-width:2}
+.kx-linha-mira-g{opacity:0;pointer-events:none}
+.kx-linha-mira-g.is-on{opacity:1}
+
+@media (prefers-reduced-motion:no-preference){
+  /* 1 — cartões sobem 8 px e aparecem, um depois do outro na grade (o esqueleto, aria-hidden, não) */
+  .k-main .k-card:not([aria-hidden="true"]){animation:k-entra var(--duracao-pagina) var(--curva-saida) backwards}
+  .k-main .k-grid > .k-card:nth-child(2){animation-delay:calc(var(--escalonar) * 1)}
+  .k-main .k-grid > .k-card:nth-child(3){animation-delay:calc(var(--escalonar) * 2)}
+  .k-main .k-grid > .k-card:nth-child(4){animation-delay:calc(var(--escalonar) * 3)}
+  .k-main .k-grid > .k-card:nth-child(5){animation-delay:calc(var(--escalonar) * 4)}
+  .k-main .k-grid > .k-card:nth-child(n+6){animation-delay:calc(var(--escalonar) * 5)}
+  .k-main .k-page-barra{animation:k-aparece var(--duracao-pagina) var(--curva-saida) backwards}
+  /* abaixo da dobra, o Revelar.tsx pausa essas animações no quadro zero (o `from` deixa o cartão transparente) e as
+     toca quando ele chega à tela */
+
+  /* 2 — barras crescem da esquerda (ranking, finas, largas, com capa, na célula, medidor, progresso, empilhada) */
+  .k-bar-fill,.k-medidor-trilho > span,.k-progress > span,.k-empilhada > span{
+    transform-origin:left center;
+    animation:k-cresce-x var(--duracao-dado) var(--curva-dado) backwards;
+    animation-delay:calc(min(var(--i, 0), 10) * var(--escalonar) + 120ms);
+  }
+  /* etapas da produção acendem em sequência */
+  .k-steps > i{transform-origin:left center;animation:k-cresce-x var(--duracao-pagina) var(--curva-dado) backwards}
+  .k-steps > i:nth-child(2){animation-delay:40ms}.k-steps > i:nth-child(3){animation-delay:80ms}
+  .k-steps > i:nth-child(4){animation-delay:120ms}.k-steps > i:nth-child(5){animation-delay:160ms}
+  .k-steps > i:nth-child(n+6){animation-delay:200ms}
+
+  /* 3 — anéis e rosca: cada fatia gira a partir do próprio começo, uma depois da outra */
+  .k-anel circle:not(.trilho),.kx-rosca circle:not(.kx-rosca-trilho){
+    animation:k-arco var(--duracao-dado) var(--curva-dado) backwards;
+    animation-delay:calc(var(--i, 0) * 120ms + 150ms);
+  }
+
+  /* 4 — linha: a série se revela da esquerda para a direita; ponto final e rótulos aparecem quando ela chega */
+  .kx-linha-series{animation:k-revela-x 900ms var(--curva-dado) backwards}
+  .kx-linha-rotulos{animation:k-aparece 240ms ease-out 720ms backwards}
+  /* a mira desliza de uma leitura à outra em vez de pular */
+  .kx-linha-mira-g,.kx-linha-ponto{transition:opacity var(--duracao-linha),transform 160ms var(--curva-saida)}
+  /* sparkline do KPI: o traço se desenha (o path tem pathLength=1) e o ponto final aparece no fim */
+  .k-chart path.s1[pathLength]{stroke-dasharray:1 1;animation:k-traca 900ms var(--curva-dado) 200ms backwards}
+  .k-kpi .k-chart .f1{animation:k-aparece 200ms ease-out 1000ms backwards}
+
+  /* 5 — o delta do KPI chega depois do número */
+  .k-kpi .k-delta{animation:k-aparece 300ms ease-out 640ms backwards}
+}
+
+@keyframes k-entra{from{opacity:0;translate:0 8px}}
+@keyframes k-cresce-x{from{scale:0 1}}
+@keyframes k-arco{from{stroke-dasharray:0 1000}}
+@keyframes k-revela-x{from{clip-path:inset(-12px 100% -12px -12px)}to{clip-path:inset(-12px -12px -12px -12px)}}
+@keyframes k-traca{from{stroke-dashoffset:1}}

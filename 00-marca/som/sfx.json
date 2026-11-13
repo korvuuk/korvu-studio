@@ -1,0 +1,96 @@
+{
+  "_sobre": "Biblioteca de efeitos sonoros da Korvu — estilo CINEMATOGRÁFICO, suave (pedido do autor 05/11: nada seco). Gerar com `uv run python scripts/gerar_sfx.py`. Regras: sound-design.md.",
+  "efeitos": [
+    {
+      "nome": "whoosh-entra",
+      "duracao": 1.8,
+      "uso": "o autor sai, a animação entra (transição de cena)",
+      "descricao": "cinematic soft whoosh transition, deep airy swell rising smoothly into a gentle shimmer, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "whoosh-sai",
+      "duracao": 1.8,
+      "uso": "a animação sai, o autor volta",
+      "descricao": "cinematic soft reverse whoosh, airy swell collapsing into a warm deep low thud, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "swipe",
+      "duracao": 1.0,
+      "uso": "troca de etapa, elemento que desliza",
+      "descricao": "gentle cinematic swipe, soft airy swoosh with a velvety texture, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "pop",
+      "duracao": 0.8,
+      "uso": "elemento aparece (caixa, ícone, bolha)",
+      "descricao": "clear soft glassy pop, rounded bubble bloom, present and audible, warm short reverb tail, cinematic UI appear sound, no music, no voice",
+      "influencia": 0.75
+    },
+    {
+      "nome": "clique",
+      "duracao": 0.6,
+      "uso": "botão, seleção, item escolhido",
+      "descricao": "soft cinematic glass tap, delicate muted click with a tiny warm resonance, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "digitar",
+      "duracao": 2.5,
+      "uso": "texto sendo digitado na tela",
+      "descricao": "soft distant elegant keyboard typing, muted gentle keystrokes, cinematic ambience, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "tick",
+      "duracao": 0.7,
+      "uso": "contador, pontos aparecendo em sequência",
+      "descricao": "clear soft glassy tick sound, short bright crystal blip, audible and present, gentle short reverb, cinematic UI, no music, no voice",
+      "influencia": 0.75
+    },
+    {
+      "nome": "corte-papel",
+      "duracao": 1.0,
+      "uso": "documento sendo cortado em pedaços (chunks)",
+      "descricao": "soft cinematic slice, smooth airy cut with a gentle glassy shimmer, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "brilho",
+      "duracao": 2.5,
+      "uso": "resultado certo, ideia que acende",
+      "descricao": "cinematic magical shimmer, warm soft chime bloom with long airy reverb tail, elegant, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "riser",
+      "duracao": 3.0,
+      "uso": "tensão antes da virada / do resultado",
+      "descricao": "cinematic soft riser, airy tension swell with warm pad, smooth build, ending cleanly, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "impacto",
+      "duracao": 2.5,
+      "uso": "título grande, conceito-chave revelado",
+      "descricao": "cinematic deep soft boom hit, warm sub impact with long airy reverb tail, trailer style but gentle, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "erro",
+      "duracao": 1.0,
+      "uso": "resposta errada / problema",
+      "descricao": "soft cinematic low muted tone, gentle descending warm hum, subtle negative feeling, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    },
+    {
+      "nome": "conectar",
+      "duracao": 1.2,
+      "uso": "linha que liga dois elementos, plugue encaixando",
+      "descricao": "soft cinematic connection sound, gentle glassy link with a rising warm shimmer, cinematic, soft and smooth, polished trailer-quality sound design, warm, airy, subtle reverb tail, no music, no voice, not harsh, not dry, not cartoonish",
+      "influencia": 0.45
+    }
+  ]
+}

@@ -1,0 +1,38 @@
+{
+ "slug": "2026-11-06-planilha-com-ia",
+ "versao": 1,
+ "cta_tipo": "palavra-material",
+ "cta_palavra": "TABELA",
+ "extras": [
+  {
+   "id": "E01"
+  }
+ ],
+ "linhas": [
+  {
+   "id": "L01",
+   "secao": "gancho",
+   "fala": "Você trava toda vez que precisa de uma fórmula na planilha?"
+  },
+  {
+   "id": "L02",
+   "secao": "contexto",
+   "fala": "Conta pra IA o que você quer calcular / em português normal."
+  },
+  {
+   "id": "L03",
+   "secao": "virada",
+   "fala": "Ela te devolve a fórmula / e explica cada pedaço."
+  },
+  {
+   "id": "L04",
+   "secao": "climax",
+   "fala": "Você cola, confere com dois números / e pronto."
+  },
+  {
+   "id": "L05",
+   "secao": "cta",
+   "fala": "Comenta TABELA / que eu te mando os dez pedidos que mais uso."
+  }
+ ]
+}

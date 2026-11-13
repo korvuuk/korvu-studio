@@ -1,0 +1,733 @@
+<meta charset="utf-8">
+<title>Documentação do korvu. painel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a casca do próprio painel — barra lateral escura com o índice (vira "Menu" abaixo de 1024 px) e a área
+   de leitura em marfim; seções com título minúsculo e ponto final, como as telas do app ("crescimento.", "por modelo.").
+   Cores e fontes = tokens do "korvu. painel" (painel/design/tokens.css). O design system só tem o tema claro "Marfim";
+   o modo escuro desta página usa só as cores da barra lateral (sidebar, sidebar-raised, sidebar-line, sidebar-ink). */
+@font-face{font-family:"Geist";src:url("fontes/Geist-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("fontes/GeistMono-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+:root{
+  --bg:#f5f2e8;--surface:#fbf9f4;--surface-sunken:#efebe0;--surface-hover:#f8f5ee;
+  --line:#e4dfd2;--line-strong:#928874;--ink:#111111;--ink-2:#6b6458;--ink-3:#736c60;
+  --sidebar:#111111;--sidebar-raised:#1d1c1a;--sidebar-line:#2c2a27;--sidebar-ink:#f5f2e8;--sidebar-ink-2:#9a9385;
+  --accent:#ff4d00;--accent-hover:#e64500;--accent-soft:#ffe8dc;--accent-ink:#b33600;--on-accent:#111111;
+  --accent-text:#b33600;
+  --positive:#1e7a45;--positive-soft:#e3f0e4;--danger:#c2271b;--danger-soft:#fbe3df;
+  --chart-1:#ff4d00;--chart-2:#111111;--chart-3:#a39b8b;--chart-4:#d6ccb5;--chart-5:#4f6475;--chart-grid:#e9e4d8;
+  --focus:#b33600;--focus-on-dark:#ff4d00;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.04);--shadow-hover:0 6px 20px rgba(17,17,17,0.07);--shadow-pop:0 12px 32px rgba(17,17,17,0.12);
+  --font-sans:Geist,Inter,system-ui,sans-serif;--font-mono:"Geist Mono",ui-monospace,monospace;
+  --radius-sm:6px;--radius-btn:8px;--radius-card:12px;--radius-panel:14px;--radius-pill:999px;
+  --sidebar-width:208px;--control-height:36px;--row-height:56px;
+  --duracao-padrao:150ms;--duracao-linha:120ms;--duracao-toque:100ms;--duracao-entrada:160ms;
+  --curva-saida:cubic-bezier(.2,0,0,1);--duracao-pagina:420ms;--duracao-dado:760ms;--curva-dado:cubic-bezier(.22,1,.36,1);--escalonar:45ms;
+  --toque-controle:.97;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111111;--surface:#1d1c1a;--surface-sunken:#2c2a27;--surface-hover:#1d1c1a;
+  --line:#2c2a27;--line-strong:#6b6458;--ink:#f5f2e8;--ink-2:#9a9385;--ink-3:#9a9385;
+  --accent-text:#ff4d00;--focus:#ff4d00;--chart-grid:#2c2a27;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.3);--shadow-hover:0 6px 20px rgba(17,17,17,0.4);--shadow-pop:0 12px 32px rgba(17,17,17,0.5);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111111;--surface:#1d1c1a;--surface-sunken:#2c2a27;--surface-hover:#1d1c1a;
+  --line:#2c2a27;--line-strong:#6b6458;--ink:#f5f2e8;--ink-2:#9a9385;--ink-3:#9a9385;
+  --accent-text:#ff4d00;--focus:#ff4d00;--chart-grid:#2c2a27;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.3);--shadow-hover:0 6px 20px rgba(17,17,17,0.4);--shadow-pop:0 12px 32px rgba(17,17,17,0.5);
+  color-scheme:dark}
+/* As amostras vivas e as capturas ficam sempre no tema do painel (Marfim), nos dois temas da página. */
+.marfim{
+  --bg:#f5f2e8;--surface:#fbf9f4;--surface-sunken:#efebe0;--surface-hover:#f8f5ee;
+  --line:#e4dfd2;--line-strong:#928874;--ink:#111111;--ink-2:#6b6458;--ink-3:#736c60;--accent-text:#b33600;--focus:#b33600;
+  --chart-grid:#e9e4d8;--shadow-card:0 1px 2px rgba(17,17,17,0.04);--shadow-pop:0 12px 32px rgba(17,17,17,0.12);
+  color-scheme:light;background:var(--bg);color:var(--ink)}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:15px;line-height:22px;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","tnum"}
+table{font:inherit;color:inherit;border-collapse:collapse}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--accent-text);text-underline-offset:3px}
+code,.mono{font-family:var(--font-mono);font-size:.86em;font-weight:500}
+p code,li code,td code{background:var(--surface-sunken);border:1px solid var(--line);border-radius:4px;padding:0 4px;overflow-wrap:anywhere}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.side :focus-visible,.topbar :focus-visible{outline-color:var(--focus-on-dark)}
+.k-cap{font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0}
+.ink2{color:var(--ink-2)}
+.pular{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:8px;clip-path:inset(50%);background:var(--accent);color:var(--on-accent);padding:8px 12px;border-radius:8px;z-index:50}
+.pular:focus{clip-path:none}
+
+/* ── casca ── */
+.casca{display:grid;grid-template-columns:var(--sidebar-width) minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;align-self:start;height:100vh;background:var(--sidebar);color:var(--sidebar-ink-2);display:flex;flex-direction:column;padding:20px 12px 16px;overflow-y:auto;border-right:1px solid var(--sidebar-line)}
+.logo{display:block;height:20px;width:auto}
+.logo .la{fill:var(--sidebar-ink)}.logo .lb{fill:var(--sidebar-ink-2)}
+.side .logo-link{display:block;padding:4px 10px 6px}
+.side-sub{font-size:11px;line-height:14px;color:var(--sidebar-ink-2);padding:0 10px 18px;margin:0}
+.side-label{font-size:10px;line-height:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sidebar-ink-2);padding:12px 10px 8px;opacity:.8;margin:0}
+.nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;min-height:34px;padding:6px 10px;border-radius:var(--radius-btn);color:var(--sidebar-ink-2);font:500 13px/18px var(--font-sans);text-decoration:none;position:relative;transition:background var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.nav a:hover{background:var(--sidebar-raised);color:var(--sidebar-ink)}
+.nav a.ativo{background:var(--sidebar-raised);color:var(--sidebar-ink)}
+.nav a.ativo::after{content:"";position:absolute;right:10px;top:50%;margin-top:-3px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.nav .cont{margin-left:auto;margin-right:14px;font:500 11px/1 var(--font-mono);color:var(--sidebar-ink-2)}
+.nav.sub a{padding-left:22px;font-size:12px;min-height:28px}
+.side-foot{margin-top:auto;border-top:1px solid var(--sidebar-line);padding:14px 10px 0;font-size:11px;line-height:15px}
+.side-foot b{display:block;color:var(--sidebar-ink);font-weight:600;font-size:12px}
+.topbar{display:none}
+.gaveta{display:none}
+
+main{min-width:0;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.miolo{max-width:1120px;margin:0 auto}
+@media (min-width:1024px){main{padding-left:48px;padding-right:max(48px,env(safe-area-inset-right,0px))}}
+
+@media (max-width:1023px){
+  .casca{display:block}
+  .side{display:none}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sidebar)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;height:56px;background:var(--sidebar);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--sidebar-line)}
+  .menu-btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:var(--radius-btn);background:var(--sidebar-raised);border:1px solid var(--sidebar-line);color:var(--sidebar-ink);font:600 13px/1 var(--font-sans);cursor:pointer;transition:scale var(--duracao-toque) var(--curva-saida)}
+  .gaveta{display:block;position:fixed;left:0;right:0;top:calc(56px + env(safe-area-inset-top,0px));z-index:19;background:var(--sidebar);border-bottom:1px solid var(--sidebar-line);max-height:calc(100vh - 56px - env(safe-area-inset-top,0px));overflow-y:auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .gaveta[hidden]{display:none!important}
+  main{padding-top:28px}
+}
+@media (max-width:1023px) and (prefers-reduced-motion:no-preference){.gaveta:not([hidden]){animation:desce var(--duracao-entrada) var(--curva-saida)}}
+@media (prefers-reduced-motion:no-preference){.menu-btn:active,.nav a:active,.k-btn:active,.copiar:active{scale:var(--toque-controle)}}
+@keyframes desce{from{opacity:0;translate:0 -8px}}
+
+/* ── tipografia da página ── */
+h1,h2,h3,h4{margin:0;text-wrap:balance;color:var(--ink)}
+.sec{padding-top:72px;scroll-margin-top:72px}
+.sec:first-child,.sec.capa{padding-top:0}
+.sec-cab{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;max-width:760px}
+.sec-cab h2{font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.03em}
+.lead{font-size:17px;line-height:26px;color:var(--ink-2);margin:0;max-width:68ch}
+h3{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em}
+.sub-cab{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:40px 0 14px}
+.sub-cab p{margin:0;color:var(--ink-2);font-size:13px}
+.texto{max-width:72ch}
+.texto p{margin:0 0 12px}
+@media (max-width:640px){.sec-cab h2{font-size:30px;line-height:36px;letter-spacing:-.02em}.lead{font-size:15px;line-height:22px}.sec{padding-top:56px}}
+
+/* ── peças ── */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card)}
+.selos{display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:0;list-style:none}
+.selo{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:var(--radius-pill);border:1px solid var(--line-strong);font:500 11.5px/1 var(--font-mono);color:var(--ink);white-space:nowrap;background:var(--surface)}
+.selo b{font-weight:500;color:var(--ink-2)}
+.tabchip{display:inline-block;font:500 11.5px/18px var(--font-mono);padding:1px 7px;border-radius:5px;background:var(--surface-sunken);border:1px solid var(--line);color:var(--ink);white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);white-space:nowrap;border:1px solid transparent}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.chip.ok{background:var(--positive-soft);color:var(--positive)}
+.chip.mal{background:var(--danger-soft);color:var(--danger)}
+.chip.neutro{background:var(--surface-sunken);color:var(--ink-2)}
+.chip.vencido{background:var(--accent-soft);color:var(--accent-ink)}
+.rolagem{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tabela{width:100%;min-width:560px}
+.tabela th{text-align:left;font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:12px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tabela td{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;line-height:19px;vertical-align:top}
+.tabela tr:last-child td{border-bottom:0}
+.tabela td.v{font-family:var(--font-mono);font-size:12px;white-space:nowrap}
+.tabela td.cam{color:var(--ink-2);font-size:12px}
+.tabela tbody tr{transition:background var(--duracao-linha)}
+.tabela tbody tr:hover{background:var(--surface-hover)}
+.tabela .grupo td{background:var(--surface-sunken);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:8px 16px}
+.nota{display:flex;gap:12px;padding:14px 16px;align-items:flex-start;border-radius:var(--radius-card);border:1px solid var(--line);background:var(--surface)}
+.nota .ic{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;flex:none;background:var(--surface-sunken);color:var(--ink)}
+.nota.alerta .ic{background:var(--danger-soft);color:var(--danger)}
+.nota.portao .ic{background:var(--accent-soft);color:var(--accent-ink)}
+.nota.ok .ic{background:var(--positive-soft);color:var(--positive)}
+.nota b{display:block;font-size:13px;line-height:18px;font-weight:600}
+.nota p{margin:2px 0 0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.nota svg{width:18px;height:18px}
+.notas{display:grid;gap:12px}
+
+/* ── capa ── */
+.capa{display:grid;gap:28px}
+.capa-topo{display:flex;flex-direction:column;gap:18px;max-width:820px}
+.capa .eyebrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.capa h1{font-size:56px;line-height:60px;font-weight:800;letter-spacing:-.035em}
+.capa h1 .pt{color:var(--accent)}
+.capa h1 .pn{color:var(--ink-2);font-weight:600}
+.capa .frase{font-size:19px;line-height:28px;color:var(--ink);margin:0;max-width:62ch}
+.capa .nao{font-size:15px;line-height:22px;color:var(--ink-2);margin:0;max-width:66ch}
+.contas{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);overflow:hidden;width:max-content;max-width:100%}
+.contas div{padding:12px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.contas div:last-child{border-right:0}
+.contas b{font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.contas span{font-size:12px;color:var(--ink-2)}
+.moldura{border:1px solid var(--line);border-radius:var(--radius-panel);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-hover)}
+.moldura figcaption,.legenda{font-size:12px;line-height:17px;color:var(--ink-2);padding:10px 14px;border-top:1px solid var(--line);background:var(--surface)}
+@media (max-width:640px){.capa h1{font-size:40px;line-height:44px}.capa .frase{font-size:17px;line-height:25px}.contas div{padding:10px 12px;flex:1 1 30%}.contas{width:auto}}
+
+/* ── diagramas ── */
+figure{margin:0}
+.fig{border:1px solid var(--line);border-radius:var(--radius-panel);background:var(--surface);overflow:hidden}
+.fig .rolagem{padding:16px}
+.dg{display:block;width:100%;height:auto;min-width:860px;max-width:var(--dg-w)}
+.dg-estreito .dg{min-width:720px}
+.fig figcaption{font-size:13px;line-height:19px;color:var(--ink-2);padding:12px 16px;border-top:1px solid var(--line)}
+.fig figcaption .arraste{display:none}
+@media (max-width:900px){.fig figcaption .arraste{display:inline;color:var(--ink)}}
+.fig-acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+{{CSS_DG}}
+.passos{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px 24px;counter-reset:p}
+.passos li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px;font-size:13px;line-height:19px;counter-increment:p}
+.passos li::before{content:counter(p);width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 11px/22px var(--font-sans);text-align:center}
+.passos li p{margin:0}
+
+/* ── banco ── */
+.grade2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start}
+.papel{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.papel h4{font-size:15px;line-height:21px;font-weight:600}
+.papel p{margin:0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.linha-tempo{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.dia{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.dia:first-child{border-top:0;padding-top:4px}
+.dia-rot{display:flex;flex-direction:column;gap:2px}
+.dia-rot b{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em}
+.dia-rot span{font-size:12px;color:var(--ink-2)}
+.migs{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--line);display:grid;gap:12px}
+.migs li{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
+.migs li::before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.migs .arq{font:500 11.5px/16px var(--font-mono);color:var(--ink-2);overflow-wrap:anywhere}
+.migs .res{font-size:13px;line-height:19px}
+.migs .hora{font:500 11.5px/16px var(--font-mono);color:var(--accent-text);margin-right:6px}
+@media (max-width:640px){.dia{grid-template-columns:1fr;gap:10px}}
+
+/* ── APIs ── */
+.apis{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px;align-items:start}
+.api:last-child{grid-column:1/-1}
+@media (min-width:900px){.api:last-child dl{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
+.api{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.api h3{font-size:15px;line-height:21px;font-weight:600;letter-spacing:-.005em}
+.api .tipo{display:flex;gap:6px;flex-wrap:wrap}
+.api dl{margin:0;display:grid;gap:10px}
+.api dt{font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.api dd{margin:2px 0 0;font-size:13px;line-height:19px;overflow-wrap:anywhere}
+
+/* ── telas ── */
+.indice-telas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px;padding:0;list-style:none}
+.indice-telas a{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:var(--radius-pill);border:1px solid var(--line-strong);color:var(--ink);text-decoration:none;font-size:13px;font-weight:500;background:var(--surface)}
+.indice-telas a:hover{background:var(--surface-sunken)}
+.tela{padding-top:56px;scroll-margin-top:72px;border-top:1px solid var(--line);margin-top:40px}
+.tela:first-of-type{border-top:0;margin-top:8px;padding-top:16px}
+.tela-cab{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;max-width:780px}
+.tela-cab .t{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tela-cab h3{font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em}
+.rota{font:500 12px/1 var(--font-mono);padding:6px 9px;border-radius:6px;background:var(--sidebar);color:var(--sidebar-ink);white-space:nowrap}
+.pergunta{font-size:18px;line-height:27px;margin:0;color:var(--ink)}
+.pergunta::before{content:"A pergunta que ela responde";display:block;font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+.fotos{display:grid;grid-template-columns:minmax(0,1fr) 252px;gap:20px;align-items:start}
+.foto-pc{position:relative;border:1px solid var(--line);border-radius:var(--radius-card);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-card)}
+.foto-pc .sobre{position:relative}
+.marca{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 12px/24px var(--font-sans);text-align:center;box-shadow:0 0 0 2px #fbf9f4,0 2px 6px rgba(17,17,17,.25);pointer-events:none}
+.foto-cel{display:flex;flex-direction:column;align-items:center;gap:8px}
+.celular{width:236px;max-width:100%;border:6px solid var(--sidebar);border-radius:30px;background:var(--sidebar);box-shadow:var(--shadow-hover);overflow:hidden}
+.celular .tela-cel{height:480px;overflow:hidden;border-radius:24px;background:#f5f2e8;position:relative}
+.celular.aberto .tela-cel{height:auto}
+.ver-cel{height:30px;padding:0 12px;border-radius:var(--radius-btn);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 12px/1 var(--font-sans);cursor:pointer;transition:background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.ver-cel:hover{background:var(--surface-sunken)}
+@media (prefers-reduced-motion:no-preference){.ver-cel:active{scale:var(--toque-controle)}}
+.foto-rot{font-size:12px;line-height:16px;color:var(--ink-2);text-align:center;margin:0}
+.foto-pc .foto-rot{text-align:left;padding:8px 12px;border-top:1px solid var(--line)}
+.blocos-dados{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;margin-top:22px}
+.blocos{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px;counter-reset:b}
+.blocos li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;font-size:14px;line-height:21px;counter-increment:b}
+.blocos li::before{content:counter(b);width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 11px/22px var(--font-sans);text-align:center}
+.dados-tela{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.vazio-tela{font-size:13px;line-height:19px;color:var(--ink-2);margin:12px 0 0}
+@media (max-width:640px){.marca{width:18px;height:18px;font-size:10px;line-height:18px}}
+@media (max-width:900px){.fotos{grid-template-columns:1fr}.blocos-dados{grid-template-columns:1fr;gap:20px}}
+
+/* ── design system (amostras com o CSS do painel) ── */
+.amostra{border:1px solid var(--line);border-radius:var(--radius-panel);padding:24px;display:grid;gap:18px}
+.escala{display:grid;gap:0}
+.escala .lin{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
+.escala .lin:first-child{border-top:0}
+.escala .meta{font:500 11.5px/16px var(--font-mono);color:var(--ink-2)}
+.escala .ex{min-width:0;overflow-wrap:anywhere}
+@media (max-width:640px){.escala .lin{grid-template-columns:1fr;gap:4px}.amostra{padding:16px}}
+.cores{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.cor{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.cor i{display:block;height:56px;border-bottom:1px solid var(--line)}
+.cor div{padding:8px 10px;display:flex;flex-direction:column;gap:1px}
+.cor b{font:500 11.5px/16px var(--font-mono)}
+.cor span{font:500 11px/15px var(--font-mono);color:var(--ink-2)}
+.comp-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.comp{display:flex;flex-direction:column;gap:12px;min-width:0}
+.comp > .k-cap{color:var(--ink-2)}
+.fila-comp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lista-comp{display:flex;flex-wrap:wrap;gap:6px}
+.mov{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.barra-dado{height:10px;border-radius:var(--radius-pill);background:var(--surface-sunken);overflow:hidden}
+.barra-dado span{display:block;height:100%;background:var(--accent);border-radius:inherit;transform-origin:left center}
+.barras{display:grid;gap:10px}
+.barras .b{display:grid;grid-template-columns:110px minmax(0,1fr) 40px;gap:10px;align-items:center;font-size:12px}
+.barras .b b{font:500 11.5px/1 var(--font-mono);text-align:right}
+@media (prefers-reduced-motion:no-preference){
+  .tocando .barra-dado span{animation:cresce var(--duracao-dado) var(--curva-dado) both;animation-delay:calc(var(--i) * var(--escalonar))}
+  .tocando .k-kpi{animation:entra var(--duracao-pagina) var(--curva-dado) both}
+}
+@keyframes cresce{from{transform:scaleX(0)}}
+@keyframes entra{from{opacity:0;translate:0 8px}}
+
+/* CSS do painel (painel/design/componentes.css), só as classes usadas nas amostras. */
+.marfim .k-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card)}
+.k-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-height);padding:0 14px;border-radius:var(--radius-btn);border:1px solid transparent;font:600 13px/1 var(--font-sans);letter-spacing:-.005em;cursor:pointer;white-space:nowrap;transition:background var(--duracao-padrao),border-color var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-btn-primary{background:var(--accent);color:var(--on-accent)}
+.k-btn-primary:hover{background:var(--accent-hover)}
+.k-btn-secondary{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
+.k-btn-secondary:hover{background:var(--surface-sunken)}
+.k-btn-ghost{background:transparent;color:var(--ink-2)}
+.k-btn-ghost:hover{background:var(--surface-sunken);color:var(--ink)}
+.k-btn-dark{background:var(--ink);color:var(--bg)}
+.k-btn-sm{height:28px;padding:0 10px;font-size:12px}
+.k-btn[disabled]{opacity:.45;cursor:not-allowed}
+.k-chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);white-space:nowrap;border:1px solid transparent}
+.k-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.k-chip--aprovado{background:var(--positive-soft);color:var(--positive)}
+.k-chip--producao{background:var(--accent-soft);color:var(--accent-ink)}
+.k-chip--bloqueado{background:var(--danger-soft);color:var(--danger)}
+.k-chip--agendado{background:var(--surface-sunken);color:var(--ink-2)}
+.k-chip--publicado{background:var(--ink);color:var(--bg)}
+.k-chip--portao{background:transparent;color:var(--accent-ink);border-color:var(--accent)}
+.k-chip--portao::before,.k-chip--model::before,.k-chip--opus::before{display:none}
+.k-chip--model{background:transparent;color:var(--ink);border-color:var(--line-strong);font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.01em}
+.k-chip--opus{background:var(--ink);color:var(--bg);border-color:var(--ink);font-family:var(--font-mono);font-weight:500;font-size:11px}
+.k-kpi{padding:20px 20px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.k-kpi-value{font-size:40px;line-height:44px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.k-kpi-value small{font-size:18px;font-weight:600;color:var(--ink-2);letter-spacing:-.01em;margin-left:2px}
+.k-kpi-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:13px;color:var(--ink-2)}
+.k-delta{display:inline-flex;align-items:center;gap:3px;height:22px;padding:0 7px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);font-variant-numeric:tabular-nums}
+.k-delta--flat{background:var(--surface-sunken);color:var(--ink-2)}
+.k-progress{height:6px;border-radius:var(--radius-pill);background:var(--surface-sunken);overflow:hidden}
+.k-progress > span{display:block;height:100%;background:var(--accent);border-radius:inherit}
+.k-steps{display:flex;gap:4px}
+.k-steps i{flex:1;height:6px;border-radius:2px;background:var(--surface-sunken)}
+.k-steps i.on{background:var(--ink)}.k-steps i.now{background:var(--accent)}.k-steps i.blocked{background:var(--danger)}
+.k-gate{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
+.k-gate-icon{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink);flex:none}
+.k-check{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}
+.k-check b{width:18px;height:18px;border-radius:var(--radius-sm);border:1px solid var(--line-strong);display:grid;place-items:center;flex:none;background:var(--surface)}
+.k-check.is-on b{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.k-check.is-on span{color:var(--ink-2);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+.k-event{display:flex;flex-direction:column;gap:3px;padding:8px 10px 8px 13px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--line);font-size:12px;line-height:16px;position:relative;overflow:hidden;min-width:150px}
+.k-event::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ink)}
+.k-event b{font-weight:600;color:var(--ink)}.k-event span{color:var(--ink-2)}
+.k-event--ig::before{background:var(--accent)}.k-event--fb::before{background:var(--chart-5)}
+.k-event--gate{background:var(--accent-soft);border-color:transparent}.k-event--gate::before{display:none}
+.k-event--gate b,.k-event--gate span{color:var(--accent-ink)}
+.k-search{display:flex;align-items:center;gap:8px;height:var(--control-height);padding:0 12px;border-radius:var(--radius-btn);background:var(--surface);border:1px solid var(--line-strong);color:var(--ink-2);font-size:13px;max-width:100%}
+.k-search input{border:0;outline:0;background:transparent;font:inherit;color:var(--ink);flex:1;min-width:0}
+.k-search input::placeholder{color:var(--ink-3)}
+.k-search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px var(--accent-soft)}
+.k-kbd{font:500 11px/1 var(--font-mono);color:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:3px 5px;background:var(--bg)}
+.k-tooltip{display:inline-flex;flex-direction:column;gap:2px;background:var(--sidebar);color:var(--sidebar-ink);padding:8px 10px;border-radius:var(--radius-sm);font:500 12px/16px var(--font-sans);box-shadow:var(--shadow-pop);position:relative;align-self:flex-start}
+.k-tooltip small{color:var(--sidebar-ink-2);font-size:11px}
+.k-tooltip::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;background:var(--sidebar);transform:translateX(-50%) rotate(45deg)}
+.k-note{display:flex;gap:12px;padding:14px 16px;align-items:flex-start}
+.k-note-icon{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;flex:none;background:var(--surface-sunken);color:var(--ink)}
+.k-note--alert .k-note-icon{background:var(--danger-soft);color:var(--danger)}
+.k-note--gate .k-note-icon{background:var(--accent-soft);color:var(--accent-ink)}
+.k-note-title{font-size:13px;line-height:18px;font-weight:600}
+.k-note-body{font-size:13px;line-height:18px;color:var(--ink-2)}
+.k-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:32px 20px;border:1px dashed var(--line-strong);border-radius:var(--radius-card);background:transparent}
+.k-empty-icon{width:48px;height:48px;border-radius:var(--radius-card);background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);margin-bottom:4px}
+.k-empty h4{margin:0;font-size:15px;line-height:22px;font-weight:600}
+.k-empty p{margin:0;font-size:13px;line-height:18px;color:var(--ink-2);max-width:300px}
+.k-empty svg,.k-note svg,.k-gate svg{width:20px;height:20px}
+
+/* ── qualidade ── */
+.gauntlet{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.area{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.area .topo{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.area h4{font-size:15px;line-height:21px;font-weight:600}
+.area p{margin:0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.area .quem{font:500 12px/16px var(--font-mono);color:var(--ink)}
+.teste-num{font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.falhas{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:19px;color:var(--ink-2)}
+.falhas li{margin-bottom:4px}
+
+/* ── instalar ── */
+.passos-inst{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:s}
+.passos-inst > li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:14px;counter-increment:s}
+.passos-inst > li::before{content:counter(s);width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);font:700 13px/28px var(--font-sans);text-align:center}
+.passos-inst h4{font-size:15px;line-height:22px;font-weight:600;margin-bottom:6px}
+.passos-inst p{margin:0 0 8px;font-size:14px;line-height:21px;color:var(--ink-2)}
+.codigo{position:relative;border-radius:var(--radius-card);background:var(--sidebar);border:1px solid var(--sidebar-line);min-width:0}
+.codigo pre{margin:0;padding:14px 16px;padding-right:96px;overflow-x:auto;color:var(--sidebar-ink);font:500 12.5px/20px var(--font-mono)}
+.codigo pre .c{color:var(--sidebar-ink-2)}
+.copiar{position:absolute;top:8px;right:8px;height:28px;padding:0 10px;border-radius:var(--radius-btn);border:1px solid var(--sidebar-line);background:var(--sidebar-raised);color:var(--sidebar-ink);font:600 12px/1 var(--font-sans);cursor:pointer;transition:background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.copiar:hover{background:var(--sidebar-line)}
+.copiar:focus-visible{outline-color:var(--focus-on-dark)}
+.reuso{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.reuso .card{padding:18px 20px}
+.reuso h4{font-size:15px;line-height:21px;font-weight:600;margin-bottom:8px}
+.reuso ul{margin:0;padding-left:18px;font-size:13px;line-height:20px;color:var(--ink-2);display:grid;gap:6px}
+.reuso ul b{color:var(--ink);font-weight:600}
+.rodape{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;line-height:18px;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="casca">
+  <aside class="side" aria-label="Índice">
+    <a class="logo-link" href="#capa" aria-label="korvu. painel, início">{{LOGO}}</a>
+    <p class="side-sub">documentação técnica</p>
+    <p class="side-label">Seções</p>
+    {{NAV}}
+    <p class="side-label"><a href="../../estudio/site/index.html" style="color:inherit">Volume 1 · Estúdio ↗</a></p>
+    <div class="side-foot"><b>Dossiê de 12/11/2026</b>tudo o que está aqui vem dele</div>
+  </aside>
+
+  <header class="topbar">
+    <a href="#capa" aria-label="korvu. painel, início">{{LOGO}}</a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="gaveta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+  </header>
+  <nav class="gaveta" id="gaveta" hidden aria-label="Índice">{{NAV}}</nav>
+
+  <main id="conteudo">
+  <div class="miolo">
+
+  <!-- 1. CAPA -->
+  <section class="sec capa" id="capa">
+    <div class="capa-topo">
+      <div class="eyebrow"><span class="k-cap">Estúdio de Reels Korvu Studio</span><span class="selo">painel web · só leitura</span></div>
+      <h1>korvu<span class="pt">.</span> <span class="pn">painel</span></h1>
+      <p class="frase">O quadro de comando do estúdio: um site que roda no próprio Mac e mostra, numa olhada, quem é quem na equipe de agentes de IA, em que fase está cada vídeo, se os portões de aprovação deixaram o trabalho passar, o que vai ser publicado e quando, como os vídeos estão indo no Instagram e no Facebook, e quanto a IA consome em tokens e dólares.</p>
+      <p class="nao">Ele não cria, não edita e não publica nada. Os arquivos do projeto são a fonte da verdade; o painel só lê. Onde antes havia um botão que “criava” algo, a tela mostra o comando para copiar e colar no Claude Code.</p>
+      <ul class="selos" aria-label="A pilha">{{SELOS}}</ul>
+      <div class="contas" aria-label="O sistema em números">
+        <div><b>9</b><span>telas</span></div><div><b>32</b><span>tabelas</span></div><div><b>10</b><span>views</span></div><div><b>18</b><span>migrações</span></div><div><b>7</b><span>APIs</span></div>
+      </div>
+    </div>
+    <figure class="moldura marfim">
+      <img src="capturas/inicio-1440.png" width="2880" height="3734" alt="A tela Visão geral do painel a 1440 px: barra lateral escura com o menu, quatro números do perfil, próximas publicações, desempenho de 28 dias, público por país, tokens e custos de 30 dias e os cartões da equipe.">
+      <figcaption>Visão geral, a 1440 px. Foto do app rodando em 12/11/2026 (não é maquete).</figcaption>
+    </figure>
+  </section>
+
+  <!-- 2. ARQUITETURA -->
+  <section class="sec" id="arquitetura">
+    <div class="sec-cab">
+      <p class="k-cap">Como um dado chega à tela</p>
+      <h2>arquitetura.</h2>
+      <p class="lead">Arquivos do projeto → sincronizador → Postgres → Next.js → navegador. Tudo em 127.0.0.1, sem nada aberto para a rede. O sincronizador roda a cada 15 minutos; o app só lê o banco.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama da arquitetura, role para o lado">{{SVG_arquitetura}}</div>
+      <figcaption>As setas laranja são o caminho de um veredicto do GAUNTLET até a tela; as tracejadas são entradas e saídas laterais. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/arquitetura.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>O caminho de um dado, com o exemplo real</h3><p>o veredicto de um portão até a tela</p></div>
+    <ol class="passos">
+      <li><p>Um agente-portão audita um vídeo e o <code>scripts/portoes.py</code> grava o veredicto no <code>portoes.json</code> do alvo (ex.: <code>videos/&lt;slug&gt;/portoes.json</code>).</p></li>
+      <li><p>A cada 15 min o launchd <code>uk.korvu.painel</code> roda <code>uv run python painel/sync/sincronizar.py</code> (<code>StartInterval 900</code>, <code>RunAtLoad</code>).</p></li>
+      <li><p>O sincronizador importa o próprio <code>portoes.py</code> com <code>portoes.SO_LEITURA = True</code> e <code>sys.dont_write_bytecode = True</code>; <code>portoes_e_veredictos()</code> devolve as linhas.</p></li>
+      <li><p>Numa transação só: <code>truncate</code> das tabelas-espelho e <code>insert</code> em <code>portoes_estado</code> (alvo × portão) e <code>veredictos</code> (chave <code>alvo, ordem</code>).</p></li>
+      <li><p>No Next.js, <code>db.portoesEstado()</code> e <code>db.veredictos()</code> leem pela API do Supabase, página a página de 1.000 linhas, conferindo a contagem exata.</p></li>
+      <li><p>A tela Produção (“Portões” e “Precisam de atenção”), a ficha do agente e o sino de avisos mostram o resultado.</p></li>
+      <li><p>O rodapé de toda página diz a hora da última passagem (<code>sincronizacoes.em</code>).</p></li>
+    </ol>
+  </section>
+
+  <!-- 3. TECNOLOGIA -->
+  <section class="sec" id="tecnologia">
+    <div class="sec-cab">
+      <p class="k-cap">A pilha</p>
+      <h2>tecnologia.</h2>
+      <p class="lead">Versões lidas do <code>package.json</code>, do <code>pyproject.toml</code> e do <code>config.toml</code>. Na coluna “por quê” só entra o motivo que está escrito no projeto; sem motivo escrito, fica o traço.</p>
+    </div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela de tecnologia, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Camada</th><th scope="col">Tecnologia</th><th scope="col">Versão</th><th scope="col">Por quê</th></tr></thead>
+      <tbody>{{TEC}}</tbody>
+    </table></div>
+  </section>
+
+  <!-- 4. BANCO -->
+  <section class="sec" id="banco">
+    <div class="sec-cab">
+      <p class="k-cap">Supabase local próprio · Postgres 17</p>
+      <h2>banco de dados.</h2>
+      <p class="lead">32 tabelas e 10 views criadas por 18 migrações em <code>painel/supabase/migrations/</code>. A maioria é espelho dos arquivos e é refeita a cada passagem; <code>execucoes</code> e <code>uso_execucao</code> são arquivo e nunca são truncadas. O custo não fica guardado nas linhas: as views calculam a partir de <code>precos_modelo</code>.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama entidade-relação, role para o lado">{{SVG_banco}}</div>
+      <figcaption>Cada caixa mostra a chave primária (PK) e as chaves estrangeiras (FK) da tabela; as colunas completas estão no dossiê. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/banco.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>Portas</h3><p>de <code>painel/supabase/config.toml</code>, <code>project_id = "korvu-studio-painel"</code></p></div>
+    <ul class="selos" aria-label="Portas">{{PORTAS}}</ul>
+
+    <div class="sub-cab"><h3>Segurança: papéis e RLS</h3><p>ninguém de fora lê, e o app não escreve</p></div>
+    <figure class="fig dg-estreito">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama de papéis e RLS, role para o lado">{{SVG_seguranca}}</div>
+      <figcaption>RLS ligado em todas as tabelas, sem nenhuma política: só passa quem ignora RLS (<code>postgres</code> e <code>service_role</code>). Fora do alcance, escrito na própria migração: os default privileges do papel <code>supabase_admin</code>. <a href="diagramas/seguranca.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="grade2" style="margin-top:16px">
+      <div class="card papel"><h4>Só no Mac</h4><p>App em <code>127.0.0.1:3456</code>; banco e API só em 127.0.0.1 por uma rede Docker com <code>host_binding_ipv4=127.0.0.1</code>. O <code>iniciar.sh</code> e o <code>studio.sh</code> param com erro se uma porta ficar aberta para a rede; <code>/pg/*</code> responde 503 com o Studio desligado.</p></div>
+      <div class="card papel"><h4>Chaves só no servidor</h4><p><code>SUPABASE_URL</code> e <code>SUPABASE_SERVICE_ROLE_KEY</code> ficam em <code>painel/web/.env.local</code>, fora do git. O <code>lib/db.ts</code> tem <code>import "server-only"</code>; os comandos das telas de erro moram em <code>lib/comandos.ts</code> para nenhum componente de cliente importar o acesso ao banco.</p></div>
+      <div class="card papel"><h4>Rotas de arquivo endurecidas</h4><p><code>GET /capa/[pasta]/[slug]</code>: pasta numa lista fixa (<code>Object.hasOwn</code>) e slug por regex. <code>GET /look/[id]</code>: caminho vindo do banco e preso a <code>painel/previas/looks/</code>.</p></div>
+      <div class="card papel"><h4>Sem login, sem texto de conversa</h4><p>Não há login no app e ele não usa a chave <code>anon</code>. Dos registros do Claude Code, só entram números, ids, modelo, horário, slug e a descrição curta do <code>.meta.json</code>.</p></div>
+    </div>
+
+    <div class="sub-cab"><h3>Linha do tempo das migrações</h3><p>18 migrações em 4 dias, pela data do nome do arquivo</p></div>
+    <div class="card" style="padding:20px 24px">
+      <ol class="linha-tempo">{{MIGRACOES}}</ol>
+    </div>
+  </section>
+
+  <!-- 5. BACK-END -->
+  <section class="sec" id="backend">
+    <div class="sec-cab">
+      <p class="k-cap">painel/sync/sincronizar.py</p>
+      <h2>back-end e sincronização.</h2>
+      <p class="lead">Um script Python lê o projeto e regrava o espelho do banco numa transação. Ele nunca escreve nos arquivos do estúdio. Se algo dá errado, nada é gravado e o painel continua com a passagem anterior.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Fluxograma da sincronização, role para o lado">{{SVG_sincronizacao}}</div>
+      <figcaption>Quando roda: launchd <code>uk.korvu.painel</code> a cada 900 s e ao entrar na sessão do Mac; o launchd anota uma linha por passagem em <code>_controle/logs/painel.log</code>. Manual: <code>--seco</code> lê sem gravar; <code>--ate</code> e <code>--regra-do-script</code> servem só para reconciliar e são recusados no banco real sem <code>--seco</code>. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/sincronizacao.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>O que cada origem vira</h3><p><code>ler_projeto()</code></p></div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela: origem de cada dado, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Origem (só leitura)</th><th scope="col">Vira</th></tr></thead>
+      <tbody>{{ORIGENS}}</tbody>
+    </table></div>
+    <div class="grade2" style="margin-top:16px">
+      <div class="card papel"><h4>No app (back-end do Next.js)</h4><p>Todas as páginas são Server Components com <code>dynamic = "force-dynamic"</code>. A leitura usa <code>todos()</code>: pagina por 1.000 linhas, confere <code>count: "exact"</code>, relê uma vez se a tabela mudar no meio (sincronização rodando) e lança erro se vier menos linha do que o banco diz ter. O <code>cache()</code> do React faz cada leitura ir ao banco uma vez por pedido.</p></div>
+      <div class="card papel"><h4>Prévias dos looks</h4><p><code>uv run python painel/sync/previas_looks.py</code> gera um JPEG 640×800 por look a partir de um quadro de amostra + a LUT de entrada + a LUT do look, com nome por hash, e só refaz o que mudou. É o único passo que grava arquivo (em <code>painel/previas/looks/</code>).</p></div>
+      <div class="card papel"><h4>Rotas que não são telas</h4><p><code>/videos</code> redireciona (307) para <code>/producao</code>. <code>/sistema</code> é a vitrine dos componentes e dá 404 sem <code>PAINEL_VITRINE=1</code>. <code>GET /capa/[pasta]/[slug]</code> (PNG) e <code>GET /look/[id]</code> (JPEG) servem imagens, só leitura.</p></div>
+      <div class="card papel"><h4>Como roda tudo</h4><p><code>bash painel/iniciar.sh</code>: garante a rede Docker só em 127.0.0.1 → <code>supabase start</code> → confere as portas 553xx → uma passagem do sincronizador → <code>npm run dev</code> em <code>painel/web</code>. Studio: <code>bash painel/studio.sh liga|desliga</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- 6. APIs -->
+  <section class="sec" id="apis">
+    <div class="sec-cab">
+      <p class="k-cap">Quem chama · o que traz · onde guarda</p>
+      <h2>APIs.</h2>
+      <p class="lead">Sete integrações. Só duas são de rede dentro do painel (a API do Supabase e o Postgres); a Meta é indireta, pelos arquivos que a área Automação Meta grava.</p>
+    </div>
+    <div class="apis">{{APIS}}</div>
+    <div class="nota" style="margin-top:16px">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg></span>
+      <div><b>Não usados pelo painel</b><p>A chave <code>anon</code>, Supabase Auth, Storage e Realtime (Realtime desligado no <code>config.toml</code>; Auth e Storage ligados por padrão, mas nenhum código do app chama). O ElevenLabs aparece só na lista da stack da Biblioteca: o consumo dele não é medido. Há também o otimizador de imagens do Next, que guarda a versão reduzida das capas em <code>.next*/cache/images</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- 7. TELAS -->
+  <section class="sec" id="telas">
+    <div class="sec-cab">
+      <p class="k-cap">9 telas · computador e celular</p>
+      <h2>tela por tela.</h2>
+      <p class="lead">Fotos do app rodando, a 1440 px e a 375 px, página inteira. Os números laranja sobre a foto do computador são os blocos da lista ao lado; no celular aparece a primeira tela, e o botão abre a página inteira.</p>
+    </div>
+    <div class="texto">
+      <p>A casca é a mesma em todas: barra lateral escura com o menu (Visão geral · Equipe · Produção de conteúdo · Calendário · Desempenho · Biblioteca · Tokens e custos), busca global ⌘K (vídeos, agentes, portões), sino de avisos com os portões que pedem ação, e o rodapé com a hora da última sincronização. No celular, a barra lateral vira o botão “Menu” no topo e os blocos empilham.</p>
+      <p>Cada bloco tem o próprio carregamento (esqueleto), erro de bloco e vazio com frase. Sem banco ou nunca sincronizado, uma nota de alerta aparece no topo; erro geral mostra “Não deu para ler os dados” com os passos para ligar o banco e sincronizar.</p>
+    </div>
+    <ul class="indice-telas" aria-label="As telas">{{INDICE_TELAS}}</ul>
+    {{TELAS}}
+  </section>
+
+  <!-- 8. DESIGN SYSTEM -->
+  <section class="sec" id="design">
+    <div class="sec-cab">
+      <p class="k-cap">painel/design/</p>
+      <h2>design system.</h2>
+      <p class="lead">“korvu. painel”: desenhado pelo dono no Claude Design em 23/10/2026 e importado em PT-BR com os valores exatos. Um tema só, claro, chamado Marfim. As amostras abaixo usam o CSS do próprio painel e ficam no Marfim mesmo com esta página no escuro.</p>
+    </div>
+
+    <div class="sub-cab"><h3>Tipografia</h3><p>Geist e Geist Mono, arquivos variáveis locais, licença OFL 1.1 · números tabulares em tudo</p></div>
+    <div class="amostra marfim">
+      <div class="escala">
+        <div class="lin"><span class="meta">display 56/60 · 800</span><span class="ex" style="font-size:56px;line-height:60px;font-weight:800;letter-spacing:-.035em">korvu. painel</span></div>
+        <div class="lin"><span class="meta">h1 44/48 · 800</span><span class="ex" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.03em">Contratar</span></div>
+        <div class="lin"><span class="meta">h2 30/36 · 700</span><span class="ex" style="font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em">Próximas publicações</span></div>
+        <div class="lin"><span class="meta">h3 22/28 · 700</span><span class="ex" style="font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em">por departamento.</span></div>
+        <div class="lin"><span class="meta">body 15/22 · 400</span><span class="ex">O painel só lê os arquivos do projeto.</span></div>
+        <div class="lin"><span class="meta">small 13/18 · 500</span><span class="ex" style="font-size:13px;line-height:18px;font-weight:500">Rótulos de botão, chips e barra lateral.</span></div>
+        <div class="lin"><span class="meta">caption 11/14 · 600</span><span class="ex k-cap">Tokens · 30 dias</span></div>
+        <div class="lin"><span class="meta">metric-xl 40/44 · 700</span><span class="ex" style="font-size:40px;line-height:44px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums">32</span></div>
+        <div class="lin"><span class="meta">metric-l 24/28 · 700</span><span class="ex" style="font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">18 migrações</span></div>
+        <div class="lin"><span class="meta">mono 12/16 · 500</span><span class="ex" style="font:500 12px/16px var(--font-mono)">Opus 5.5 · #FF4D00 · 127.0.0.1:3456</span></div>
+      </div>
+    </div>
+
+    <div class="sub-cab"><h3>Cores-token</h3><p>de <code>tokens.css</code> · “não alterar sem decisão do autor”</p></div>
+    <div class="cores">{{CORES}}</div>
+
+    <div class="sub-cab"><h3>Componentes</h3><p>48 arquivos em <code>painel/web/src/components/</code> · amostras vivas com as classes <code>k-*</code></p></div>
+    <div class="amostra marfim">
+      <div class="comp-grade">
+        <div class="comp"><p class="k-cap">Botão · k-btn</p>
+          <div class="fila-comp"><button class="k-btn k-btn-primary" type="button">Copiar pedido</button><button class="k-btn k-btn-secondary" type="button">Ver produção</button><button class="k-btn k-btn-ghost" type="button">Ver os números</button><button class="k-btn k-btn-dark" type="button">Aprovar</button><button class="k-btn k-btn-secondary" type="button" disabled>Desativado</button></div></div>
+        <div class="comp"><p class="k-cap">Chip de estado · k-chip</p>
+          <div class="fila-comp"><span class="k-chip k-chip--aprovado">Aprovado</span><span class="k-chip k-chip--bloqueado">Bloqueado</span><span class="k-chip k-chip--producao">Em produção</span><span class="k-chip k-chip--agendado">Agendado</span><span class="k-chip k-chip--publicado">Publicado</span><span class="k-chip k-chip--portao">Portão</span><span class="k-chip k-chip--opus">Opus 5.5</span><span class="k-chip k-chip--model">Sonnet 5.5</span></div></div>
+        <div class="comp"><p class="k-cap">KPI · k-card k-kpi</p>
+          <div class="k-card k-kpi"><span class="k-cap">Tabelas no banco</span><span class="k-kpi-value">32</span><div class="k-kpi-foot"><span class="k-delta k-delta--flat">+10 views</span><span>18 migrações</span></div></div></div>
+        <div class="comp"><p class="k-cap">Notificação · k-note</p>
+          <div class="k-card k-note k-note--alert"><span class="k-note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><div class="k-note-title">Portão dos dados vencido</div><div class="k-note-body">1 arquivo mudou depois do APROVADO.</div></div></div>
+          <div class="k-card k-note k-note--gate"><span class="k-note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><div><div class="k-note-title">Portão do roteiro ainda não rodou</div><div class="k-note-body">O portão revisa cada um antes da gravação.</div></div></div></div>
+        <div class="comp"><p class="k-cap">Portão de aprovação · k-gate</p>
+          <div class="k-card k-gate"><div class="fila-comp"><span class="k-gate-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><b style="font-size:15px">Quem faz não aprova</b></div>
+          <div class="k-check is-on"><b aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b><span>Construtor terminou</span></div>
+          <div class="k-check is-on"><b aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b><span>Portão da área auditou</span></div>
+          <div class="k-check"><b aria-hidden="true"></b><span>APROVADO preso aos arquivos</span></div>
+          <div class="k-steps" aria-label="Etapa 3 de 4"><i class="on"></i><i class="on"></i><i class="now"></i><i></i></div></div></div>
+        <div class="comp"><p class="k-cap">Evento do calendário · k-event</p>
+          <div class="fila-comp"><div class="k-event k-event--ig"><b>19:00 · Agendado</b><span>Instagram</span></div><div class="k-event k-event--fb"><b>21:00 · Agendado</b><span>Facebook</span></div><div class="k-event k-event--gate"><b>Portão</b><span>Publicação</span></div></div></div>
+        <div class="comp"><p class="k-cap">Busca e dica · k-search · k-tooltip</p>
+          <label class="k-search" for="busca-amostra"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="busca-amostra" type="search" placeholder="Buscar vídeos, agentes, portões…"><span class="k-kbd">⌘K</span></label>
+          <span class="k-tooltip">Opus 5.5<small>o modelo que rodou nos 30 dias</small></span></div>
+        <div class="comp"><p class="k-cap">Estado vazio · k-empty</p>
+          <div class="k-empty"><span class="k-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><h4>Nada agendado</h4><p>Quando um pacote entrar na fila, aparece aqui com dia, hora e canal.</p></div></div>
+      </div>
+      <div class="comp"><p class="k-cap">Os 48 componentes</p><div class="lista-comp">{{COMPONENTES}}</div></div>
+    </div>
+
+    <div class="sub-cab"><h3>Movimento</h3><p>v0 estados · v1 toque, popovers e gaveta (03/11) · v2 os dados entram (04/11)</p></div>
+    <div class="mov">
+      <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela dos tokens de movimento, role para o lado"><table class="tabela" style="min-width:0">
+        <thead><tr><th scope="col">Token</th><th scope="col">Valor</th><th scope="col">Uso</th></tr></thead>
+        <tbody>
+          <tr><td class="v">duracao-padrao</td><td class="v">150ms</td><td>troca de cor dos estados</td></tr>
+          <tr><td class="v">duracao-linha</td><td class="v">120ms</td><td>hover da linha da tabela</td></tr>
+          <tr><td class="v">atraso-dica</td><td class="v">300ms</td><td>até a dica aparecer</td></tr>
+          <tr><td class="v">duracao-toque</td><td class="v">100ms</td><td>o controle afunda no toque</td></tr>
+          <tr><td class="v">duracao-entrada</td><td class="v">160ms</td><td>popover e gaveta</td></tr>
+          <tr><td class="v">duracao-pagina</td><td class="v">420ms</td><td>o cartão entra</td></tr>
+          <tr><td class="v">duracao-dado</td><td class="v">760ms</td><td>barra cresce, arco gira, linha se revela</td></tr>
+          <tr><td class="v">escalonar</td><td class="v">45ms</td><td>atraso entre irmãos</td></tr>
+        </tbody></table></div>
+      <div class="amostra marfim" id="demo-mov">
+        <p class="k-cap">Amostra: os dados entram</p>
+        <div class="barras" aria-label="Amostra de barras: telas 9, views 10, migrações 18, tabelas 32">
+          <div class="b"><span>telas</span><div class="barra-dado"><span style="width:28%;--i:0"></span></div><b>9</b></div>
+          <div class="b"><span>views</span><div class="barra-dado"><span style="width:31%;--i:1"></span></div><b>10</b></div>
+          <div class="b"><span>migrações</span><div class="barra-dado"><span style="width:56%;--i:2"></span></div><b>18</b></div>
+          <div class="b"><span>tabelas</span><div class="barra-dado"><span style="width:100%;--i:3"></span></div><b>32</b></div>
+        </div>
+        <div class="fila-comp"><button class="k-btn k-btn-secondary k-btn-sm" type="button" id="tocar">Tocar de novo</button><span class="ink2" style="font-size:12px">Só transform e opacity; curva que só desacelera; com “reduzir movimento” o dado aparece pronto.</span></div>
+        <p style="margin:0;font-size:13px;line-height:19px" class="ink2">Toque nos botões das amostras: eles afundam (<code>scale .97</code>) no pointer-down, sem esperar o clique terminar.</p>
+      </div>
+    </div>
+    <div class="texto" style="margin-top:16px"><p class="ink2">Gráficos seguem a skill <code>dataviz</code>: um eixo, tabela gêmea em todo gráfico, hover e foco. Conferência de fidelidade em <code>painel/design/verificacao/fidelidade.py</code> e de contraste em <code>contraste.py</code>.</p></div>
+  </section>
+
+  <!-- 9. QUALIDADE -->
+  <section class="sec" id="qualidade">
+    <div class="sec-cab">
+      <p class="k-cap">GAUNTLET · testes</p>
+      <h2>qualidade.</h2>
+      <p class="lead">Quem faz não aprova. Dois portões fiscalizam três áreas do painel, e a aprovação é presa aos arquivos: se um arquivo muda depois do APROVADO, o veredicto vence.</p>
+    </div>
+    <div class="gauntlet">{{GAUNTLET}}</div>
+    <p class="ink2" style="font-size:13px;margin:10px 0 0">Estado em 12/11, por <code>uv run python scripts/portoes.py estado painel</code>.</p>
+
+    <div class="sub-cab"><h3>Testes</h3><p>scripts Python em <code>painel/tests/</code>, não pytest</p></div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela dos testes, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Arquivo</th><th scope="col">O que cobre</th><th scope="col">Resultado em 12/11</th></tr></thead>
+      <tbody>
+        <tr><td class="v">test_sincronizar.py<br><span class="ink2">3.167 linhas · ≈ 327 checagens</span></td><td>Raiz temporária + banco descartável <code>painel_teste_&lt;pid&gt;</code>: cada mapeamento arquivo → linha, <code>--seco</code>, porta morta, contrato com os produtores, permissões “do zero”, reconciliação de tokens; confere que as migrações criam as 32 tabelas.</td><td><span class="chip neutro">não rodado</span><p class="ink2" style="margin:6px 0 0;font-size:12px">aplica as migrações num banco de teste; ficou fora do limite do levantamento</p></td></tr>
+        <tr><td class="v">test_previas_looks.py<br><span class="ink2">318 linhas</span></td><td>O gerador de prévias numa raiz temporária, com amostra e <code>.cube</code> sintéticos.</td><td><span class="teste-num">44/44</span> <span class="chip ok">PASS</span></td></tr>
+        <tr><td class="v">test_biblioteca_yaml.py<br><span class="ink2">149 linhas</span></td><td>O <code>biblioteca.yaml</code> real contra a maquete, o <code>brand.ts</code> e o sincronizador (só leitura).
+          <ul class="falhas"><li>A fonte “Inter Tight” do <code>biblioteca.yaml</code> não bate com o <code>remotion/src/brand.ts</code> (<code>confere_brand_ts = false</code>).</li><li>4 briefs de animação de um vídeo (E24, E26, E27, E28) sem duração no cabeçalho.</li><li>Por causa dessas duas, “nenhum aviso ⚠” falha.</li></ul></td><td><span class="teste-num">19/22</span> <span class="chip mal">3 FAIL</span></td></tr>
+      </tbody></table></div>
+    <div class="notas" style="margin-top:16px">
+      <div class="nota alerta"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><b><code>uv run pytest painel/tests -q</code> não roda</b><p><code>error: Failed to spawn: pytest</code>: o pytest não está nas dependências do <code>pyproject.toml</code>. Os testes rodam como <code>uv run python painel/tests/&lt;arquivo&gt;.py</code>.</p></div></div>
+      <div class="nota ok"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Olhar a tela de verdade</b><p><code>bash painel/capturar.sh</code> fotografa no Chrome sem janela a 1440 e 375 px, mede <code>innerWidth</code>/<code>scrollWidth</code> e falha se houver rolagem lateral: 0 casos nas 18 fotos desta documentação.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 10. INSTALAR -->
+  <section class="sec" id="instalar">
+    <div class="sec-cab">
+      <p class="k-cap">Do zero, num Mac</p>
+      <h2>instalar e reusar.</h2>
+      <p class="lead">Pré-requisitos: macOS (launchd), Docker (aqui o Colima), Supabase CLI, Node ≥ 22 e npm, Python ≥ 3.12 com <code>uv</code>, Google Chrome (só para as capturas) e ffmpeg (só para as prévias dos looks). Os comandos rodam na raiz do projeto.</p>
+    </div>
+    <ol class="passos-inst">
+      <li><div><h4>Dependências</h4><p>Python pelo <code>pyproject.toml</code> da raiz; Next.js pelo <code>package-lock.json</code>.</p>
+        <div class="codigo"><pre id="c1">uv sync
+cd painel/web &amp;&amp; npm ci &amp;&amp; cd ../..</pre><button class="copiar" type="button" data-alvo="c1">Copiar</button></div></div></li>
+      <li><div><h4>Banco, primeira sincronização e app</h4><p>Sobe o Supabase local, confere as portas, roda uma passagem e abre o app em <code>http://localhost:3456</code>.</p>
+        <div class="codigo"><pre id="c2">bash painel/iniciar.sh</pre><button class="copiar" type="button" data-alvo="c2">Copiar</button></div>
+        <div class="nota alerta" style="margin-top:10px"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><b>Use sempre <code>bash painel/iniciar.sh</code>, nunca um <code>supabase start</code> solto</b><p>O comando solto pode recriar a rede Docker aberta para a rede local. A tela de erro do app ainda sugere <code>cd painel &amp;&amp; supabase start</code> (em <code>web/src/lib/comandos.ts</code>); o <code>README.md</code> e o próprio sincronizador dizem para usar o <code>iniciar.sh</code>.</p></div></div></div></li>
+      <li><div><h4>Chaves do app</h4><p>Criar <code>painel/web/.env.local</code> com as duas variáveis abaixo. Nenhum script do painel cria esse arquivo; este passo foi deduzido do <code>lib/db.ts</code> e do <code>README.md</code> e não foi confirmado.</p>
+        <div class="codigo"><pre id="c3">SUPABASE_URL=&lt;API URL local&gt;
+SUPABASE_SERVICE_ROLE_KEY=&lt;service_role do supabase status&gt;</pre><button class="copiar" type="button" data-alvo="c3">Copiar</button></div></div></li>
+      <li><div><h4>Sincronização automática a cada 15 min</h4>
+        <div class="codigo"><pre id="c4">bash scripts/launchd/instalar.sh uk.korvu.painel
+launchctl kickstart -k gui/$(id -u)/uk.korvu.painel   <span class="c"># forçar agora</span></pre><button class="copiar" type="button" data-alvo="c4">Copiar</button></div></div></li>
+      <li><div><h4>Testes</h4>
+        <div class="codigo"><pre id="c5">uv run python painel/tests/test_sincronizar.py
+uv run python painel/tests/test_previas_looks.py
+uv run python painel/tests/test_biblioteca_yaml.py</pre><button class="copiar" type="button" data-alvo="c5">Copiar</button></div></div></li>
+    </ol>
+    <div class="notas" style="margin-top:20px">
+      <div class="nota"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg></span><div><b>Ao instalar, saiba também</b><p>O <code>config.toml</code> aponta <code>sql_paths = ["./seed.sql"]</code>, mas não existe <code>painel/supabase/seed.sql</code>. Auth e Storage estão ligados no <code>config.toml</code> (<code>enable_signup = true</code>), embora o painel não use login nem arquivos no Supabase. Que o primeiro <code>supabase start</code> aplica as 18 migrações sozinho é provável (<code>[db.migrations] enabled = true</code>), mas não foi testado no levantamento.</p></div></div>
+      <div class="nota portao"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><div><b>Antes de expor na internet</b><p>Trocar as chaves de demonstração do Supabase, criar um projeto Supabase na nuvem e rodar <code>supabase db push</code>, trocar o <code>web/.env.local</code> e pôr login antes de abrir. Hoje o painel foi feito para rodar só no Mac.</p></div></div>
+    </div>
+    <div class="sub-cab"><h3>Para usar fora do Korvu Studio</h3><p>o que é preso ao estúdio e o que se reusa</p></div>
+    <div class="reuso">
+      <div class="card"><h4>O que trocar</h4><ul>
+        <li><b>A leitura do sincronizador</b> é presa às pastas do estúdio (<code>videos/&lt;slug&gt;/…</code>, <code>05-render-pronto</code>, <code>06-publicar</code>, <code>07-publicados</code>, <code>_controle/…</code>, <code>00-marca/cor</code>, <code>remotion/src/brand.ts</code>) e aos contratos de <code>docs/contratos.md</code>. Para outro projeto: reescrever as funções de leitura de <code>sincronizar.py</code>.</li>
+        <li><b><code>scripts/portoes.py</code></b> é importado do projeto (o GAUNTLET). Sem ele, o sincronizador não abre.</li>
+        <li><b>Pessoas e nomes:</b> <code>painel/equipe.yaml</code>, <code>painel/biblioteca.yaml</code>, <code>painel/cambio.yaml</code>, os retratos em <code>web/public/equipe/</code> e os textos fixos (“o autor · Proprietário”, <code>@korvu_oficial</code>).</li>
+        <li><b>Registros do Claude Code:</b> pasta derivada da raiz do projeto (<code>PAINEL_REGISTROS</code> troca); preços em <code>PRECOS</code>.</li>
+        <li><b>Ambiente:</b> raiz por <code>PAINEL_PROJETO</code>/<code>CONTENT_AI_ROOT</code>, banco por <code>PAINEL_DB_URL</code>, fuso de publicação no calendário, <code>so-no-mac.sh</code> pensado para o Colima, launchd (só macOS).</li>
+      </ul></div>
+      <div class="card"><h4>O que se reusa quase sem mudança</h4><ul>
+        <li><b>O padrão</b> “arquivos → sincronizador em transação → Postgres com RLS fechado → Server Components com paginação conferida”.</li>
+        <li><b>O design system</b> “korvu. painel” (tokens, componentes, movimento) e os componentes de <code>painel/web/src/components/</code>.</li>
+        <li><b>O <code>capturar.sh</code></b>, que fotografa qualquer página a 1440 e 375 px e acusa rolagem lateral.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <footer class="rodape"><span>Documentação feita a partir do dossiê técnico de 12/11/2026, que cita o arquivo de origem de cada fato.</span><span><a href="../../estudio/site/index.html">Volume 1 · Estúdio ↗</a> · korvu. painel · o painel só lê os arquivos do projeto</span></footer>
+  </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('menu-btn'),gav=document.getElementById('gaveta');
+  function fechar(){gav.hidden=true;btn.setAttribute('aria-expanded','false')}
+  btn.addEventListener('click',function(){var abrir=gav.hidden;gav.hidden=!abrir;btn.setAttribute('aria-expanded',String(abrir))});
+  gav.addEventListener('click',function(e){if(e.target.closest('a'))fechar()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!gav.hidden){fechar();btn.focus()}});
+
+  // índice: marca a seção que está na tela
+  var links=[].slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var secoes=[].slice.call(document.querySelectorAll('main .sec'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(a){var on=a.getAttribute('href')==='#'+id;a.classList.toggle('ativo',on);if(on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')})}})},{rootMargin:'-30% 0px -60% 0px'});
+    secoes.forEach(function(s){io.observe(s)});
+  }
+
+  // copiar
+  document.querySelectorAll('.copiar').forEach(function(b){b.addEventListener('click',function(){
+    var pre=document.getElementById(b.getAttribute('data-alvo')),txt=pre.innerText;
+    function marcar(m){b.textContent=m;setTimeout(function(){b.textContent='Copiar'},1600)}
+    function selecionar(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);marcar('Selecionado')}
+    try{navigator.clipboard.writeText(txt).then(function(){marcar('Copiado')},selecionar)}catch(e){selecionar()}
+  })});
+
+  // celular: abre e fecha a página inteira
+  document.querySelectorAll('.ver-cel').forEach(function(b){b.addEventListener('click',function(){
+    var c=document.getElementById(b.getAttribute('aria-controls')),ab=!c.classList.contains('aberto');
+    c.classList.toggle('aberto',ab);b.setAttribute('aria-expanded',String(ab));b.textContent=ab?'Mostrar só a primeira tela':'Ver a página inteira';
+    if(!ab)c.scrollIntoView({block:'nearest'});
+  })});
+  // movimento: as barras entram quando a amostra chega à tela; "tocar de novo" repete
+  var demo=document.getElementById('demo-mov');
+  function tocar(){demo.classList.remove('tocando');void demo.offsetWidth;demo.classList.add('tocando')}
+  document.getElementById('tocar').addEventListener('click',tocar);
+  if('IntersectionObserver' in window){var io2=new IntersectionObserver(function(es){if(es[0].isIntersecting){tocar();io2.disconnect()}},{threshold:.4});io2.observe(demo)}
+})();
+</script>

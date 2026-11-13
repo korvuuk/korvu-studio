@@ -1,0 +1,34 @@
+{
+ "slug": "2026-10-27-resumir-reunioes",
+ "versao": 2,
+ "cta_tipo": "palavra-material",
+ "cta_palavra": "ATA",
+ "extras": [],
+ "linhas": [
+  {
+   "id": "L01",
+   "secao": "gancho",
+   "fala": "Você sai de uma reunião de uma hora / e não lembra o que ficou decidido?"
+  },
+  {
+   "id": "L02",
+   "secao": "contexto",
+   "fala": "Dá pra pedir pra IA transformar a transcrição / numa ata de cinco linhas."
+  },
+  {
+   "id": "L03",
+   "secao": "virada",
+   "fala": "O segredo é dizer o formato: / decisões, responsáveis e prazos."
+  },
+  {
+   "id": "L04",
+   "secao": "climax",
+   "fala": "Em dois minutos / você tem o resumo que ninguém tinha paciência de escrever."
+  },
+  {
+   "id": "L05",
+   "secao": "cta",
+   "fala": "Salva esse vídeo / e comenta ATA que eu te mando o modelo de pedido."
+  }
+ ]
+}

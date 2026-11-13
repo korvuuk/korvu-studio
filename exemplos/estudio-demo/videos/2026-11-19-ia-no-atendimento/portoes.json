@@ -1,0 +1,41 @@
+{
+  "versao": 1,
+  "veredictos": [
+    {
+      "portao": "pauta",
+      "agente": "portao-pauta",
+      "resultado": "APROVADO",
+      "impressao": "c246f559441e",
+      "em": "2026-11-11T09:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-19-ia-no-atendimento/qa/portoes/pauta-v1.md",
+      "arquivos": {
+        "material/dossie.md": "c665a50866776bca84709a2bf6aa7635cc96207483051e0c86a45bc0c512861a",
+        "material/fontes.json": "66593c58cfdbcb6b4a0f0c5c94abf2bf9a4b24c97f2b389155e3e64d16357018"
+      }
+    },
+    {
+      "portao": "roteiro",
+      "agente": "revisor-de-roteiro",
+      "resultado": "APROVADO",
+      "impressao": "3ca8d32a6d18",
+      "em": "2026-11-11T14:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-19-ia-no-atendimento/qa/portoes/roteiro-v1.md",
+      "arquivos": {
+        "roteiro.md": "arquivo:29f250e0f295427c1d26373020217dcbbf615c58f10788cb956d820fbe1d172c",
+        "material/modelos-de-resposta.pdf": "c829acf677408c1bc4d06ff6a23c5abc9ea06470b76f3db310b097814eb89c27"
+      }
+    }
+  ]
+}

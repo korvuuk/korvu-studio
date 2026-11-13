@@ -1,0 +1,19 @@
+{
+ "nota": "Demonstração: as gravações não vêm no repositório; o manifesto as conta como arquivadas.",
+ "arquivos": [
+  {
+   "nome": "camera-01.MOV",
+   "bytes": 4812000000,
+   "sha256": "fe5fa4bebe74721c41de86d1ac684d9226fc0c7c483b7b714be9bbfbd9d2172b",
+   "mtime": "2026-11-10T15:30:00-03:00",
+   "ctime": "2026-11-10T18:01:00-03:00"
+  },
+  {
+   "nome": "camera-02.MOV",
+   "bytes": 2154000000,
+   "sha256": "c3e755f6d99e871e60df246b4de747f3edd547b945af2c12af32aac8381f5377",
+   "mtime": "2026-11-10T15:50:00-03:00",
+   "ctime": "2026-11-10T18:02:00-03:00"
+  }
+ ]
+}

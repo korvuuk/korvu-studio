@@ -1,0 +1,32 @@
+{
+ "slug": "2026-11-06-planilha-com-ia",
+ "estado": "agendado",
+ "atualizado": "2026-11-10T09:00:00-03:00",
+ "historico": [
+  {
+   "estado": "roteiro",
+   "em": "2026-10-31T10:00:00-03:00",
+   "nota": "roteiro v1"
+  },
+  {
+   "estado": "gravacao",
+   "em": "2026-11-06T10:00:00-03:00",
+   "nota": "gravado"
+  },
+  {
+   "estado": "edicao",
+   "em": "2026-11-07T10:00:00-03:00",
+   "nota": "EDL v1"
+  },
+  {
+   "estado": "pronto",
+   "em": "2026-11-09T18:00:00-03:00",
+   "nota": "pacote QA PASS"
+  },
+  {
+   "estado": "agendado",
+   "em": "2026-11-10T09:00:00-03:00",
+   "nota": "fila"
+  }
+ ]
+}

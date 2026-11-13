@@ -1,0 +1,19 @@
+1
+00:00:00,000 --> 00:00:03,600
+Você trava toda vez que precisa de uma fórmula na planilha?
+
+2
+00:00:04,000 --> 00:00:07,600
+Conta pra IA o que você quer calcular em português normal.
+
+3
+00:00:08,000 --> 00:00:11,600
+Ela te devolve a fórmula e explica cada pedaço.
+
+4
+00:00:12,000 --> 00:00:15,600
+Você cola, confere com dois números e pronto.
+
+5
+00:00:16,000 --> 00:00:19,600
+Comenta TABELA que eu te mando os dez pedidos que mais uso.

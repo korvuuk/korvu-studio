@@ -1,0 +1,76 @@
+{
+  "versao": 1,
+  "veredictos": [
+    {
+      "portao": "pauta",
+      "agente": "portao-pauta",
+      "resultado": "APROVADO",
+      "impressao": "8fd8e8d1cb3d",
+      "em": "2026-10-18T10:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-10-27-resumir-reunioes/qa/portoes/pauta-v1.md",
+      "arquivos": {
+        "material/dossie.md": "6fe9f40e15186c2af9b818a9a95ded929b4bbbebe02eba91a895394c6e6dc6ee",
+        "material/fontes.json": "66593c58cfdbcb6b4a0f0c5c94abf2bf9a4b24c97f2b389155e3e64d16357018"
+      }
+    },
+    {
+      "portao": "roteiro",
+      "agente": "revisor-de-roteiro",
+      "resultado": "APROVADO",
+      "impressao": "159802242a20",
+      "em": "2026-10-19T15:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-10-27-resumir-reunioes/qa/portoes/roteiro-v1.md",
+      "arquivos": {
+        "roteiro.md": "arquivo:42a5aa28230729ff8acd1392a906d460a67d98e278a2e3d04f46b9117f89eb65",
+        "material/modelo-de-ata.pdf": "a711ebeb8927bbb8a49d7625e856a9a6600a594da848976c91759efc21db390e"
+      }
+    },
+    {
+      "portao": "imagem",
+      "agente": "portao-imagem",
+      "resultado": "APROVADO",
+      "impressao": "7c5943d518f3",
+      "em": "2026-10-27T11:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-10-27-resumir-reunioes/qa/portoes/imagem-v1.md",
+      "arquivos": {
+        "capa/capa.png": "75974241a3134c4e95d6371cbe8fd3295f729552cae01635ea6747cb71b341be"
+      }
+    },
+    {
+      "portao": "corte",
+      "agente": "revisor-de-video",
+      "resultado": "APROVADO",
+      "impressao": "859c9548fab3",
+      "em": "2026-10-27T17:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 1
+      },
+      "relatorio": "videos/2026-10-27-resumir-reunioes/qa/portoes/corte-v1.md",
+      "arquivos": {
+        "edicao/legendas.srt": "1a901dacb4224aebd2a3f7f5e4dcce91f6a95e48a82334185bad70d75ed4c9f0"
+      },
+      "nota": "S2: legenda da L03 pode quebrar em duas linhas (backlog)"
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+# Mapa dos projetos do estúdio (ESPECIFICACAO.md §2 e §5).
+#
+# Fonte: tabela "Áreas do projeto" do CLAUDE.md da raiz (26/10), CLAUDE.md de cada área e painel/equipe.yaml.
+# Escrito pelo agente construtor em 12/11/2026. O grafo (contexto.nos/arestas) é DERIVADO deste arquivo:
+#   projeto  → nó `projeto`
+#   pai      → aresta `pertence_a` (sub-área → área)
+#   depende_de → aresta `depende_de`
+#   pastas   → um documento pertence ao projeto cuja pasta é o prefixo MAIS LONGO do caminho dele
+#   departamentos → os agentes desses departamentos (painel.agentes.departamento_id) ganham `pertence_a` → projeto
+#
+# Para mudar o mapa: editar aqui e rodar `uv run python -m contexto.sincronizar` (o grafo é recalculado inteiro).
+
+projetos:
+  - id: estudio
+    nome: estúdio de conteúdo
+    descricao: Pipeline dos Reels do tema à publicação (roteiro → gravação → edição → cor → Remotion → pacote → publicação).
+    instrucoes: CLAUDE.md
+    pastas: ["", "00-marca/", "01-ideias/", "02-calibracao/", "docs/", "_controle/", "videos/", "05-render-pronto/",
+             "06-publicar/", "07-publicados/", ".claude/agents/", ".claude/commands/"]
+    departamentos: [direcao, pesquisa, roteiro, arte, pos, distribuicao]
+    depende_de: []
+
+  - id: remotion
+    nome: composições Remotion
+    descricao: Legendas, títulos, animações e zooms do Reel (passo "Remotion" do /renderizar).
+    pai: estudio
+    pastas: ["remotion/"]
+    depende_de: [estudio]
+
+  - id: carrosseis
+    nome: carrosséis
+    descricao: Carrosséis 3:4 do Instagram (modelo aprovado em 09/11).
+    pai: estudio
+    pastas: ["carrosseis/"]
+    depende_de: [estudio, automacao-meta]
+
+  - id: painel
+    nome: painel web
+    descricao: Equipe, vídeos + portões, fila de publicação e desempenho IG/FB. Next.js + Supabase local (553xx); só lê o projeto.
+    instrucoes: painel/CLAUDE.md
+    pastas: ["painel/"]
+    departamentos: [tecnologia]
+    depende_de: [estudio, automacao-meta]
+
+  - id: automacao-meta
+    nome: automação Meta
+    descricao: Publicação IG+FB, comentário→direct com o PDF e métricas aos 5 dias (scripts em scripts/, launchd).
+    instrucoes: automacao-meta/CLAUDE.md
+    pastas: ["automacao-meta/", "scripts/publicar.py", "scripts/responder_comentarios.py", "scripts/metricas.py",
+             "scripts/perfil.py"]
+    depende_de: [estudio]
+
+  - id: ai-engineer
+    nome: série AI Engineer
+    descricao: Temário, biblioteca de estudo, glossário e linguagem visual da série; os vídeos ficam em videos/<slug>/ (pilar ai-engineer).
+    instrucoes: ai-engineer/CLAUDE.md
+    pastas: ["ai-engineer/"]
+    depende_de: [estudio]
+
+  - id: estudio-contexto
+    nome: contexto do estúdio
+    descricao: Grafo de entidades, busca híbrida local e servidor MCP somente leitura para os agentes.
+    pastas: ["estudio-contexto/"]
+    depende_de: [estudio, painel]

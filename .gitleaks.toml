@@ -1,0 +1,19 @@
+# gitleaks (CI: .github/workflows/privacidade.yml). Regras padrão + exceções para valores FICTÍCIOS de propósito.
+# As exceções são pelo VALOR (não pelo arquivo): um token real colado num teste continua sendo pego.
+title = "korvu-studio"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "tokens falsos dos testes e a chave pública de demonstração do Supabase local"
+regexes = [
+  '''EAAG(teste|pagina)[A-Za-z0-9]*''',
+  '''eyJpc3MiOiJzdXBhYmFzZS1kZW1v''',
+  '''r2segredo_abcdef0123456789ABCDEF''',
+  '''appsecret_0123456789abcdefFEDCBA''',
+]
+paths = [
+  '''(^|/)uv\.lock$''',
+  '''(^|/)package-lock\.json$''',
+]

@@ -1,0 +1,63 @@
+{
+ "slug": "2026-10-27-resumir-reunioes",
+ "publicado_em": "2026-10-29T19:02:00-03:00",
+ "duracao_s": 41.6,
+ "palavra": "ATA",
+ "trial": {
+  "graduation_strategy": "SS_PERFORMANCE"
+ },
+ "tema": "Resumir reuniões com IA",
+ "pilar": "produtividade",
+ "permalink_instagram": "https://www.instagram.com/reel/DEMO0001/",
+ "permalink_facebook": "https://www.facebook.com/reel/1000000001/",
+ "leituras": [
+  {
+   "lido_em": "2026-10-30T09:30:00-03:00",
+   "dias_desde_publicacao": 0.6,
+   "resumo": {
+    "instagram": {
+     "views": 1840,
+     "alcance": 1612,
+     "curtidas": 96,
+     "comentarios": 41,
+     "salvamentos": 133,
+     "compartilhamentos": 22,
+     "tempo_medio_s": 14.8,
+     "pct_medio_assistido": 35.6
+    },
+    "facebook": {
+     "plays": 420,
+     "tempo_medio_s": 9.1
+    },
+    "palavra": {
+     "comentarios": 33,
+     "directs": 31
+    }
+   }
+  },
+  {
+   "lido_em": "2026-11-03T09:30:00-03:00",
+   "dias_desde_publicacao": 4.6,
+   "resumo": {
+    "instagram": {
+     "views": 6210,
+     "alcance": 5380,
+     "curtidas": 288,
+     "comentarios": 117,
+     "salvamentos": 512,
+     "compartilhamentos": 74,
+     "tempo_medio_s": 16.2,
+     "pct_medio_assistido": 38.9
+    },
+    "facebook": {
+     "plays": 1310,
+     "tempo_medio_s": 9.8
+    },
+    "palavra": {
+     "comentarios": 98,
+     "directs": 95
+    }
+   }
+  }
+ ]
+}

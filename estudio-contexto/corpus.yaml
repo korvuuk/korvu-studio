@@ -1,0 +1,46 @@
+# Corpus de texto do índice (ESPECIFICACAO.md §2 e §6). Lista EXPLÍCITA — nunca um **/* que pegue tudo.
+#
+# `incluir`: padrões glob relativos à raiz do repositório. Só arquivos de texto (.md, .yaml, .yml, .json).
+# `excluir`: vence o `incluir`. Além desta lista, o código (contexto/seguranca.py) tem a lista fixa de segredos e
+#            mídia, que não dá para desligar por aqui.
+# Escrito pelo agente construtor em 12/11/2026.
+
+incluir:
+  # instruções de cada área
+  - CLAUDE.md
+  - painel/CLAUDE.md
+  - automacao-meta/CLAUDE.md
+  - ai-engineer/CLAUDE.md
+  # documentação
+  - painel/README.md
+  - docs/decisoes.md
+  - docs/gauntlet.md
+  - docs/contratos.md
+  - HANDOFF.md
+  - _controle/backlog-portoes.md
+  - _controle/CONTINUAR.md
+  # relatórios dos portões do painel
+  - painel/portoes/*.md
+  # roteiros, revisões de roteiro e dossiês (briefs) de cada vídeo
+  - videos/*/roteiro.md
+  - videos/*/roteiro-revisao.md
+  - videos/*/material/dossie.md
+  - videos/*/status.json
+  # relatórios dos portões de cada vídeo (o veredicto do painel aponta para eles)
+  - videos/*/qa/portoes/*.md
+  # mapa do próprio módulo
+  - estudio-contexto/projetos.yaml
+
+excluir:
+  - videos/_modelos/**
+  - videos/_teste-*/**
+  - "**/brutos/**"
+  - "**/edicao/**"
+  - "**/node_modules/**"
+  - "**/.venv/**"
+  - .claude/skills/**
+
+chunking:
+  max_caracteres: 1100        # um trecho maior que isto é partido por parágrafo (1800 → 1100 na avaliação v3)
+  min_caracteres: 120         # seção curta demais é juntada à seguinte
+  sobreposicao: 0

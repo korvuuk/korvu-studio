@@ -1,0 +1,40 @@
+name: Erro
+description: Algo não funciona como a documentação diz
+labels: ["erro", "triagem"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Obrigado por relatar. **Não cole tokens, chaves, e-mails, nomes de quem comentou nem caminhos com o seu usuário** —
+        troque por `<token>`, `<você>` etc. Problema de segurança? Use o relato privado (veja SECURITY.md), não esta issue.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options: [roteiro e pauta, edição (corte-por-roteiro), cor, Remotion / legendas, áudio e música, capa, publicação e API da Meta, comentário → direct, métricas, painel web, banco / sincronizador, estudio-contexto, documentação, outra]
+    validations: {required: true}
+  - type: textarea
+    id: o-que
+    attributes:
+      label: O que aconteceu
+      description: E o que você esperava que acontecesse.
+    validations: {required: true}
+  - type: textarea
+    id: reproduzir
+    attributes:
+      label: Como reproduzir
+      description: O comando exato, de preferência com os dados de `exemplos/`.
+      placeholder: |
+        1. uv run python scripts/...
+        2. ...
+    validations: {required: true}
+  - type: textarea
+    id: saida
+    attributes:
+      label: Saída / log
+      render: text
+  - type: input
+    id: ambiente
+    attributes:
+      label: Ambiente
+      placeholder: macOS 15.x · Python 3.12 · ffmpeg 7.x · Node 22

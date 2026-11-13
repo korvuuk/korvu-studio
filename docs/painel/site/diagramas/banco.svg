@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1210 732" width="1210" height="732" role="img" aria-label="Diagrama entidade-relação do banco do painel: 32 tabelas em cinco grupos e as 10 views. Linhas laranja são chaves estrangeiras; tracejadas são relações lógicas sem chave.">
+<style>
+.dg-bg{fill:#f5f2e8}
+text{font-family:Geist,Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.dg-box{fill:#fbf9f4;stroke:#928874;stroke-width:1}
+.dg-soft{fill:#efebe0;stroke:#e4dfd2;stroke-width:1}
+.dg-dec{fill:#f5f2e8;stroke:#111111;stroke-width:1.5}
+.dg-ink{fill:#111111;stroke:#111111;stroke-width:1}
+.dg-hl{fill:#ffe8dc;stroke:none}
+.dg-zone{fill:none;stroke:#928874;stroke-width:1;stroke-dasharray:5 5}
+.dg-errb{fill:#fbe3df;stroke:#c2271b;stroke-width:1}
+.dg-okb{fill:#e3f0e4;stroke:#1e7a45;stroke-width:1}
+.dg-t{fill:#111111;font-size:13px;font-weight:600}
+.dg-s{fill:#6b6458;font-size:11px;font-weight:500}
+.dg-m{fill:#6b6458;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-mi{fill:#111111;font-size:12px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-fk{fill:#b33600;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-hlt{fill:#b33600;font-size:10.5px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-cap{fill:#6b6458;font-size:10.5px;font-weight:600;letter-spacing:.08em}
+.dg-lbl{fill:#6b6458;font-size:10.5px;font-weight:600}
+.dg-inkt{fill:#f5f2e8;font-size:13px;font-weight:600}
+.dg-inks{fill:#f5f2e8;font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-errt{fill:#c2271b;font-size:12px;font-weight:600}
+.dg-errs{fill:#c2271b;font-size:10.5px;font-weight:500}
+.dg-okt{fill:#1e7a45;font-size:13px;font-weight:600}
+.dg-oks{fill:#1e7a45;font-size:10.5px;font-weight:500}
+.dg-acc{fill:none;stroke:#ff4d00;stroke-width:2;stroke-linejoin:round}
+.dg-ln{fill:none;stroke:#6b6458;stroke-width:1.25;stroke-linejoin:round}
+.dg-dash{fill:none;stroke:#6b6458;stroke-width:1.25;stroke-dasharray:5 4;stroke-linejoin:round}
+.dg-err{fill:none;stroke:#c2271b;stroke-width:1.25;stroke-dasharray:5 4}
+.dg-aha{fill:#ff4d00}
+.dg-ahn{fill:#6b6458}
+.dg-ahe{fill:#c2271b}
+.dg-num{fill:#ff4d00;stroke:#fbf9f4;stroke-width:2}
+.dg-numt{fill:#111111;font-size:11px;font-weight:700}
+</style>
+<defs><marker id="er-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="er-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="er-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="dg-bg" x="0" y="0" width="1210" height="732"/>
+<text class="dg-cap" x="20" y="30">EQUIPE E GAUNTLET · 4</text>
+<rect class="dg-box" x="20" y="42" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="32" y="62">departamentos</text>
+<text class="dg-m" x="32" y="80">PK id</text>
+<text class="dg-fk" x="32" y="95">FK gerente_id → agentes</text>
+<rect class="dg-box" x="20" y="120" width="210" height="96" rx="8"/>
+<text class="dg-mi" x="32" y="140">agentes</text>
+<text class="dg-m" x="32" y="158">PK id</text>
+<text class="dg-fk" x="32" y="173">FK departamento_id</text>
+<text class="dg-fk" x="32" y="188">   → departamentos</text>
+<text class="dg-fk" x="32" y="203">FK fiscalizado_por → agentes</text>
+<rect class="dg-box" x="20" y="228" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="248">portoes_estado</text>
+<text class="dg-m" x="32" y="266">PK alvo, portao</text>
+<rect class="dg-box" x="20" y="291" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="311">veredictos</text>
+<text class="dg-m" x="32" y="329">PK alvo, ordem</text>
+<text class="dg-cap" x="20" y="388">PERFIL IG/FB · 3</text>
+<rect class="dg-box" x="20" y="400" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="420">perfil_snapshots</text>
+<text class="dg-m" x="32" y="438">PK lido_em</text>
+<rect class="dg-box" x="20" y="463" width="210" height="81" rx="8"/>
+<text class="dg-mi" x="32" y="483">perfil_demografia</text>
+<text class="dg-m" x="32" y="501">PK lido_em, publico, dimensao,</text>
+<text class="dg-m" x="32" y="516">   chave</text>
+<text class="dg-fk" x="32" y="531">FK lido_em → perfil_snapshots</text>
+<rect class="dg-box" x="20" y="556" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="576">perfil_diario</text>
+<text class="dg-m" x="32" y="594">PK dia, metrica</text>
+<text class="dg-cap" x="260" y="30">TOKENS E CUSTOS · 4</text>
+<rect class="dg-box" x="260" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="62">precos_modelo</text>
+<text class="dg-m" x="272" y="80">PK modelo</text>
+<rect class="dg-box" x="260" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="125">execucoes</text>
+<text class="dg-m" x="272" y="143">PK arquivo</text>
+<rect class="dg-box" x="260" y="168" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="272" y="188">uso_execucao</text>
+<text class="dg-m" x="272" y="206">PK arquivo, dia, modelo</text>
+<text class="dg-fk" x="272" y="221">FK arquivo → execucoes</text>
+<rect class="dg-box" x="260" y="246" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="266">cambio</text>
+<text class="dg-m" x="272" y="284">PK moeda, data</text>
+<text class="dg-cap" x="260" y="343">OPERAÇÃO · 1</text>
+<rect class="dg-box" x="260" y="355" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="375">sincronizacoes</text>
+<text class="dg-m" x="272" y="393">PK em</text>
+<text class="dg-cap" x="500" y="30">VÍDEOS, FILA E PUBLICAÇÃO · 7</text>
+<rect class="dg-box" x="500" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="62">videos</text>
+<text class="dg-m" x="512" y="80">PK slug</text>
+<rect class="dg-box" x="500" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="125">prontos</text>
+<text class="dg-m" x="512" y="143">PK slug</text>
+<rect class="dg-box" x="500" y="168" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="188">fila</text>
+<text class="dg-m" x="512" y="206">PK slug</text>
+<rect class="dg-box" x="500" y="231" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="251">nao_publicar</text>
+<text class="dg-m" x="512" y="269">PK slug</text>
+<rect class="dg-box" x="500" y="294" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="314">publicacoes</text>
+<text class="dg-m" x="512" y="332">PK slug</text>
+<rect class="dg-box" x="500" y="357" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="512" y="377">metricas</text>
+<text class="dg-m" x="512" y="395">PK slug, lido_em</text>
+<text class="dg-fk" x="512" y="410">FK slug → publicacoes</text>
+<rect class="dg-box" x="500" y="435" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="455">calendario_vagas</text>
+<text class="dg-m" x="512" y="473">PK dia_semana, hora</text>
+<text class="dg-cap" x="740" y="30">BIBLIOTECA · MATERIAL · 4</text>
+<rect class="dg-box" x="740" y="42" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="752" y="62">biblioteca_materiais</text>
+<text class="dg-m" x="752" y="80">PK id</text>
+<text class="dg-fk" x="752" y="95">FK video_slug → videos</text>
+<rect class="dg-box" x="740" y="120" width="210" height="96" rx="8"/>
+<text class="dg-mi" x="752" y="140">biblioteca_arquivos</text>
+<text class="dg-m" x="752" y="158">PK caminho</text>
+<text class="dg-fk" x="752" y="173">FK material_id</text>
+<text class="dg-fk" x="752" y="188">   → biblioteca_materiais</text>
+<text class="dg-fk" x="752" y="203">FK video_slug → videos</text>
+<rect class="dg-box" x="740" y="228" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="752" y="248">biblioteca_referencias</text>
+<text class="dg-m" x="752" y="266">PK pasta</text>
+<rect class="dg-box" x="740" y="291" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="752" y="311">biblioteca_mais_utilizados</text>
+<text class="dg-m" x="752" y="329">PK arquivo</text>
+<text class="dg-cap" x="980" y="30">BIBLIOTECA · ACERVO DE ESTILOS · 9</text>
+<rect class="dg-box" x="980" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="62">looks</text>
+<text class="dg-m" x="992" y="80">PK id</text>
+<rect class="dg-box" x="980" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="125">capa_estilos</text>
+<text class="dg-m" x="992" y="143">PK id</text>
+<rect class="dg-box" x="980" y="168" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="992" y="188">capa_estilos_exemplos</text>
+<text class="dg-m" x="992" y="206">PK estilo_id, ordem</text>
+<text class="dg-fk" x="992" y="221">FK estilo_id → capa_estilos</text>
+<rect class="dg-box" x="980" y="246" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="266">legenda_estilos</text>
+<text class="dg-m" x="992" y="284">PK id</text>
+<rect class="dg-box" x="980" y="309" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="329">fontes</text>
+<text class="dg-m" x="992" y="347">PK familia</text>
+<rect class="dg-box" x="980" y="372" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="392">sistema_ferramentas</text>
+<text class="dg-m" x="992" y="410">PK nome</text>
+<rect class="dg-box" x="980" y="435" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="455">modelos_descricao</text>
+<text class="dg-m" x="992" y="473">PK modelo</text>
+<rect class="dg-box" x="980" y="498" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="992" y="518">animacoes</text>
+<text class="dg-m" x="992" y="536">PK id</text>
+<text class="dg-fk" x="992" y="551">FK video_slug → videos</text>
+<rect class="dg-box" x="980" y="576" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="596">sistema_contagens</text>
+<text class="dg-m" x="992" y="614">PK unico</text>
+<rect class="dg-soft" x="260" y="432" width="210" height="230" rx="8"/>
+<text class="dg-mi" x="272" y="452">10 views</text>
+<text class="dg-m" x="272" y="468">security_invoker = true</text>
+<text class="dg-m" x="272" y="490">consumo</text>
+<text class="dg-m" x="272" y="506">consumo_diario</text>
+<text class="dg-m" x="272" y="522">execucoes_custo</text>
+<text class="dg-m" x="272" y="538">biblioteca_materiais_resumo</text>
+<text class="dg-m" x="272" y="554">biblioteca_por_tipo</text>
+<text class="dg-m" x="272" y="570">biblioteca_por_video</text>
+<text class="dg-m" x="272" y="586">videos_producao</text>
+<text class="dg-m" x="272" y="602">modelo_por_agente</text>
+<text class="dg-m" x="272" y="618">armazenamento</text>
+<text class="dg-m" x="272" y="634">sistema_modelos</text>
+<path class="dg-acc" d="M85.0 120 V110" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M165.0 108 V118" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M230 136 H243 V154 H232" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M605.0 357 V347" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M125.0 463 V453" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M365.0 168 V158" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M845.0 120 V110" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M1085.0 168 V158" marker-end="url(#er-a)"/>
+<path class="dg-dash" d="M605.0 105 V95" marker-end="url(#er-n)"/>
+<path class="dg-dash" d="M500 186 H488 V79 H498" marker-end="url(#er-n)"/>
+<path class="dg-acc" d="M740 58 H731 V58 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M740 136 H723 V72 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M980 514 H715 V86 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M20 702 H60" marker-end="url(#er-a)"/>
+<text class="dg-lbl" x="68" y="706">chave estrangeira (FK), da filha para a mãe</text>
+<path class="dg-dash" d="M360 702 H400" marker-end="url(#er-n)"/>
+<text class="dg-lbl" x="408" y="706">relação lógica, sem FK (prontos e fila → videos)</text>
+<text class="dg-lbl" x="760" y="706">RLS ligado nas 32, sem nenhuma política</text>
+</svg>

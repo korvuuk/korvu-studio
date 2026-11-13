@@ -1,0 +1,1233 @@
+{
+  "volume": "estudio",
+  "levantado_em": "2026-11-12",
+  "stack": [
+    {
+      "camada": "scripts",
+      "tecnologia": "Python",
+      "versao": ">=3.12",
+      "fonte": "pyproject.toml"
+    },
+    {
+      "camada": "executor",
+      "tecnologia": "uv",
+      "versao": "0.12.14",
+      "fonte": "uv --version"
+    },
+    {
+      "camada": "HTTP Meta",
+      "tecnologia": "requests",
+      "versao": "2.34.2",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "upload R2 (S3)",
+      "tecnologia": "boto3",
+      "versao": "1.43.94",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "transcrição API",
+      "tecnologia": "elevenlabs SDK (Scribe v2)",
+      "versao": "2.68.0",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "transcrição local",
+      "tecnologia": "mlx-whisper (whisper-large-v3-turbo)",
+      "versao": "0.4.3",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "imagem/rosto",
+      "tecnologia": "Pillow / OpenCV headless",
+      "versao": "12.3.0 / 4.14.0.94",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "sinais",
+      "tecnologia": "numpy / scipy",
+      "versao": "2.5.3 / 1.18.1",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "alinhamento",
+      "tecnologia": "rapidfuzz",
+      "versao": "3.14.6",
+      "fonte": "uv.lock"
+    },
+    {
+      "camada": "vídeo/áudio",
+      "tecnologia": "ffmpeg estático + ffprobe",
+      "versao": null,
+      "fonte": ".env.example"
+    },
+    {
+      "camada": "gráficos",
+      "tecnologia": "Remotion / React / TypeScript",
+      "versao": "4.0.525 / 19.2.3 / 5.9.3",
+      "fonte": "remotion/package.json"
+    },
+    {
+      "camada": "download YouTube",
+      "tecnologia": "yt-dlp",
+      "versao": "2026.08.19",
+      "fonte": "yt-dlp --version"
+    },
+    {
+      "camada": "PDF",
+      "tecnologia": "Chrome headless",
+      "versao": null,
+      "fonte": "scripts/gerar_material_pdf.py"
+    },
+    {
+      "camada": "agendamento",
+      "tecnologia": "launchd (macOS)",
+      "versao": null,
+      "fonte": "scripts/launchd/"
+    },
+    {
+      "camada": "agentes",
+      "tecnologia": "Claude Code (subagentes opus)",
+      "versao": null,
+      "fonte": ".claude/agents/*.md"
+    },
+    {
+      "camada": "ajuste fino",
+      "tecnologia": "DaVinci Resolve (FCPXML + MCP)",
+      "versao": null,
+      "fonte": "corte-por-roteiro/SKILL.md"
+    }
+  ],
+  "pipeline": [
+    {
+      "etapa": "Pauta",
+      "quem": "estrategista (/ideias)",
+      "entra": "notícias + _controle/aprendizados.md",
+      "sai": "01-ideias/",
+      "portao": "PAUTA"
+    },
+    {
+      "etapa": "Roteiro",
+      "quem": "roteirista → dramaturgo",
+      "entra": "tema",
+      "sai": "roteiro.md",
+      "portao": "ROTEIRO"
+    },
+    {
+      "etapa": "PDF da palavra-chave",
+      "quem": "produtor-de-material (gerar_material_pdf.py)",
+      "entra": "roteiro + fontes",
+      "sai": "material/<arquivo>.pdf",
+      "portao": "ROTEIRO"
+    },
+    {
+      "etapa": "Material em vídeo",
+      "quem": "buscador-de-videos / curador-de-obra (yt-dlp)",
+      "entra": "roteiro",
+      "sai": "material/youtube/catalogo.*, brutos/extras/",
+      "portao": "PAUTA"
+    },
+    {
+      "etapa": "Formatos de leitura",
+      "quem": "skill roteiro-reels",
+      "entra": "roteiro",
+      "sai": "teleprompter.txt, monitor-chatgpt.txt, historia-completa.txt",
+      "portao": null
+    },
+    {
+      "etapa": "Cenas extras e animação",
+      "quem": "produtor-de-extras, animador (Claude Design → Remotion)",
+      "entra": "roteiro",
+      "sai": "brutos/extras/, composições Remotion",
+      "portao": "IMAGEM"
+    },
+    {
+      "etapa": "Gravação",
+      "quem": "apresentador (método ChatGPT monitor)",
+      "entra": "teleprompter/monitor",
+      "sai": "brutos/principal/",
+      "portao": null
+    },
+    {
+      "etapa": "Edição",
+      "quem": "editor-de-video (/editar)",
+      "entra": "brutos",
+      "sai": "edl.json + preview.mp4",
+      "portao": "aprovação humana da EDL"
+    },
+    {
+      "etapa": "Corte + legendas",
+      "quem": "render_corte.py, verify.py, gerar_props.py",
+      "entra": "EDL aprovada",
+      "sai": "corte.mp4, legendas.json/.srt",
+      "portao": "revisão 1 (revisor-de-video)"
+    },
+    {
+      "etapa": "Cor",
+      "quem": "colorista (/cor)",
+      "entra": "corte.mp4 (V-Log)",
+      "sai": "edicao/cor/corte-cor.mp4",
+      "portao": "IMAGEM"
+    },
+    {
+      "etapa": "Gráficos",
+      "quem": "Remotion (render_reel.py)",
+      "entra": "reel-props.json",
+      "sai": "render-remotion.mp4",
+      "portao": null
+    },
+    {
+      "etapa": "Música + áudio",
+      "quem": "produtor-musical (ElevenLabs Music) + audio.py",
+      "entra": "render-remotion.mp4 + corte-audio.wav",
+      "sai": "final.mp4 (−14 LUFS)",
+      "portao": "CORTE"
+    },
+    {
+      "etapa": "Capa",
+      "quem": "designer-de-capas",
+      "entra": "corte com cor",
+      "sai": "capa/capa*.png",
+      "portao": "IMAGEM"
+    },
+    {
+      "etapa": "QA final",
+      "quem": "revisor-de-video passagem 2 + qa_check.py",
+      "entra": "final.mp4",
+      "sai": "qa/relatorio.md",
+      "portao": "CORTE"
+    },
+    {
+      "etapa": "Pacote",
+      "quem": "montar_pacote.py",
+      "entra": "tudo aprovado",
+      "sai": "05-render-pronto/<slug>/ + selo",
+      "portao": "exige pauta/roteiro/imagem/corte"
+    },
+    {
+      "etapa": "Fila e agenda",
+      "quem": "publicador (/publicar) + publicar.py agendar",
+      "entra": "pacote",
+      "sai": "06-publicar/<slug>/post.json + legendas",
+      "portao": "PUBLICACAO"
+    },
+    {
+      "etapa": "Publicação",
+      "quem": "publicar.py --due (launchd 15 min)",
+      "entra": "06-publicar/",
+      "sai": "IG + FB, 07-publicados/<slug>/",
+      "portao": "confere selo + PUBLICACAO"
+    },
+    {
+      "etapa": "Material no direct",
+      "quem": "responder_comentarios.py (launchd 2 min)",
+      "entra": "dm-material.json",
+      "sai": "direct + resposta pública, estado.json",
+      "portao": null
+    },
+    {
+      "etapa": "Métricas",
+      "quem": "metricas.py (launchd 09:30) → analista-de-metricas",
+      "entra": "insights",
+      "sai": "metricas.json → _controle/aprendizados.md",
+      "portao": null
+    },
+    {
+      "etapa": "Acertos",
+      "quem": "acertos.py → multiplicador-de-acertos (/multiplicar)",
+      "entra": "métricas",
+      "sai": "série de ideias",
+      "portao": "PAUTA"
+    }
+  ],
+  "edicao": [
+    {
+      "passo": 1,
+      "nome": "Ingestão",
+      "script": "corte-por-roteiro/scripts/ingest.py",
+      "sai": "edicao/fontes/*.mp4 (1440×2560, H.264 high422 yuv422p10le CRF 12, ainda V-Log) + audio48k/*.wav (48 kHz 24-bit mono, highpass 60 Hz, sem redução de ruído)",
+      "fonte": "ingest.py, common.py"
+    },
+    {
+      "passo": 2,
+      "nome": "Transcrição",
+      "script": "corte-por-roteiro/scripts/transcribe.py",
+      "sai": "edicao/transcricao.json",
+      "detalhe": "Scribe v2 (language_code=por, timestamps word, diarize, num_speakers=2, até 100 keyterms); sem chave → mlx-whisper-large-v3-turbo",
+      "fonte": "transcribe.py"
+    },
+    {
+      "passo": 3,
+      "nome": "Locutores",
+      "script": "corte-por-roteiro/scripts/locutores.py",
+      "sai": "locutores.json (zonas_ia)",
+      "detalhe": "diarização do Scribe + análise acústica local (graves, nível, centróide, pitch) → k-means 2 classes → HMM",
+      "fonte": "locutores.py"
+    },
+    {
+      "passo": 4,
+      "nome": "Alinhamento + escolha do take",
+      "script": "corte-por-roteiro/scripts/align.py",
+      "sai": "alinhamento.json",
+      "parametros": {
+        "GAP_TAKE_s": 1.5,
+        "SIM_OK": 0.8,
+        "SIM_PARAFRASE": 0.45,
+        "COB_IMPROVISO": 0.55,
+        "CONF_MIN": 0.6,
+        "PAUSA_INTERNA_flag_s": 0.7,
+        "PESOS": {
+          "sim": 0.55,
+          "cobertura": 0.15,
+          "fluencia": 0.1,
+          "recencia": 0.1,
+          "confianca": 0.1
+        }
+      },
+      "detalhe": "escolhido = último take limpo (sim ≥ 0,80 sem false_start/recomeco/final_cortado/sobreposicao_ia)",
+      "fonte": "align.py linhas 33–66, função escolher"
+    },
+    {
+      "passo": 5,
+      "nome": "EDL",
+      "script": "corte-por-roteiro/scripts/edl.py",
+      "sai": "edl.json, edl.md, preview.mp4 (540×960), resolve/<slug>.fcpxml",
+      "parametros": {
+        "PRE_s": 0.06,
+        "POS_s": 0.08,
+        "PAUSA_ALVO_s": {
+          "normal": 0.08,
+          "pausa": 0.45,
+          "pausa_longa": 0.75
+        },
+        "SNAP_s": 0.06,
+        "GUARDA_ENERGIA_s": 0.04,
+        "PAUSA_INTERNA_s": 0.25,
+        "PAUSA_RESTA_s": 0.12,
+        "GAP_MULETA_s": 0.15,
+        "MARGEM_IA_s": 0.08,
+        "MIN_PECA_s": 0.8,
+        "ZOOM_ESCALA": 1.12,
+        "ZOOM_MAX": 1.33,
+        "ZOOM_ORIGEM_sem_rosto": "50% 38%",
+        "ZOOM_SEGURA_MIN_s": 1.0
+      },
+      "detalhe": "in = 1.ª palavra − 0,06 s; out = última palavra + max(0,08; pausa da linha); pausa interna > 0,25 s fica 0,12 s; zoom alterna 1.00 ↔ 1.12 nos cortes com origem no rosto (Haar OpenCV)",
+      "fonte": "edl.py linhas 30–51; common.py linhas 255–257"
+    },
+    {
+      "passo": 6,
+      "nome": "Aprovação humana",
+      "script": null,
+      "sai": "edl.json.aprovado = true",
+      "detalhe": "regra rígida 1 (CLAUDE.md)"
+    },
+    {
+      "passo": 7,
+      "nome": "Render do corte",
+      "script": "corte-por-roteiro/scripts/render_corte.py",
+      "sai": "corte.mp4 (1080×1920, 10-bit V-Log) + corte-audio.wav",
+      "parametros": {
+        "ALCA_s": 0.015,
+        "XFADE_s": 0.03
+      },
+      "detalhe": "peças na grade de frames; recorte no 1440 + lanczos",
+      "fonte": "render_corte.py"
+    },
+    {
+      "passo": 8,
+      "nome": "Filmstrip",
+      "script": "corte-por-roteiro/scripts/filmstrip.py",
+      "sai": "edicao/frames/corte-NN.png",
+      "parametros": {
+        "OFFS_s": [
+          -0.2,
+          -0.1,
+          0.0,
+          0.1,
+          0.2
+        ],
+        "ONDA_s": 0.5
+      },
+      "fonte": "filmstrip.py"
+    },
+    {
+      "passo": 9,
+      "nome": "Verificação",
+      "script": "corte-por-roteiro/scripts/verify.py",
+      "sai": "qa/diff.md",
+      "parametros": {
+        "WER_MAX": 0.08,
+        "VOZ_IA_MAX_s": 0.2,
+        "AV_tolerancia": "1 frame"
+      },
+      "fonte": "verify.py"
+    },
+    {
+      "passo": 10,
+      "nome": "Cor",
+      "script": "color-grading/scripts/aplicar_cor.py",
+      "sai": "edicao/cor/corte-cor.mp4 (H.264 CRF 16, yuv420p bt709)",
+      "parametros": {
+        "MAX_STOPS": 0.5,
+        "MAX_CANAL": 0.08,
+        "grao_padrao": 0.0
+      },
+      "detalhe": "16 bits: [V-Log→Rec.709 só câmera vlog] → primária por take (alvo_primaria do JSON da LUT) → LUT da marca (lut3d tetraédrica) → yuv420p bt709 (+ grão)",
+      "fonte": "aplicar_cor.py"
+    },
+    {
+      "passo": 11,
+      "nome": "Remotion",
+      "script": "legendas-animadas/scripts/gerar_props.py + render_reel.py",
+      "sai": "render-remotion.mp4 (h264 CRF 18, yuv420p, bt709)",
+      "detalhe": "legendas do texto do roteiro; extras split/full/card; cartão do CTA",
+      "fonte": "render_reel.py; docs/contratos.md §6–7"
+    },
+    {
+      "passo": 12,
+      "nome": "Áudio",
+      "script": "audio-polish/scripts/audio.py",
+      "sai": "final.mp4",
+      "parametros": {
+        "RAZAO": 1.5,
+        "LIMIAR_REL_dB": 9.0,
+        "ATAQUE_ms": 30,
+        "RELEASE_ms": 300,
+        "LUFS": -14,
+        "TP_dBTP": -1.5,
+        "MARGEM_TP_dB": 0.3,
+        "TOL_LUFS": 0.3,
+        "BITRATE": "256k",
+        "passadas_max": 4,
+        "musica_db": -22,
+        "ducking": "sidechaincompress threshold=0.05 ratio=8 attack=20 release=300",
+        "fade_out_s": 1.5
+      },
+      "fonte": "audio.py linhas 41–50, 128–147, 186, 221–228"
+    },
+    {
+      "passo": 13,
+      "nome": "QA",
+      "script": "qa-video/scripts/qa_check.py",
+      "sai": "qa/qa-tecnico.json",
+      "parametros": {
+        "resolucao": "1080×1920",
+        "fps": "FPS_PROJETO ±0,01 (25)",
+        "codec": "h264 High yuv420p",
+        "audio": "aac 48 kHz",
+        "duracao_s": [
+          3,
+          900
+        ],
+        "tamanho_max_mb": 300,
+        "bitrate_max_mbps": 25,
+        "lufs": "−14 ±1",
+        "true_peak_max": -1.5
+      },
+      "fonte": "qa_check.py SPEC"
+    },
+    {
+      "passo": 14,
+      "nome": "Pacote",
+      "script": "scripts/montar_pacote.py",
+      "sai": "05-render-pronto/<slug>/ + selo GAUNTLET"
+    }
+  ],
+  "integracoes": [
+    {
+      "nome": "Meta Graph API (Instagram + Página do Facebook)",
+      "para_que": "publicar Reel/carrossel, 1.º comentário, ler comentários, direct, resposta pública, métricas, perfil",
+      "como": "https://graph.facebook.com/v23.0 + rupload.facebook.com + graph-video.facebook.com, via requests",
+      "credencial": [
+        "INSTAGRAM_USER_ID",
+        "INSTAGRAM_ACCESS_TOKEN",
+        "META_PAGE_ID",
+        "META_PAGE_ACCESS_TOKEN",
+        "META_APP_ID",
+        "META_APP_SECRET",
+        "META_GRAPH_VERSION"
+      ],
+      "script": [
+        "scripts/publicar.py",
+        "scripts/responder_comentarios.py",
+        "scripts/metricas.py",
+        "scripts/perfil.py"
+      ],
+      "quando_roda": "15 min / 2 min / 09:30 diário / manual",
+      "custo_limite": "grátis (ARQUITETURA.md §4); limites na seção meta.limites"
+    },
+    {
+      "nome": "Cloudflare R2",
+      "para_que": "link público de vídeo, capa, slides e PDF (a Meta busca por URL)",
+      "como": "API S3 com boto3; HEAD na URL pública antes de chamar a Meta",
+      "credencial": [
+        "R2_ACCOUNT_ID",
+        "R2_ACCESS_KEY_ID",
+        "R2_SECRET_ACCESS_KEY",
+        "R2_BUCKET_NAME",
+        "R2_PUBLIC_URL"
+      ],
+      "script": [
+        "scripts/publicar.py"
+      ],
+      "quando_roda": "na publicação",
+      "custo_limite": "não documentado"
+    },
+    {
+      "nome": "ElevenLabs Speech-to-Text (Scribe v2)",
+      "para_que": "transcrição com tempo por palavra + diarização (2 vozes)",
+      "como": "SDK elevenlabs: speech_to_text.convert(model_id=scribe_v2, language_code=por, timestamps_granularity=word, diarize=True)",
+      "credencial": [
+        "ELEVENLABS_API_KEY",
+        "SCRIBE_MODEL",
+        "SCRIBE_NUM_SPEAKERS"
+      ],
+      "script": [
+        ".claude/skills/corte-por-roteiro/scripts/transcribe.py"
+      ],
+      "quando_roda": "/editar (passo 2), /calibrar-voz",
+      "custo_limite": "não documentado; alternativa local mlx-whisper"
+    },
+    {
+      "nome": "ElevenLabs Music",
+      "para_que": "trilha instrumental original por vídeo",
+      "como": "POST https://api.elevenlabs.io/v1/music (xi-api-key, model_id music_v2_5, force_instrumental, composition_plan opcional)",
+      "credencial": [
+        "ELEVENLABS_API_KEY"
+      ],
+      "script": [
+        "scripts/gerar_musica.py"
+      ],
+      "quando_roda": "/musica e passo de áudio do /renderizar",
+      "custo_limite": "exige plano pago (uso comercial) — docs/decisoes.md"
+    },
+    {
+      "nome": "ElevenLabs Sound Effects",
+      "para_que": "biblioteca de efeitos sonoros (sound design)",
+      "como": "POST https://api.elevenlabs.io/v1/sound-generation",
+      "credencial": [
+        "ELEVENLABS_API_KEY"
+      ],
+      "script": [
+        "scripts/gerar_sfx.py"
+      ],
+      "quando_roda": "quando falta efeito no catálogo 00-marca/som/sfx.json",
+      "custo_limite": "reserva sem API: scripts/sfx_sintetico.py"
+    },
+    {
+      "nome": "YouTube (yt-dlp)",
+      "para_que": "buscar, baixar e cortar vídeos sobre o assunto (material de comentário)",
+      "como": "yt-dlp CLI (ytsearchN:, --dump-json, -f bv*+ba/b)",
+      "credencial": [],
+      "script": [
+        "scripts/buscar_youtube.py",
+        "scripts/baixar_obra.py",
+        ".claude/skills/watch/"
+      ],
+      "quando_roda": "/novo-video passo 4b, /buscar-videos, /obra",
+      "custo_limite": "sem custo; cópia inteira só para estudo, nunca publicada"
+    },
+    {
+      "nome": "archive.org + Wikimedia Commons",
+      "para_que": "B-roll com licença legível por máquina",
+      "como": "APIs públicas de metadados",
+      "credencial": [],
+      "script": [
+        "scripts/buscar_video.py"
+      ],
+      "quando_roda": "/material",
+      "custo_limite": "sem custo"
+    },
+    {
+      "nome": "Anthropic / Claude Code",
+      "para_que": "todos os agentes do pipeline e os portões",
+      "como": "subagentes .claude/agents/*.md (opus), comandos e skills; nenhum script chama a API direto",
+      "credencial": [],
+      "script": [
+        ".claude/agents/",
+        ".claude/commands/",
+        ".claude/skills/"
+      ],
+      "quando_roda": "sob demanda",
+      "custo_limite": "painel estima a preço de tabela (Volume 2)"
+    },
+    {
+      "nome": "Claude Design (claude.ai)",
+      "para_que": "animações explicativas",
+      "como": "manual: brief → export HTML → porta para Remotion",
+      "credencial": [],
+      "script": [
+        ".claude/agents/animador.md"
+      ],
+      "quando_roda": "/animar",
+      "custo_limite": null
+    },
+    {
+      "nome": "DaVinci Resolve",
+      "para_que": "ajuste fino manual do corte",
+      "como": "FCPXML gerado pelo edl.py; resolve.py importar; MCP local",
+      "credencial": [],
+      "script": [
+        ".claude/skills/corte-por-roteiro/scripts/resolve.py"
+      ],
+      "quando_roda": "opcional",
+      "custo_limite": null
+    },
+    {
+      "nome": "Google Fonts",
+      "para_que": "fontes do PDF e do carrossel",
+      "como": "CSS fonts.googleapis.com",
+      "credencial": [],
+      "script": [
+        "scripts/gerar_material_pdf.py",
+        "scripts/gerar_carrossel.py"
+      ],
+      "quando_roda": "ao gerar PDF/slides",
+      "custo_limite": "sem custo"
+    },
+    {
+      "nome": "Groq / OpenAI Whisper (opcional)",
+      "para_que": "transcrição de reserva da skill watch",
+      "como": "/audio/transcriptions",
+      "credencial": [
+        "não confirmado"
+      ],
+      "script": [
+        ".claude/skills/watch/scripts/whisper.py"
+      ],
+      "quando_roda": "só na skill watch, sem legenda",
+      "custo_limite": "não documentado"
+    },
+    {
+      "nome": "Geração de imagem (OpenRouter · OpenAI)",
+      "verificado": false,
+      "status": "não verificado com chamada real — chaves ainda fora do .env; só teste --seco (12/11)",
+      "para_que": "imagem que não existe e não tem material livre: cena extra, animação, capa, carrossel, PDF",
+      "motores": [
+        {
+          "motor": "teste",
+          "padrao": true,
+          "modelo": "sourceful/riverflow-v2-fast",
+          "endpoint": "POST https://openrouter.ai/api/v1/chat/completions",
+          "chave": "OPENROUTER_API_KEY",
+          "papel": "teste barato de composição"
+        },
+        {
+          "motor": "gemini",
+          "modelo": "google/gemini-3.1-flash-image-preview (Gemini 3.1 Flash Image)",
+          "endpoint": "POST https://openrouter.ai/api/v1/chat/completions (modalities image+text; referências em data URL base64)",
+          "chave": "OPENROUTER_API_KEY",
+          "papel": "final"
+        },
+        {
+          "motor": "openai",
+          "modelo": "gpt-image-2",
+          "endpoint": "POST https://api.openai.com/v1/images/generations; com --ref: POST https://api.openai.com/v1/images/edits (multipart image[])",
+          "chave": "OPENAI_API_KEY",
+          "papel": "final; padrão 1024x1536, quality high"
+        }
+      ],
+      "como": "urllib, timeout 600 s, resposta base64 → PNG; --seco mostra o pedido sem chave/rede/custo",
+      "credencial": [
+        "OPENROUTER_API_KEY",
+        "OPENAI_API_KEY"
+      ],
+      "script": [
+        ".claude/skills/gerar-imagem/scripts/gerar_imagem.py",
+        ".claude/skills/gerar-imagem/SKILL.md"
+      ],
+      "quem_chama": [
+        "animador",
+        "produtor-de-extras",
+        "designer-de-capas"
+      ],
+      "guarda_em": [
+        "--saida (sugerido: videos/<slug>/material/gerado/, videos/<slug>/animacoes/<ID>/, carrosseis/<pasta>/)",
+        "imagens-geradas.jsonl na pasta da saída: data, motor, modelo, prompt, referencias, saida, bytes, uso"
+      ],
+      "quando_roda": "sob demanda, desde 12/11",
+      "custo_limite": "'gerar custa dinheiro' — valor não documentado; regra: gerar uma e validar; nunca pessoa real além do apresentador; passa pelo PORTÃO-IMAGEM"
+    },
+    {
+      "nome": "Hugging Face (modelo de embedding)",
+      "para_que": "índice de contexto (intfloat/multilingual-e5-small)",
+      "como": "baixado uma vez; MCP com HF_HUB_OFFLINE=1",
+      "credencial": [],
+      "script": [
+        "estudio-contexto/"
+      ],
+      "quando_roda": "sincronização a cada 30 min, sem rede",
+      "custo_limite": "sem custo"
+    }
+  ],
+  "jobs_locais": [
+    {
+      "nome": "uk.korvu.publicar",
+      "script": "scripts/publicar.py --due",
+      "intervalo": "900 s",
+      "le": [
+        "06-publicar/*/post.json",
+        "pacote.json",
+        "_controle/calendario.md"
+      ],
+      "escreve": [
+        "R2",
+        "Meta (IG + FB)",
+        "post.json",
+        "dm-material.json",
+        "07-publicados/",
+        "_controle/tracker.md",
+        "status.json"
+      ],
+      "log": "_controle/logs/publicar.log"
+    },
+    {
+      "nome": "uk.korvu.comentarios",
+      "script": "scripts/responder_comentarios.py",
+      "intervalo": "120 s",
+      "le": [
+        "07-publicados/*/dm-material.json",
+        "automacao-meta/respostas.yaml",
+        "comentários na Meta"
+      ],
+      "escreve": [
+        "direct + resposta pública na Meta",
+        "_controle/comentarios/estado.json"
+      ],
+      "log": "_controle/logs/comentarios.log"
+    },
+    {
+      "nome": "uk.korvu.metricas",
+      "script": "scripts/metricas.py",
+      "intervalo": "diário 09:30",
+      "le": [
+        "07-publicados/*/post.json",
+        "insights na Meta",
+        "_controle/comentarios/estado.json"
+      ],
+      "escreve": [
+        "07-publicados/<slug>/metricas.json",
+        "_controle/metricas.md",
+        "_controle/acertos.json"
+      ],
+      "log": "_controle/logs/metricas.log"
+    },
+    {
+      "nome": "uk.korvu.painel",
+      "script": "painel/sync/sincronizar.py",
+      "intervalo": "900 s + ao entrar",
+      "le": [
+        "arquivos do projeto (só leitura)"
+      ],
+      "escreve": [
+        "Postgres local do painel"
+      ],
+      "log": "_controle/logs/painel.log"
+    },
+    {
+      "nome": "uk.korvu.contexto",
+      "script": "python -m contexto.sincronizar (estudio-contexto/)",
+      "intervalo": "1800 s + ao entrar, IO baixa prioridade",
+      "le": [
+        "documentos do projeto"
+      ],
+      "escreve": [
+        "schema contexto no Postgres local"
+      ],
+      "log": "estudio-contexto/logs/contexto.log"
+    }
+  ],
+  "meta": {
+    "pre_requisitos": [
+      "Instagram profissional e público",
+      "ligado a uma Página do Facebook",
+      "app na Meta for Developers, caminho Facebook Login (graph.facebook.com v23.0)",
+      "administrador do app"
+    ],
+    "permissoes": [
+      {
+        "nome": "instagram_basic",
+        "uso": "ler conta, mídia, comentários"
+      },
+      {
+        "nome": "instagram_content_publish",
+        "uso": "publicar Reel e carrossel"
+      },
+      {
+        "nome": "instagram_manage_comments",
+        "uso": "ler e responder comentários"
+      },
+      {
+        "nome": "instagram_manage_messages",
+        "uso": "direct (resposta privada)"
+      },
+      {
+        "nome": "instagram_manage_insights",
+        "uso": "métricas IG"
+      },
+      {
+        "nome": "pages_show_list",
+        "uso": "listar a Página"
+      },
+      {
+        "nome": "pages_read_engagement",
+        "uso": "ler a Página e o engajamento"
+      },
+      {
+        "nome": "pages_manage_posts",
+        "uso": "publicar na Página"
+      },
+      {
+        "nome": "read_insights",
+        "uso": "métricas FB"
+      },
+      {
+        "nome": "pages_manage_engagement",
+        "uso": "1.º comentário da Página no FB (só aviso no código)"
+      }
+    ],
+    "tokens": {
+      "tipo": "token da Página tirado de token de usuário de longa duração (~60 dias); o da Página 'normalmente não expira'; INSTAGRAM_ACCESS_TOKEN pode ser o mesmo",
+      "verificacao": "publicar.py verificar-tokens → GET /debug_token (escopos em falta, aviso < 7 dias)",
+      "renovacao": "manual; sem refresh automático no código"
+    },
+    "fluxo_publicar": [
+      {
+        "ordem": 1,
+        "onde": "R2",
+        "chamada": "PUT reels/<slug>/video.mp4 e capa.jpg (+ material/<pdf>); HEAD na URL pública"
+      },
+      {
+        "ordem": 2,
+        "onde": "IG",
+        "chamada": "POST /{ig-user-id}/media (media_type=REELS, video_url, cover_url, caption, share_to_feed, trial_params?)"
+      },
+      {
+        "ordem": 3,
+        "onde": "IG",
+        "chamada": "GET /{container-id}?fields=status_code,status (5 s, até 10 min) até FINISHED"
+      },
+      {
+        "ordem": 4,
+        "onde": "IG",
+        "chamada": "POST /{ig-user-id}/media_publish (creation_id) → media_id"
+      },
+      {
+        "ordem": 5,
+        "onde": "IG",
+        "chamada": "GET /{media-id}?fields=permalink"
+      },
+      {
+        "ordem": 6,
+        "onde": "disco",
+        "chamada": "grava dm-material.json {palavra, media_id_instagram, material_url}"
+      },
+      {
+        "ordem": 7,
+        "onde": "IG",
+        "chamada": "POST /{media-id}/comments (1.º comentário)"
+      },
+      {
+        "ordem": 8,
+        "onde": "FB ≤ 90 s",
+        "chamada": "POST /{page-id}/video_reels upload_phase=start → POST rupload.facebook.com/video-upload/{v}/{video-id} (bytes) → GET status → POST video_reels upload_phase=finish video_state=PUBLISHED"
+      },
+      {
+        "ordem": 8,
+        "onde": "FB > 90 s",
+        "chamada": "graph-video.facebook.com/{page-id}/videos upload_phase=start → transfer (pedaços) → finish published=true"
+      },
+      {
+        "ordem": 9,
+        "onde": "FB",
+        "chamada": "GET /{video-id}?fields=status,permalink_url; POST /{video-id}/comments"
+      },
+      {
+        "ordem": 10,
+        "onde": "disco",
+        "chamada": "move 06-publicar/<slug> → 07-publicados/<slug>; atualiza calendário, tracker, status.json; notificação"
+      }
+    ],
+    "fluxo_carrossel": [
+      {
+        "ordem": 1,
+        "onde": "R2",
+        "chamada": "PUT carrosseis/<slug>/<slide>.jpg (PNG → JPEG)"
+      },
+      {
+        "ordem": 2,
+        "onde": "IG",
+        "chamada": "POST /{ig-user-id}/media (image_url, is_carousel_item=true) por slide"
+      },
+      {
+        "ordem": 3,
+        "onde": "IG",
+        "chamada": "POST /{ig-user-id}/media (media_type=CAROUSEL, children, caption) → media_publish"
+      },
+      {
+        "ordem": 4,
+        "onde": "FB",
+        "chamada": "POST /{page-id}/photos (published=false, source do disco) por slide"
+      },
+      {
+        "ordem": 5,
+        "onde": "FB",
+        "chamada": "POST /{page-id}/feed (message, attached_media[i]) — uma tentativa"
+      }
+    ],
+    "fluxo_agendamento": [
+      {
+        "ordem": 1,
+        "quem": "o autor/comando /publicar",
+        "acao": "move a pasta para 06-publicar/ (= autorização)"
+      },
+      {
+        "ordem": 2,
+        "quem": "publicar.py agendar",
+        "acao": "próxima vaga livre de vagas_semanais no fuso do calendário → post.json.publicar_em"
+      },
+      {
+        "ordem": 3,
+        "quem": "portao-publicacao",
+        "acao": "audita legendas, post.json e arquivos; sem APROVADO não publica"
+      },
+      {
+        "ordem": 4,
+        "quem": "launchd uk.korvu.publicar (900 s)",
+        "acao": "publicar.py --due: estado=agendado e publicar_em ≤ agora → publica"
+      },
+      {
+        "ordem": 5,
+        "quem": "publicar.py",
+        "acao": "atraso > 6 h ou confirmar=true → aguardando_confirmacao + notificação; confirma com publicar <slug> --sim"
+      }
+    ],
+    "fluxo_comentario": [
+      {
+        "ordem": 1,
+        "quem": "launchd uk.korvu.comentarios (120 s)",
+        "acao": "lê 07-publicados/*/dm-material.json com posts < 7 dias"
+      },
+      {
+        "ordem": 2,
+        "quem": "IG",
+        "acao": "GET /{media-id}/ordered_comments + /comments (fields id,text,timestamp,username,from,replies{id,from})"
+      },
+      {
+        "ordem": 3,
+        "quem": "script",
+        "acao": "filtra: palavra (sem acento/maiúscula, plural), não é a própria conta, não respondido à mão, não recebeu antes"
+      },
+      {
+        "ordem": 4,
+        "quem": "Página",
+        "acao": "POST /{page-id}/messages recipient={comment_id} message={text com link do PDF}"
+      },
+      {
+        "ordem": 5,
+        "quem": "IG",
+        "acao": "só se o direct saiu: POST /{comment-id}/replies (frase sorteada)"
+      },
+      {
+        "ordem": 6,
+        "quem": "disco",
+        "acao": "_controle/comentarios/estado.json"
+      }
+    ],
+    "fluxo_metricas": [
+      {
+        "ordem": 1,
+        "quem": "launchd uk.korvu.metricas (09:30)",
+        "acao": "posts com ≥ 5 dias sem leitura completa"
+      },
+      {
+        "ordem": 2,
+        "quem": "IG",
+        "acao": "GET /{media}?fields=like_count,comments_count,…,trial_params + GET /{media}/insights (views, reach, saved, shares, ig_reels_avg_watch_time, …)"
+      },
+      {
+        "ordem": 3,
+        "quem": "FB",
+        "acao": "GET /{video}/video_insights (blue_reels_play_count, post_video_avg_time_watched, …)"
+      },
+      {
+        "ordem": 4,
+        "quem": "script",
+        "acao": "% médio assistido = tempo médio / duração; taxas sobre alcance; comentários da palavra"
+      },
+      {
+        "ordem": 5,
+        "quem": "disco",
+        "acao": "07-publicados/<slug>/metricas.json + _controle/metricas.md"
+      },
+      {
+        "ordem": 6,
+        "quem": "acertos.py → analista-de-metricas / multiplicador-de-acertos",
+        "acao": "_controle/aprendizados.md e série de ideias"
+      }
+    ],
+    "limites": [
+      "legenda IG ≤ 2.200 caracteres, ≤ 5 hashtags",
+      "Reel 3 s–15 min; > 300 MB só aviso",
+      "Reel da Página no FB: 3–90 s (acima vira vídeo da Página)",
+      "carrossel 3–10 slides, JPEG; 3:4 pode ser recusado (36003 / 2207009)",
+      "1 direct por comentário, até 7 dias depois",
+      "25 envios por passagem, 150 por hora, 4 s entre envios (respostas.yaml)",
+      "API não dá a curva de retenção segundo a segundo"
+    ],
+    "erros_conhecidos": [
+      {
+        "caso": "/comments vazio para quem não tem papel no app (~03/11)",
+        "solucao": "ler também /ordered_comments"
+      },
+      {
+        "caso": "robô do FB leva 403 da Cloudflare no R2",
+        "solucao": "FB sobe do disco"
+      },
+      {
+        "caso": "413 com 171 MB num pedido só",
+        "solucao": "upload retomável em pedaços"
+      },
+      {
+        "caso": "/{ig-user-id}/messages → (#3) sem capability",
+        "solucao": "direct por /{page-id}/messages"
+      },
+      {
+        "caso": "media_publish e /feed não idempotentes",
+        "solucao": "conferir estado antes de repetir"
+      },
+      {
+        "caso": "códigos 3/10/102/190/200 nos comentários",
+        "solucao": "para a passagem sem descartar ninguém, notifica 1×/hora"
+      }
+    ]
+  },
+  "agentes": [
+    {
+      "nome": "estrategista",
+      "faz": "pesquisa notícias e tendências e alimenta o banco de ideias"
+    },
+    {
+      "nome": "pesquisador-de-material",
+      "faz": "dossiê com fatos, fontes e lista de material com licença"
+    },
+    {
+      "nome": "curador-de-obra",
+      "faz": "traz a obra comentada e recorta os trechos citados"
+    },
+    {
+      "nome": "buscador-de-videos",
+      "faz": "procura no YouTube, baixa, anota momentos e corta trechos"
+    },
+    {
+      "nome": "roteirista",
+      "faz": "roteiro narrativo com 3 hooks, CTA e linhas L01…"
+    },
+    {
+      "nome": "dramaturgo",
+      "faz": "passada de naturalidade: tira fórmula repetida entre vídeos"
+    },
+    {
+      "nome": "revisor-de-roteiro",
+      "faz": "PORTÃO-ROTEIRO: roteiro e PDF"
+    },
+    {
+      "nome": "produtor-de-material",
+      "faz": "PDF da palavra-chave (até 2 páginas)"
+    },
+    {
+      "nome": "produtor-de-extras",
+      "faz": "lista e organiza as cenas extras"
+    },
+    {
+      "nome": "animador",
+      "faz": "brief para o Claude Design e porta para Remotion"
+    },
+    {
+      "nome": "editor-de-video",
+      "faz": "transcreve, alinha, escolhe takes, gera EDL e renderiza o corte"
+    },
+    {
+      "nome": "revisor-de-video",
+      "faz": "revisão 1 do corte e PORTÃO-CORTE (QA final)"
+    },
+    {
+      "nome": "colorista",
+      "faz": "LUT da marca e primária por take"
+    },
+    {
+      "nome": "designer-de-capas",
+      "faz": "capa do frame do vídeo, 3 variantes"
+    },
+    {
+      "nome": "produtor-musical",
+      "faz": "trilha na ElevenLabs Music e mistura com ducking"
+    },
+    {
+      "nome": "publicador",
+      "faz": "legendas do post, hooks e agendamento"
+    },
+    {
+      "nome": "analista-de-metricas",
+      "faz": "lê métricas aos 5 dias e escreve aprendizados"
+    },
+    {
+      "nome": "multiplicador-de-acertos",
+      "faz": "DNA do vídeo acima da média → série de ideias"
+    },
+    {
+      "nome": "auditor-de-perfil",
+      "faz": "auditoria do perfil IG e da Página"
+    },
+    {
+      "nome": "portao-pauta",
+      "faz": "PORTÃO-PAUTA"
+    },
+    {
+      "nome": "portao-imagem",
+      "faz": "PORTÃO-IMAGEM"
+    },
+    {
+      "nome": "portao-publicacao",
+      "faz": "PORTÃO-PUBLICACAO"
+    }
+  ],
+  "portoes": [
+    {
+      "nome": "PAUTA",
+      "agente": "portao-pauta",
+      "fiscaliza": [
+        "estrategista",
+        "pesquisador-de-material",
+        "buscador-de-videos",
+        "curador-de-obra",
+        "multiplicador-de-acertos"
+      ],
+      "cobre": [
+        "material/dossie.md",
+        "material/fontes.json",
+        "material/youtube/catalogo*.md",
+        "material/obra*"
+      ]
+    },
+    {
+      "nome": "ROTEIRO",
+      "agente": "revisor-de-roteiro",
+      "fiscaliza": [
+        "roteirista",
+        "produtor-de-material"
+      ],
+      "cobre": [
+        "roteiro.md (só a fala + CTA)",
+        "material/*.pdf"
+      ]
+    },
+    {
+      "nome": "IMAGEM",
+      "agente": "portao-imagem",
+      "fiscaliza": [
+        "colorista",
+        "designer-de-capas",
+        "produtor-de-extras",
+        "animador"
+      ],
+      "cobre": [
+        "brutos/extras/**",
+        "edicao/cor/corte-cor*.mp4",
+        "capa/capa*.png"
+      ]
+    },
+    {
+      "nome": "CORTE",
+      "agente": "revisor-de-video (passagem 2)",
+      "fiscaliza": [
+        "editor-de-video",
+        "produtor-musical"
+      ],
+      "cobre": [
+        "edicao/final*.mp4",
+        "edicao/legendas.srt"
+      ]
+    },
+    {
+      "nome": "PUBLICACAO",
+      "agente": "portao-publicacao",
+      "fiscaliza": [
+        "publicador"
+      ],
+      "cobre": [
+        "video/",
+        "capa/",
+        "slides/",
+        "material/*.pdf",
+        "legendas do post",
+        "campos do post.json que vão ao ar"
+      ]
+    }
+  ],
+  "testes": [
+    {
+      "nome": "publicação",
+      "comando": "uv run python tests/publicar/test_publicar.py",
+      "resultado": "112/116",
+      "nota": "4 falhas = vagas antigas do calendário (já registrado em tests/README.md)"
+    },
+    {
+      "nome": "comentários",
+      "comando": "uv run python tests/comentarios/test_responder.py",
+      "resultado": "33/33"
+    },
+    {
+      "nome": "métricas",
+      "comando": "uv run python tests/metricas/test_metricas.py",
+      "resultado": "32/32"
+    },
+    {
+      "nome": "portões",
+      "comando": "uv run python tests/portoes/test_portoes.py",
+      "resultado": "64/64"
+    }
+  ],
+  "em_producao": {
+    "publicacoes": 16,
+    "reels": 15,
+    "carrosseis": 1,
+    "com_trial": 9,
+    "fb_reel": 3,
+    "fb_video_pagina": 2,
+    "fb_fotos": 1,
+    "periodo": "13/10–11/11/2026",
+    "jobs_carregados": 5
+  },
+  "comandos_instalacao": [
+    "uv sync",
+    "uv sync --extra local   # opcional: transcrição local",
+    "cd remotion && npm install",
+    "cp .env.example .env    # preencher as chaves (nunca versionar)",
+    "uv run python scripts/verificar_setup.py",
+    "uv run python scripts/publicar.py verificar-tokens",
+    "uv run python scripts/responder_comentarios.py verificar",
+    "uv run python scripts/metricas.py verificar",
+    "uv run python scripts/publicar.py --due --dry-run",
+    "bash scripts/launchd/instalar.sh",
+    "bash estudio-contexto/launchd/instalar.sh",
+    "uv run python scripts/publicar.py publicar <slug> --sim"
+  ],
+  "divergencias_edicao": [
+    "corte-por-roteiro/SKILL.md tem os números antigos: in −0,15 s (código 0,06), out +0,20/0,60/0,90 (código 0,08/0,45/0,75), pausa interna >0,7→0,25 s (código >0,25→0,12), paráfrase 0,60–0,80 (código SIM_PARAFRASE 0,45)",
+    "audio-polish/SKILL.md e docstring do audio.py: teto = alvo −0,5 dB; código MARGEM_TP = 0,3 dB",
+    "corrigido em 12/11: qa_check.py reprovava vídeo > 180 s (contra a decisão de 02/11); agora dur_max = 900 s, igual ao publicar.py"
+  ],
+  "totais": {
+    "integracoes": 14,
+    "jobs_locais": 5,
+    "etapas_pipeline": 20,
+    "passos_edicao": 14,
+    "agentes_estudio": 22
+  },
+  "nao_integrado": [
+    "Geração de vídeo por IA (gerar-imagem/SKILL.md, 'Ainda não existe')"
+  ]
+}

@@ -1,0 +1,54 @@
+name: testes
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  python:
+    name: Python (sem mídia, sem rede)
+    # macOS: os testes de publicação e métricas conferem o plist do launchd com o plutil.
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - name: ffmpeg
+        run: brew install ffmpeg
+      - run: uv sync
+      - name: GAUNTLET (portões)
+        run: uv run python tests/portoes/test_portoes.py
+      - name: Publicação (API da Meta simulada)
+        run: uv run python tests/publicar/test_publicar.py
+      - name: Métricas
+        run: uv run python tests/metricas/test_metricas.py
+      - name: Comentário → direct
+        run: uv run python tests/comentarios/test_responder.py
+      - name: Cartão do CTA
+        run: uv run python tests/test_cta_props.py
+      - name: Prévias dos looks do painel
+        run: uv run python painel/tests/test_previas_looks.py
+
+  typescript:
+    name: TypeScript (Remotion e painel)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Remotion
+        working-directory: remotion
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npx eslint src
+      - name: Painel web
+        working-directory: painel/web
+        run: |
+          npm ci
+          npx tsc --noEmit
+          npm run lint

@@ -1,0 +1,42 @@
+{
+ "slug": "2026-10-27-resumir-reunioes",
+ "qa": "PASS",
+ "duracao": 41.6,
+ "criado_em": "2026-10-28T18:00:00-03:00",
+ "cta_palavra": "ATA",
+ "tema": "Resumir reuniões com IA",
+ "pilar": "produtividade",
+ "arquivos": {
+  "capa": "capa/capa.png",
+  "legendas": "legendas/legendas.srt",
+  "material": "material/modelo-de-ata.pdf"
+ },
+ "gauntlet": {
+  "versao": 1,
+  "origem": "videos/2026-10-27-resumir-reunioes",
+  "selado_em": "2026-10-28T18:00:00-03:00",
+  "veredictos": {
+   "pauta": {
+    "impressao": "8fd8e8d1cb3d",
+    "em": "2026-10-18T10:00:00-03:00"
+   },
+   "roteiro": {
+    "impressao": "159802242a20",
+    "em": "2026-10-19T15:00:00-03:00"
+   },
+   "imagem": {
+    "impressao": "7c5943d518f3",
+    "em": "2026-10-27T11:00:00-03:00"
+   },
+   "corte": {
+    "impressao": "859c9548fab3",
+    "em": "2026-10-27T17:00:00-03:00"
+   }
+  },
+  "arquivos": {
+   "capa/capa.png": "75974241a3134c4e95d6371cbe8fd3295f729552cae01635ea6747cb71b341be",
+   "legendas/legendas.srt": "1a901dacb4224aebd2a3f7f5e4dcce91f6a95e48a82334185bad70d75ed4c9f0",
+   "material/modelo-de-ata.pdf": "a711ebeb8927bbb8a49d7625e856a9a6600a594da848976c91759efc21db390e"
+  }
+ }
+}

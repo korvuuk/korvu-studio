@@ -1,0 +1,1258 @@
+<meta charset="utf-8">
+<title>Documentação do korvu. painel</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: a casca do próprio painel — barra lateral escura com o índice (vira "Menu" abaixo de 1024 px) e a área
+   de leitura em marfim; seções com título minúsculo e ponto final, como as telas do app ("crescimento.", "por modelo.").
+   Cores e fontes = tokens do "korvu. painel" (painel/design/tokens.css). O design system só tem o tema claro "Marfim";
+   o modo escuro desta página usa só as cores da barra lateral (sidebar, sidebar-raised, sidebar-line, sidebar-ink). */
+@font-face{font-family:"Geist";src:url("fontes/Geist-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+@font-face{font-family:"Geist Mono";src:url("fontes/GeistMono-Variable.woff2") format("woff2");font-weight:100 900;font-style:normal;font-display:swap}
+:root{
+  --bg:#f5f2e8;--surface:#fbf9f4;--surface-sunken:#efebe0;--surface-hover:#f8f5ee;
+  --line:#e4dfd2;--line-strong:#928874;--ink:#111111;--ink-2:#6b6458;--ink-3:#736c60;
+  --sidebar:#111111;--sidebar-raised:#1d1c1a;--sidebar-line:#2c2a27;--sidebar-ink:#f5f2e8;--sidebar-ink-2:#9a9385;
+  --accent:#ff4d00;--accent-hover:#e64500;--accent-soft:#ffe8dc;--accent-ink:#b33600;--on-accent:#111111;
+  --accent-text:#b33600;
+  --positive:#1e7a45;--positive-soft:#e3f0e4;--danger:#c2271b;--danger-soft:#fbe3df;
+  --chart-1:#ff4d00;--chart-2:#111111;--chart-3:#a39b8b;--chart-4:#d6ccb5;--chart-5:#4f6475;--chart-grid:#e9e4d8;
+  --focus:#b33600;--focus-on-dark:#ff4d00;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.04);--shadow-hover:0 6px 20px rgba(17,17,17,0.07);--shadow-pop:0 12px 32px rgba(17,17,17,0.12);
+  --font-sans:Geist,Inter,system-ui,sans-serif;--font-mono:"Geist Mono",ui-monospace,monospace;
+  --radius-sm:6px;--radius-btn:8px;--radius-card:12px;--radius-panel:14px;--radius-pill:999px;
+  --sidebar-width:208px;--control-height:36px;--row-height:56px;
+  --duracao-padrao:150ms;--duracao-linha:120ms;--duracao-toque:100ms;--duracao-entrada:160ms;
+  --curva-saida:cubic-bezier(.2,0,0,1);--duracao-pagina:420ms;--duracao-dado:760ms;--curva-dado:cubic-bezier(.22,1,.36,1);--escalonar:45ms;
+  --toque-controle:.97;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#111111;--surface:#1d1c1a;--surface-sunken:#2c2a27;--surface-hover:#1d1c1a;
+  --line:#2c2a27;--line-strong:#6b6458;--ink:#f5f2e8;--ink-2:#9a9385;--ink-3:#9a9385;
+  --accent-text:#ff4d00;--focus:#ff4d00;--chart-grid:#2c2a27;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.3);--shadow-hover:0 6px 20px rgba(17,17,17,0.4);--shadow-pop:0 12px 32px rgba(17,17,17,0.5);
+  color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111111;--surface:#1d1c1a;--surface-sunken:#2c2a27;--surface-hover:#1d1c1a;
+  --line:#2c2a27;--line-strong:#6b6458;--ink:#f5f2e8;--ink-2:#9a9385;--ink-3:#9a9385;
+  --accent-text:#ff4d00;--focus:#ff4d00;--chart-grid:#2c2a27;
+  --shadow-card:0 1px 2px rgba(17,17,17,0.3);--shadow-hover:0 6px 20px rgba(17,17,17,0.4);--shadow-pop:0 12px 32px rgba(17,17,17,0.5);
+  color-scheme:dark}
+/* As amostras vivas e as capturas ficam sempre no tema do painel (Marfim), nos dois temas da página. */
+.marfim{
+  --bg:#f5f2e8;--surface:#fbf9f4;--surface-sunken:#efebe0;--surface-hover:#f8f5ee;
+  --line:#e4dfd2;--line-strong:#928874;--ink:#111111;--ink-2:#6b6458;--ink-3:#736c60;--accent-text:#b33600;--focus:#b33600;
+  --chart-grid:#e9e4d8;--shadow-card:0 1px 2px rgba(17,17,17,0.04);--shadow-pop:0 12px 32px rgba(17,17,17,0.12);
+  color-scheme:light;background:var(--bg);color:var(--ink)}
+
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-sans);font-size:15px;line-height:22px;-webkit-font-smoothing:antialiased;font-feature-settings:"ss01","tnum"}
+table{font:inherit;color:inherit;border-collapse:collapse}
+img{max-width:100%;height:auto;display:block}
+a{color:var(--accent-text);text-underline-offset:3px}
+code,.mono{font-family:var(--font-mono);font-size:.86em;font-weight:500}
+p code,li code,td code{background:var(--surface-sunken);border:1px solid var(--line);border-radius:4px;padding:0 4px;overflow-wrap:anywhere}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.side :focus-visible,.topbar :focus-visible{outline-color:var(--focus-on-dark)}
+.k-cap{font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin:0}
+.ink2{color:var(--ink-2)}
+.pular{position:absolute;left:max(16px,env(safe-area-inset-left,0px));top:8px;clip-path:inset(50%);background:var(--accent);color:var(--on-accent);padding:8px 12px;border-radius:8px;z-index:50}
+.pular:focus{clip-path:none}
+
+/* ── casca ── */
+.casca{display:grid;grid-template-columns:var(--sidebar-width) minmax(0,1fr);min-height:100vh}
+.side{position:sticky;top:0;align-self:start;height:100vh;background:var(--sidebar);color:var(--sidebar-ink-2);display:flex;flex-direction:column;padding:20px 12px 16px;overflow-y:auto;border-right:1px solid var(--sidebar-line)}
+.logo{display:block;height:20px;width:auto}
+.logo .la{fill:var(--sidebar-ink)}.logo .lb{fill:var(--sidebar-ink-2)}
+.side .logo-link{display:block;padding:4px 10px 6px}
+.side-sub{font-size:11px;line-height:14px;color:var(--sidebar-ink-2);padding:0 10px 18px;margin:0}
+.side-label{font-size:10px;line-height:14px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--sidebar-ink-2);padding:12px 10px 8px;opacity:.8;margin:0}
+.nav{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.nav a{display:flex;align-items:center;gap:10px;min-height:34px;padding:6px 10px;border-radius:var(--radius-btn);color:var(--sidebar-ink-2);font:500 13px/18px var(--font-sans);text-decoration:none;position:relative;transition:background var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.nav a:hover{background:var(--sidebar-raised);color:var(--sidebar-ink)}
+.nav a.ativo{background:var(--sidebar-raised);color:var(--sidebar-ink)}
+.nav a.ativo::after{content:"";position:absolute;right:10px;top:50%;margin-top:-3px;width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.nav .cont{margin-left:auto;margin-right:14px;font:500 11px/1 var(--font-mono);color:var(--sidebar-ink-2)}
+.nav.sub a{padding-left:22px;font-size:12px;min-height:28px}
+.side-foot{margin-top:auto;border-top:1px solid var(--sidebar-line);padding:14px 10px 0;font-size:11px;line-height:15px}
+.side-foot b{display:block;color:var(--sidebar-ink);font-weight:600;font-size:12px}
+.topbar{display:none}
+.gaveta{display:none}
+
+main{min-width:0;padding-block:40px 64px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.miolo{max-width:1120px;margin:0 auto}
+@media (min-width:1024px){main{padding-left:48px;padding-right:max(48px,env(safe-area-inset-right,0px))}}
+
+@media (max-width:1023px){
+  .casca{display:block}
+  .side{display:none}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--sidebar)}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;height:56px;background:var(--sidebar);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));border-bottom:1px solid var(--sidebar-line)}
+  .menu-btn{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 12px;border-radius:var(--radius-btn);background:var(--sidebar-raised);border:1px solid var(--sidebar-line);color:var(--sidebar-ink);font:600 13px/1 var(--font-sans);cursor:pointer;transition:scale var(--duracao-toque) var(--curva-saida)}
+  .gaveta{display:block;position:fixed;left:0;right:0;top:calc(56px + env(safe-area-inset-top,0px));z-index:19;background:var(--sidebar);border-bottom:1px solid var(--sidebar-line);max-height:calc(100vh - 56px - env(safe-area-inset-top,0px));overflow-y:auto;padding:8px max(16px,env(safe-area-inset-right,0px)) 16px max(16px,env(safe-area-inset-left,0px))}
+  .gaveta[hidden]{display:none!important}
+  main{padding-top:28px}
+}
+@media (max-width:1023px) and (prefers-reduced-motion:no-preference){.gaveta:not([hidden]){animation:desce var(--duracao-entrada) var(--curva-saida)}}
+@media (prefers-reduced-motion:no-preference){.menu-btn:active,.nav a:active,.k-btn:active,.copiar:active{scale:var(--toque-controle)}}
+@keyframes desce{from{opacity:0;translate:0 -8px}}
+
+/* ── tipografia da página ── */
+h1,h2,h3,h4{margin:0;text-wrap:balance;color:var(--ink)}
+.sec{padding-top:72px;scroll-margin-top:72px}
+.sec:first-child,.sec.capa{padding-top:0}
+.sec-cab{display:flex;flex-direction:column;gap:8px;margin-bottom:28px;max-width:760px}
+.sec-cab h2{font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.03em}
+.lead{font-size:17px;line-height:26px;color:var(--ink-2);margin:0;max-width:68ch}
+h3{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em}
+.sub-cab{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:40px 0 14px}
+.sub-cab p{margin:0;color:var(--ink-2);font-size:13px}
+.texto{max-width:72ch}
+.texto p{margin:0 0 12px}
+@media (max-width:640px){.sec-cab h2{font-size:30px;line-height:36px;letter-spacing:-.02em}.lead{font-size:15px;line-height:22px}.sec{padding-top:56px}}
+
+/* ── peças ── */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card)}
+.selos{display:flex;flex-wrap:wrap;gap:6px;padding:0;margin:0;list-style:none}
+.selo{display:inline-flex;align-items:center;gap:6px;height:26px;padding:0 10px;border-radius:var(--radius-pill);border:1px solid var(--line-strong);font:500 11.5px/1 var(--font-mono);color:var(--ink);white-space:nowrap;background:var(--surface)}
+.selo b{font-weight:500;color:var(--ink-2)}
+.tabchip{display:inline-block;font:500 11.5px/18px var(--font-mono);padding:1px 7px;border-radius:5px;background:var(--surface-sunken);border:1px solid var(--line);color:var(--ink);white-space:nowrap}
+.chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);white-space:nowrap;border:1px solid transparent}
+.chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.chip.ok{background:var(--positive-soft);color:var(--positive)}
+.chip.mal{background:var(--danger-soft);color:var(--danger)}
+.chip.neutro{background:var(--surface-sunken);color:var(--ink-2)}
+.chip.vencido{background:var(--accent-soft);color:var(--accent-ink)}
+.rolagem{overflow-x:auto;-webkit-overflow-scrolling:touch;max-width:100%}
+.tabela{width:100%;min-width:560px}
+.tabela th{text-align:left;font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:12px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+.tabela td{padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;line-height:19px;vertical-align:top}
+.tabela tr:last-child td{border-bottom:0}
+.tabela td.v{font-family:var(--font-mono);font-size:12px;white-space:nowrap}
+.tabela td.cam{color:var(--ink-2);font-size:12px}
+.tabela tbody tr{transition:background var(--duracao-linha)}
+.tabela tbody tr:hover{background:var(--surface-hover)}
+.tabela .grupo td{background:var(--surface-sunken);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);padding:8px 16px}
+.nota{display:flex;gap:12px;padding:14px 16px;align-items:flex-start;border-radius:var(--radius-card);border:1px solid var(--line);background:var(--surface)}
+.nota .ic{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;flex:none;background:var(--surface-sunken);color:var(--ink)}
+.nota.alerta .ic{background:var(--danger-soft);color:var(--danger)}
+.nota.portao .ic{background:var(--accent-soft);color:var(--accent-ink)}
+.nota.ok .ic{background:var(--positive-soft);color:var(--positive)}
+.nota b{display:block;font-size:13px;line-height:18px;font-weight:600}
+.nota p{margin:2px 0 0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.nota svg{width:18px;height:18px}
+.notas{display:grid;gap:12px}
+
+/* ── capa ── */
+.capa{display:grid;gap:28px}
+.capa-topo{display:flex;flex-direction:column;gap:18px;max-width:820px}
+.capa .eyebrow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.capa h1{font-size:56px;line-height:60px;font-weight:800;letter-spacing:-.035em}
+.capa h1 .pt{color:var(--accent)}
+.capa h1 .pn{color:var(--ink-2);font-weight:600}
+.capa .frase{font-size:19px;line-height:28px;color:var(--ink);margin:0;max-width:62ch}
+.capa .nao{font-size:15px;line-height:22px;color:var(--ink-2);margin:0;max-width:66ch}
+.contas{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line);border-radius:var(--radius-card);background:var(--surface);overflow:hidden;width:max-content;max-width:100%}
+.contas div{padding:12px 18px;border-right:1px solid var(--line);display:flex;flex-direction:column;gap:2px}
+.contas div:last-child{border-right:0}
+.contas b{font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.contas span{font-size:12px;color:var(--ink-2)}
+.moldura{border:1px solid var(--line);border-radius:var(--radius-panel);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-hover)}
+.moldura figcaption,.legenda{font-size:12px;line-height:17px;color:var(--ink-2);padding:10px 14px;border-top:1px solid var(--line);background:var(--surface)}
+@media (max-width:640px){.capa h1{font-size:40px;line-height:44px}.capa .frase{font-size:17px;line-height:25px}.contas div{padding:10px 12px;flex:1 1 30%}.contas{width:auto}}
+
+/* ── diagramas ── */
+figure{margin:0}
+.fig{border:1px solid var(--line);border-radius:var(--radius-panel);background:var(--surface);overflow:hidden}
+.fig .rolagem{padding:16px}
+.dg{display:block;width:100%;height:auto;min-width:860px;max-width:var(--dg-w)}
+.dg-estreito .dg{min-width:720px}
+.fig figcaption{font-size:13px;line-height:19px;color:var(--ink-2);padding:12px 16px;border-top:1px solid var(--line)}
+.fig figcaption .arraste{display:none}
+@media (max-width:900px){.fig figcaption .arraste{display:inline;color:var(--ink)}}
+.fig-acoes{display:flex;gap:12px;flex-wrap:wrap;margin-top:6px}
+
+.dg-bg{fill:var(--bg)}
+.dg text{font-family:Geist,Inter,system-ui,sans-serif;font-variant-numeric:tabular-nums}
+.dg-box{fill:var(--surface);stroke:var(--line-strong);stroke-width:1}
+.dg-soft{fill:var(--surface-sunken);stroke:var(--line);stroke-width:1}
+.dg-dec{fill:var(--bg);stroke:var(--ink);stroke-width:1.5}
+.dg-ink{fill:var(--ink);stroke:var(--ink);stroke-width:1}
+.dg-hl{fill:var(--accent-soft);stroke:none}
+.dg-zone{fill:none;stroke:var(--line-strong);stroke-width:1;stroke-dasharray:5 5}
+.dg-errb{fill:var(--danger-soft);stroke:var(--danger);stroke-width:1}
+.dg-okb{fill:var(--positive-soft);stroke:var(--positive);stroke-width:1}
+.dg-t{fill:var(--ink);font-size:13px;font-weight:600}
+.dg-s{fill:var(--ink-2);font-size:11px;font-weight:500}
+.dg-m{fill:var(--ink-2);font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-mi{fill:var(--ink);font-size:12px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-fk{fill:var(--accent-text);font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-hlt{fill:var(--accent-ink);font-size:10.5px;font-weight:600;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-cap{fill:var(--ink-2);font-size:10.5px;font-weight:600;letter-spacing:.08em}
+.dg-lbl{fill:var(--ink-2);font-size:10.5px;font-weight:600}
+.dg-inkt{fill:var(--bg);font-size:13px;font-weight:600}
+.dg-inks{fill:var(--bg);font-size:10.5px;font-weight:500;font-family:"Geist Mono",ui-monospace,monospace !important}
+.dg-errt{fill:var(--danger);font-size:12px;font-weight:600}
+.dg-errs{fill:var(--danger);font-size:10.5px;font-weight:500}
+.dg-okt{fill:var(--positive);font-size:13px;font-weight:600}
+.dg-oks{fill:var(--positive);font-size:10.5px;font-weight:500}
+.dg-acc{fill:none;stroke:var(--accent);stroke-width:2;stroke-linejoin:round}
+.dg-ln{fill:none;stroke:var(--ink-2);stroke-width:1.25;stroke-linejoin:round}
+.dg-dash{fill:none;stroke:var(--ink-2);stroke-width:1.25;stroke-dasharray:5 4;stroke-linejoin:round}
+.dg-err{fill:none;stroke:var(--danger);stroke-width:1.25;stroke-dasharray:5 4}
+.dg-aha{fill:var(--accent)}
+.dg-ahn{fill:var(--ink-2)}
+.dg-ahe{fill:var(--danger)}
+.dg-num{fill:var(--accent);stroke:var(--surface);stroke-width:2}
+.dg-numt{fill:var(--on-accent);font-size:11px;font-weight:700}
+
+.passos{list-style:none;margin:20px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:10px 24px;counter-reset:p}
+.passos li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:12px;font-size:13px;line-height:19px;counter-increment:p}
+.passos li::before{content:counter(p);width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 11px/22px var(--font-sans);text-align:center}
+.passos li p{margin:0}
+
+/* ── banco ── */
+.grade2{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px;align-items:start}
+.papel{padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.papel h4{font-size:15px;line-height:21px;font-weight:600}
+.papel p{margin:0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.linha-tempo{list-style:none;margin:0;padding:0;display:grid;gap:0}
+.dia{display:grid;grid-template-columns:120px minmax(0,1fr);gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.dia:first-child{border-top:0;padding-top:4px}
+.dia-rot{display:flex;flex-direction:column;gap:2px}
+.dia-rot b{font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em}
+.dia-rot span{font-size:12px;color:var(--ink-2)}
+.migs{list-style:none;margin:0;padding:0 0 0 18px;border-left:2px solid var(--line);display:grid;gap:12px}
+.migs li{position:relative;display:flex;flex-direction:column;gap:2px;min-width:0}
+.migs li::before{content:"";position:absolute;left:-24px;top:6px;width:10px;height:10px;border-radius:50%;background:var(--surface);border:2px solid var(--accent)}
+.migs .arq{font:500 11.5px/16px var(--font-mono);color:var(--ink-2);overflow-wrap:anywhere}
+.migs .res{font-size:13px;line-height:19px}
+.migs .hora{font:500 11.5px/16px var(--font-mono);color:var(--accent-text);margin-right:6px}
+@media (max-width:640px){.dia{grid-template-columns:1fr;gap:10px}}
+
+/* ── APIs ── */
+.apis{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));gap:16px;align-items:start}
+.api:last-child{grid-column:1/-1}
+@media (min-width:900px){.api:last-child dl{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}}
+.api{padding:18px 20px;display:flex;flex-direction:column;gap:12px}
+.api h3{font-size:15px;line-height:21px;font-weight:600;letter-spacing:-.005em}
+.api .tipo{display:flex;gap:6px;flex-wrap:wrap}
+.api dl{margin:0;display:grid;gap:10px}
+.api dt{font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2)}
+.api dd{margin:2px 0 0;font-size:13px;line-height:19px;overflow-wrap:anywhere}
+
+/* ── telas ── */
+.indice-telas{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 8px;padding:0;list-style:none}
+.indice-telas a{display:inline-flex;align-items:center;height:30px;padding:0 12px;border-radius:var(--radius-pill);border:1px solid var(--line-strong);color:var(--ink);text-decoration:none;font-size:13px;font-weight:500;background:var(--surface)}
+.indice-telas a:hover{background:var(--surface-sunken)}
+.tela{padding-top:56px;scroll-margin-top:72px;border-top:1px solid var(--line);margin-top:40px}
+.tela:first-of-type{border-top:0;margin-top:8px;padding-top:16px}
+.tela-cab{display:flex;flex-direction:column;gap:10px;margin-bottom:20px;max-width:780px}
+.tela-cab .t{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.tela-cab h3{font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em}
+.rota{font:500 12px/1 var(--font-mono);padding:6px 9px;border-radius:6px;background:var(--sidebar);color:var(--sidebar-ink);white-space:nowrap}
+.pergunta{font-size:18px;line-height:27px;margin:0;color:var(--ink)}
+.pergunta::before{content:"A pergunta que ela responde";display:block;font-size:11px;line-height:14px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:4px}
+.fotos{display:grid;grid-template-columns:minmax(0,1fr) 252px;gap:20px;align-items:start}
+.foto-pc{position:relative;border:1px solid var(--line);border-radius:var(--radius-card);overflow:hidden;background:var(--surface);box-shadow:var(--shadow-card)}
+.foto-pc .sobre{position:relative}
+.marca{position:absolute;transform:translate(-50%,-50%);width:24px;height:24px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 12px/24px var(--font-sans);text-align:center;box-shadow:0 0 0 2px #fbf9f4,0 2px 6px rgba(17,17,17,.25);pointer-events:none}
+.foto-cel{display:flex;flex-direction:column;align-items:center;gap:8px}
+.celular{width:236px;max-width:100%;border:6px solid var(--sidebar);border-radius:30px;background:var(--sidebar);box-shadow:var(--shadow-hover);overflow:hidden}
+.celular .tela-cel{height:480px;overflow:hidden;border-radius:24px;background:#f5f2e8;position:relative}
+.celular.aberto .tela-cel{height:auto}
+.ver-cel{height:30px;padding:0 12px;border-radius:var(--radius-btn);border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:600 12px/1 var(--font-sans);cursor:pointer;transition:background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.ver-cel:hover{background:var(--surface-sunken)}
+@media (prefers-reduced-motion:no-preference){.ver-cel:active{scale:var(--toque-controle)}}
+.foto-rot{font-size:12px;line-height:16px;color:var(--ink-2);text-align:center;margin:0}
+.foto-pc .foto-rot{text-align:left;padding:8px 12px;border-top:1px solid var(--line)}
+.blocos-dados{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:28px;margin-top:22px}
+.blocos{list-style:none;margin:8px 0 0;padding:0;display:grid;gap:8px;counter-reset:b}
+.blocos li{display:grid;grid-template-columns:24px minmax(0,1fr);gap:10px;font-size:14px;line-height:21px;counter-increment:b}
+.blocos li::before{content:counter(b);width:22px;height:22px;border-radius:50%;background:var(--accent);color:var(--on-accent);font:700 11px/22px var(--font-sans);text-align:center}
+.dados-tela{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.vazio-tela{font-size:13px;line-height:19px;color:var(--ink-2);margin:12px 0 0}
+@media (max-width:640px){.marca{width:18px;height:18px;font-size:10px;line-height:18px}}
+@media (max-width:900px){.fotos{grid-template-columns:1fr}.blocos-dados{grid-template-columns:1fr;gap:20px}}
+
+/* ── design system (amostras com o CSS do painel) ── */
+.amostra{border:1px solid var(--line);border-radius:var(--radius-panel);padding:24px;display:grid;gap:18px}
+.escala{display:grid;gap:0}
+.escala .lin{display:grid;grid-template-columns:150px minmax(0,1fr);gap:18px;align-items:baseline;padding:12px 0;border-top:1px solid var(--line)}
+.escala .lin:first-child{border-top:0}
+.escala .meta{font:500 11.5px/16px var(--font-mono);color:var(--ink-2)}
+.escala .ex{min-width:0;overflow-wrap:anywhere}
+@media (max-width:640px){.escala .lin{grid-template-columns:1fr;gap:4px}.amostra{padding:16px}}
+.cores{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.cor{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.cor i{display:block;height:56px;border-bottom:1px solid var(--line)}
+.cor div{padding:8px 10px;display:flex;flex-direction:column;gap:1px}
+.cor b{font:500 11.5px/16px var(--font-mono)}
+.cor span{font:500 11px/15px var(--font-mono);color:var(--ink-2)}
+.comp-grade{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.comp{display:flex;flex-direction:column;gap:12px;min-width:0}
+.comp > .k-cap{color:var(--ink-2)}
+.fila-comp{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.lista-comp{display:flex;flex-wrap:wrap;gap:6px}
+.mov{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:16px}
+.barra-dado{height:10px;border-radius:var(--radius-pill);background:var(--surface-sunken);overflow:hidden}
+.barra-dado span{display:block;height:100%;background:var(--accent);border-radius:inherit;transform-origin:left center}
+.barras{display:grid;gap:10px}
+.barras .b{display:grid;grid-template-columns:110px minmax(0,1fr) 40px;gap:10px;align-items:center;font-size:12px}
+.barras .b b{font:500 11.5px/1 var(--font-mono);text-align:right}
+@media (prefers-reduced-motion:no-preference){
+  .tocando .barra-dado span{animation:cresce var(--duracao-dado) var(--curva-dado) both;animation-delay:calc(var(--i) * var(--escalonar))}
+  .tocando .k-kpi{animation:entra var(--duracao-pagina) var(--curva-dado) both}
+}
+@keyframes cresce{from{transform:scaleX(0)}}
+@keyframes entra{from{opacity:0;translate:0 8px}}
+
+/* CSS do painel (painel/design/componentes.css), só as classes usadas nas amostras. */
+.marfim .k-card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-card);box-shadow:var(--shadow-card)}
+.k-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:var(--control-height);padding:0 14px;border-radius:var(--radius-btn);border:1px solid transparent;font:600 13px/1 var(--font-sans);letter-spacing:-.005em;cursor:pointer;white-space:nowrap;transition:background var(--duracao-padrao),border-color var(--duracao-padrao),color var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.k-btn-primary{background:var(--accent);color:var(--on-accent)}
+.k-btn-primary:hover{background:var(--accent-hover)}
+.k-btn-secondary{background:var(--surface);color:var(--ink);border-color:var(--line-strong)}
+.k-btn-secondary:hover{background:var(--surface-sunken)}
+.k-btn-ghost{background:transparent;color:var(--ink-2)}
+.k-btn-ghost:hover{background:var(--surface-sunken);color:var(--ink)}
+.k-btn-dark{background:var(--ink);color:var(--bg)}
+.k-btn-sm{height:28px;padding:0 10px;font-size:12px}
+.k-btn[disabled]{opacity:.45;cursor:not-allowed}
+.k-chip{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);white-space:nowrap;border:1px solid transparent}
+.k-chip::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.k-chip--aprovado{background:var(--positive-soft);color:var(--positive)}
+.k-chip--producao{background:var(--accent-soft);color:var(--accent-ink)}
+.k-chip--bloqueado{background:var(--danger-soft);color:var(--danger)}
+.k-chip--agendado{background:var(--surface-sunken);color:var(--ink-2)}
+.k-chip--publicado{background:var(--ink);color:var(--bg)}
+.k-chip--portao{background:transparent;color:var(--accent-ink);border-color:var(--accent)}
+.k-chip--portao::before,.k-chip--model::before,.k-chip--opus::before{display:none}
+.k-chip--model{background:transparent;color:var(--ink);border-color:var(--line-strong);font-family:var(--font-mono);font-weight:500;font-size:11px;letter-spacing:.01em}
+.k-chip--opus{background:var(--ink);color:var(--bg);border-color:var(--ink);font-family:var(--font-mono);font-weight:500;font-size:11px}
+.k-kpi{padding:20px 20px 18px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.k-kpi-value{font-size:40px;line-height:44px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.k-kpi-value small{font-size:18px;font-weight:600;color:var(--ink-2);letter-spacing:-.01em;margin-left:2px}
+.k-kpi-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:6px;font-size:13px;color:var(--ink-2)}
+.k-delta{display:inline-flex;align-items:center;gap:3px;height:22px;padding:0 7px;border-radius:var(--radius-pill);font:600 12px/1 var(--font-sans);font-variant-numeric:tabular-nums}
+.k-delta--flat{background:var(--surface-sunken);color:var(--ink-2)}
+.k-progress{height:6px;border-radius:var(--radius-pill);background:var(--surface-sunken);overflow:hidden}
+.k-progress > span{display:block;height:100%;background:var(--accent);border-radius:inherit}
+.k-steps{display:flex;gap:4px}
+.k-steps i{flex:1;height:6px;border-radius:2px;background:var(--surface-sunken)}
+.k-steps i.on{background:var(--ink)}.k-steps i.now{background:var(--accent)}.k-steps i.blocked{background:var(--danger)}
+.k-gate{display:flex;flex-direction:column;gap:14px;padding:18px 20px}
+.k-gate-icon{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;background:var(--accent-soft);color:var(--accent-ink);flex:none}
+.k-check{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--ink)}
+.k-check b{width:18px;height:18px;border-radius:var(--radius-sm);border:1px solid var(--line-strong);display:grid;place-items:center;flex:none;background:var(--surface)}
+.k-check.is-on b{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.k-check.is-on span{color:var(--ink-2);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+.k-event{display:flex;flex-direction:column;gap:3px;padding:8px 10px 8px 13px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--line);font-size:12px;line-height:16px;position:relative;overflow:hidden;min-width:150px}
+.k-event::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ink)}
+.k-event b{font-weight:600;color:var(--ink)}.k-event span{color:var(--ink-2)}
+.k-event--ig::before{background:var(--accent)}.k-event--fb::before{background:var(--chart-5)}
+.k-event--gate{background:var(--accent-soft);border-color:transparent}.k-event--gate::before{display:none}
+.k-event--gate b,.k-event--gate span{color:var(--accent-ink)}
+.k-search{display:flex;align-items:center;gap:8px;height:var(--control-height);padding:0 12px;border-radius:var(--radius-btn);background:var(--surface);border:1px solid var(--line-strong);color:var(--ink-2);font-size:13px;max-width:100%}
+.k-search input{border:0;outline:0;background:transparent;font:inherit;color:var(--ink);flex:1;min-width:0}
+.k-search input::placeholder{color:var(--ink-3)}
+.k-search:focus-within{border-color:var(--ink);box-shadow:0 0 0 3px var(--accent-soft)}
+.k-kbd{font:500 11px/1 var(--font-mono);color:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:3px 5px;background:var(--bg)}
+.k-tooltip{display:inline-flex;flex-direction:column;gap:2px;background:var(--sidebar);color:var(--sidebar-ink);padding:8px 10px;border-radius:var(--radius-sm);font:500 12px/16px var(--font-sans);box-shadow:var(--shadow-pop);position:relative;align-self:flex-start}
+.k-tooltip small{color:var(--sidebar-ink-2);font-size:11px}
+.k-tooltip::after{content:"";position:absolute;left:50%;bottom:-4px;width:8px;height:8px;background:var(--sidebar);transform:translateX(-50%) rotate(45deg)}
+.k-note{display:flex;gap:12px;padding:14px 16px;align-items:flex-start}
+.k-note-icon{width:32px;height:32px;border-radius:var(--radius-btn);display:grid;place-items:center;flex:none;background:var(--surface-sunken);color:var(--ink)}
+.k-note--alert .k-note-icon{background:var(--danger-soft);color:var(--danger)}
+.k-note--gate .k-note-icon{background:var(--accent-soft);color:var(--accent-ink)}
+.k-note-title{font-size:13px;line-height:18px;font-weight:600}
+.k-note-body{font-size:13px;line-height:18px;color:var(--ink-2)}
+.k-empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:32px 20px;border:1px dashed var(--line-strong);border-radius:var(--radius-card);background:transparent}
+.k-empty-icon{width:48px;height:48px;border-radius:var(--radius-card);background:var(--surface);border:1px solid var(--line);display:grid;place-items:center;color:var(--ink-2);margin-bottom:4px}
+.k-empty h4{margin:0;font-size:15px;line-height:22px;font-weight:600}
+.k-empty p{margin:0;font-size:13px;line-height:18px;color:var(--ink-2);max-width:300px}
+.k-empty svg,.k-note svg,.k-gate svg{width:20px;height:20px}
+
+/* ── qualidade ── */
+.gauntlet{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:16px}
+.area{padding:18px 20px;display:flex;flex-direction:column;gap:10px}
+.area .topo{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+.area h4{font-size:15px;line-height:21px;font-weight:600}
+.area p{margin:0;font-size:13px;line-height:19px;color:var(--ink-2)}
+.area .quem{font:500 12px/16px var(--font-mono);color:var(--ink)}
+.teste-num{font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+.falhas{margin:8px 0 0;padding-left:18px;font-size:13px;line-height:19px;color:var(--ink-2)}
+.falhas li{margin-bottom:4px}
+
+/* ── instalar ── */
+.passos-inst{list-style:none;margin:0;padding:0;display:grid;gap:16px;counter-reset:s}
+.passos-inst > li{display:grid;grid-template-columns:32px minmax(0,1fr);gap:14px;counter-increment:s}
+.passos-inst > li::before{content:counter(s);width:28px;height:28px;border-radius:8px;background:var(--ink);color:var(--bg);font:700 13px/28px var(--font-sans);text-align:center}
+.passos-inst h4{font-size:15px;line-height:22px;font-weight:600;margin-bottom:6px}
+.passos-inst p{margin:0 0 8px;font-size:14px;line-height:21px;color:var(--ink-2)}
+.codigo{position:relative;border-radius:var(--radius-card);background:var(--sidebar);border:1px solid var(--sidebar-line);min-width:0}
+.codigo pre{margin:0;padding:14px 16px;padding-right:96px;overflow-x:auto;color:var(--sidebar-ink);font:500 12.5px/20px var(--font-mono)}
+.codigo pre .c{color:var(--sidebar-ink-2)}
+.copiar{position:absolute;top:8px;right:8px;height:28px;padding:0 10px;border-radius:var(--radius-btn);border:1px solid var(--sidebar-line);background:var(--sidebar-raised);color:var(--sidebar-ink);font:600 12px/1 var(--font-sans);cursor:pointer;transition:background var(--duracao-padrao),scale var(--duracao-toque) var(--curva-saida)}
+.copiar:hover{background:var(--sidebar-line)}
+.copiar:focus-visible{outline-color:var(--focus-on-dark)}
+.reuso{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px}
+.reuso .card{padding:18px 20px}
+.reuso h4{font-size:15px;line-height:21px;font-weight:600;margin-bottom:8px}
+.reuso ul{margin:0;padding-left:18px;font-size:13px;line-height:20px;color:var(--ink-2);display:grid;gap:6px}
+.reuso ul b{color:var(--ink);font-weight:600}
+.rodape{margin-top:72px;padding-top:20px;border-top:1px solid var(--line);font-size:12px;line-height:18px;color:var(--ink-2);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+</style>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+<div class="casca">
+  <aside class="side" aria-label="Índice">
+    <a class="logo-link" href="#capa" aria-label="korvu. painel, início"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 -790 6168 1030" aria-hidden="true"><path class="la" d="M60.80029296875 -710.0H232.7989501953125V-340.19854736328125L412.400146484375 -537.9998779296875H615.5987548828125L407.39874267578125 -318.59979248046875L620.5988159179688 0.0H435.40008544921875L296.799560546875 -224.0003662109375L232.7989501953125 -155.5997314453125V0.0H60.80029296875Z M661.8001708984375 -268.99993896484375Q661.8001708984375 -352.99993896484375 697.0000915527344 -416.6999206542969Q732.2000122070312 -480.39990234375 795.8556178358734 -515.1998901367188Q859.5112234647156 -549.9998779296875 943.9995727539062 -549.9998779296875Q1027.709284185053 -549.9998779296875 1091.6542026394015 -515.1998901367188Q1155.59912109375 -480.39990234375 1190.7990417480469 -416.6999206542969Q1225.9989624023438 -352.99993896484375 1225.9989624023438 -268.99993896484375Q1225.9989624023438 -184.99993896484375 1190.7990417480469 -121.29995727539062Q1155.59912109375 -57.5999755859375 1091.6542026394015 -22.79998779296875Q1027.709284185053 12.0 943.9995727539062 12.0Q859.5112234647156 12.0 795.8556178358734 -22.79998779296875Q732.2000122070312 -57.5999755859375 697.0000915527344 -121.29995727539062Q661.8001708984375 -184.99993896484375 661.8001708984375 -268.99993896484375ZM1049.2003173828125 -268.5999450683594Q1049.2003173828125 -341.80023193359375 1021.9001159667969 -382.3004150390625Q994.5999145507812 -422.80059814453125 943.9995727539062 -422.80059814453125Q893.3992309570312 -422.80059814453125 865.9990234375 -382.20346983314164Q838.5988159179688 -341.6063415217521 838.5988159179688 -268.99993896484375Q838.5988159179688 -195.19964599609375 865.9990234375 -155.199462890625Q893.3992309570312 -115.19927978515625 943.9995727539062 -115.19927978515625Q994.5999145507812 -115.19927978515625 1021.9001159667969 -155.29946899414062Q1049.2003173828125 -195.399658203125 1049.2003173828125 -268.5999450683594Z M1282.80029296875 -537.9998779296875H1447.9989013671875L1453.598876953125 -375.2003173828125L1440.7989501953125 -377.40032958984375Q1454.7988891601562 -462.800048828125 1487.7988891601562 -500.39996337890625Q1520.7988891601562 -537.9998779296875 1580.1988525390625 -537.9998779296875H1627.39892578125V-398.80078125H1578.7988891601562Q1534.7989501953125 -398.80078125 1507.8989562988281 -388.7007141113281Q1480.9989624023438 -378.60064697265625 1467.8989562988281 -356.00054931640625Q1454.7989501953125 -333.40045166015625 1454.7989501953125 -295.20037841796875V0.0H1282.80029296875Z M1644.2000122070312 -537.9998779296875H1822.5986938476562L1940.5992431640625 -172.398681640625L2057.7998046875 -537.9998779296875H2236.198486328125L2038.3985595703125 0.0H1841.199951171875Z M2277.80029296875 -191.39996337890625V-537.9998779296875H2449.7989501953125V-231.19970703125Q2449.7989501953125 -174.19940185546875 2466.4991149902344 -148.0992431640625Q2483.1992797851562 -121.99908447265625 2518.599609375 -121.99908447265625Q2559.199951171875 -121.99908447265625 2580.8001708984375 -150.89926147460938Q2602.400390625 -179.7994384765625 2602.400390625 -239.599609375V-537.9998779296875H2774.3990478515625V0.0H2619.2001953125L2613.6002807617188 -162.19952392578125L2633.8001708984375 -159.199462890625Q2624.2000732421875 -73.3997802734375 2579.2000732421875 -30.69989013671875Q2534.2000732421875 12.0 2455.000244140625 12.0Q2371.0003051757812 12.0 2324.4002990722656 -41.100006103515625Q2277.80029296875 -94.20001220703125 2277.80029296875 -191.39996337890625Z M2830.8001708984375 -166.59918212890625H3010.1991577148438V0.0H2830.8001708984375Z"></path><g transform="translate(3346 0)"><path class="lb" d="M75.19970703125 -532.0001220703125H175.40106201171875L177.80108642578125 -418.20013427734375L165.60107421875 -424.0001220703125Q184.60107421875 -481.80010986328125 230.74105224609374 -512.9001159667969Q276.8810302734375 -544.0001220703125 338.4010009765625 -544.0001220703125Q413.200927734375 -544.0001220703125 464.6009216308594 -506.900146484375Q516.0009155273438 -469.8001708984375 541.200927734375 -406.60015869140625Q566.4009399414062 -343.400146484375 566.4009399414062 -266.00006103515625Q566.4009399414062 -188.5999755859375 541.1009216308594 -125.39996337890625Q515.8009033203125 -62.199951171875 464.4009094238281 -25.0999755859375Q413.00091552734375 12.0 338.05204350897606 12.0Q297.61909939380405 12.0 262.610086806277 -2.100006103515625Q227.60107421875 -16.20001220703125 203.10107421875 -42.000030517578125Q178.60107421875 -67.800048828125 169.00103759765625 -101.60009765625L181.2010498046875 -113.5999755859375V150.0H75.19970703125ZM456.1995849609375 -266.00006103515625Q456.1995849609375 -353.5997314453125 419.35875212840546 -402.8995666503906Q382.5179192958734 -452.19940185546875 318.9674826597556 -452.19940185546875Q276.60052490234375 -452.19940185546875 245.41223496657153 -430.9513579633899Q214.22394503079929 -409.70331407131107 197.7124974177434 -368.15158379346803Q181.2010498046875 -326.599853515625 181.2010498046875 -266.0371003327546Q181.2010498046875 -205.47434714988427 197.70095825195312 -163.83745433666087Q214.20086669921875 -122.2005615234375 244.90069580078125 -101.00064086914062Q275.60052490234375 -79.80072021484375 318.95375061035156 -79.80072021484375Q382.5999755859375 -79.80072021484375 419.3997802734375 -129.10055541992188Q456.1995849609375 -178.400390625 456.1995849609375 -266.00006103515625Z M635.1998291015625 -132.800048828125Q635.1998291015625 -201.2000732421875 676.2998962402344 -240.2000732421875Q717.3999633789062 -279.2000732421875 805.4000244140625 -296.0001220703125L988.19970703125 -330.80010986328125Q988.19970703125 -392.7998046875 959.3998718261719 -423.59967041015625Q930.6000366210938 -454.3995361328125 873.8004150390625 -454.3995361328125Q823.8006591796875 -454.3995361328125 794.100830078125 -431.8996276855469Q764.4010009765625 -409.39971923828125 753.8010864257812 -365.39990234375L644.1998291015625 -372.19989013671875Q659.1998291015625 -453.0001220703125 719.5999450683594 -498.5001220703125Q780.0000610351562 -544.0001220703125 873.8004150390625 -544.0001220703125Q981.0007934570312 -544.0001220703125 1037.6009216308594 -487.0001220703125Q1094.2010498046875 -430.0001220703125 1094.2010498046875 -325.199951171875V-118.40069580078125Q1094.2010498046875 -99.0006103515625 1101.0010681152344 -91.30059814453125Q1107.8010864257812 -83.6005859375 1123.0010986328125 -83.6005859375H1142.0009765625V0.0Q1135.4009399414062 1.4000244140625 1124.9007873535156 2.300048828125Q1114.400634765625 3.2000732421875 1102.800537109375 3.2000732421875Q1047.800537109375 3.2000732421875 1021.600341796875 -23.39996337890625Q995.400146484375 -50.0 995.400146484375 -112.8001708984375L1006.2001953125 -108.0Q994.8001098632812 -55.7999267578125 941.7001647949219 -21.89996337890625Q888.6002197265625 12.0 817.4000244140625 12.0Q733.5999755859375 12.0 684.39990234375 -26.300018310546875Q635.1998291015625 -64.60003662109375 635.1998291015625 -132.800048828125ZM988.19970703125 -216.7999267578125V-250.7996826171875L833.000732421875 -220.7998046875Q786.0010375976562 -212.39984130859375 765.7011108398438 -193.19992065429688Q745.4011840820312 -174.0 745.4011840820312 -142.8001708984375Q745.4011840820312 -108.80035400390625 768.6010131835938 -90.20046997070312Q791.8008422851562 -71.6005859375 834.6005859375 -71.6005859375Q881.80029296875 -71.6005859375 916.5000915527344 -90.20046997070312Q951.1998901367188 -108.80035400390625 969.6997985839844 -141.80020141601562Q988.19970703125 -174.800048828125 988.19970703125 -216.7999267578125Z M1230.19970703125 -532.0001220703125H1336.2010498046875V0.0H1230.19970703125ZM1227.9996948242188 -714.8002319335938H1338.4010620117188V-609.1997680664062H1227.9996948242188Z M1466.19970703125 -532.0001220703125H1562.6008911132812L1566.6009521484375 -389.59967041015625L1553.80078125 -397.1995849609375Q1566.8007202148438 -470.99993896484375 1613.2007141113281 -507.5000305175781Q1659.6007080078125 -544.0001220703125 1726.600830078125 -544.0001220703125Q1813.2008056640625 -544.0001220703125 1860.0008544921875 -488.5001525878906Q1906.8009033203125 -433.00018310546875 1906.8009033203125 -342.2000732421875V0.0H1800.799560546875V-309.59954833984375Q1800.799560546875 -382.3994140625 1776.6997375488281 -418.6993103027344Q1752.5999145507812 -454.99920654296875 1698.0001831054688 -454.99920654296875Q1640.4005126953125 -454.99920654296875 1606.30078125 -417.09930419921875Q1572.2010498046875 -379.19940185546875 1572.2010498046875 -309.59954833984375V0.0H1466.19970703125Z M2006.1998291015625 -266.00006103515625Q2006.1998291015625 -349.2000732421875 2036.9999084472656 -412.40008544921875Q2067.7999877929688 -475.60009765625 2124.100128173828 -509.80010986328125Q2180.4002685546875 -544.0001220703125 2255.200439453125 -544.0001220703125Q2327.6006469726562 -544.0001220703125 2382.80078125 -510.7000732421875Q2438.0009155273438 -477.4000244140625 2468.4009704589844 -413.4999694824219Q2498.801025390625 -349.59991455078125 2498.801025390625 -261.9998779296875V-235.19976806640625H2116.6011962890625Q2120.0011596679688 -158.6002197265625 2157.4009704589844 -118.90045166015625Q2194.80078125 -79.20068359375 2259.200439453125 -79.20068359375Q2306.0001831054688 -79.20068359375 2336.800018310547 -100.300537109375Q2367.599853515625 -121.400390625 2380.5997924804688 -160.40020751953125L2491.0010375976562 -152.8001708984375Q2469.801025390625 -77.4000244140625 2407.600860595703 -32.70001220703125Q2345.4006958007812 12.0 2258.400390625 12.0Q2182.000244140625 12.0 2124.900115966797 -22.20001220703125Q2067.7999877929688 -56.4000244140625 2036.9999084472656 -119.20004272460938Q2006.1998291015625 -182.00006103515625 2006.1998291015625 -266.00006103515625ZM2255.200439453125 -453.5994873046875Q2198.000732421875 -453.5994873046875 2161.6009216308594 -417.9996337890625Q2125.2011108398438 -382.3997802734375 2116.6011962890625 -315.20013427734375H2386.3997802734375Q2381.3998413085938 -383.59979248046875 2346.7000122070312 -418.5996398925781Q2312.0001831054688 -453.5994873046875 2255.200439453125 -453.5994873046875Z M2598.19970703125 -113.2008056640625 2598.9996948242188 -710.0H2705.0010375976562V-123.20098876953125Q2705.0010375976562 -104.80084228515625 2714.3010864257812 -95.7008056640625Q2723.6011352539062 -86.60076904296875 2741.4012451171875 -86.60076904296875H2784.0010375976562V0.0H2715.0004272460938Q2659.800048828125 0.0 2628.9998779296875 -27.600189208984375Q2598.19970703125 -55.20037841796875 2598.19970703125 -113.2008056640625Z"></path></g></svg></a>
+    <p class="side-sub">documentação técnica</p>
+    <p class="side-label">Seções</p>
+    <ul class="nav"><li><a href="#capa">Início</a></li><li><a href="#arquitetura">Arquitetura</a></li><li><a href="#tecnologia">Tecnologia</a></li><li><a href="#banco">Banco de dados</a></li><li><a href="#backend">Back-end e sincronização</a></li><li><a href="#apis">APIs<span class="cont">7</span></a></li><li><a href="#telas">Tela por tela<span class="cont">9</span></a></li><li><a href="#design">Design system</a></li><li><a href="#qualidade">Qualidade</a></li><li><a href="#instalar">Instalar e reusar</a></li></ul>
+    <p class="side-label"><a href="../../estudio/site/index.html" style="color:inherit">Volume 1 · Estúdio ↗</a></p>
+    <div class="side-foot"><b>Dossiê de 12/11/2026</b>tudo o que está aqui vem dele</div>
+  </aside>
+
+  <header class="topbar">
+    <a href="#capa" aria-label="korvu. painel, início"><svg class="logo" xmlns="http://www.w3.org/2000/svg" viewBox="0 -790 6168 1030" aria-hidden="true"><path class="la" d="M60.80029296875 -710.0H232.7989501953125V-340.19854736328125L412.400146484375 -537.9998779296875H615.5987548828125L407.39874267578125 -318.59979248046875L620.5988159179688 0.0H435.40008544921875L296.799560546875 -224.0003662109375L232.7989501953125 -155.5997314453125V0.0H60.80029296875Z M661.8001708984375 -268.99993896484375Q661.8001708984375 -352.99993896484375 697.0000915527344 -416.6999206542969Q732.2000122070312 -480.39990234375 795.8556178358734 -515.1998901367188Q859.5112234647156 -549.9998779296875 943.9995727539062 -549.9998779296875Q1027.709284185053 -549.9998779296875 1091.6542026394015 -515.1998901367188Q1155.59912109375 -480.39990234375 1190.7990417480469 -416.6999206542969Q1225.9989624023438 -352.99993896484375 1225.9989624023438 -268.99993896484375Q1225.9989624023438 -184.99993896484375 1190.7990417480469 -121.29995727539062Q1155.59912109375 -57.5999755859375 1091.6542026394015 -22.79998779296875Q1027.709284185053 12.0 943.9995727539062 12.0Q859.5112234647156 12.0 795.8556178358734 -22.79998779296875Q732.2000122070312 -57.5999755859375 697.0000915527344 -121.29995727539062Q661.8001708984375 -184.99993896484375 661.8001708984375 -268.99993896484375ZM1049.2003173828125 -268.5999450683594Q1049.2003173828125 -341.80023193359375 1021.9001159667969 -382.3004150390625Q994.5999145507812 -422.80059814453125 943.9995727539062 -422.80059814453125Q893.3992309570312 -422.80059814453125 865.9990234375 -382.20346983314164Q838.5988159179688 -341.6063415217521 838.5988159179688 -268.99993896484375Q838.5988159179688 -195.19964599609375 865.9990234375 -155.199462890625Q893.3992309570312 -115.19927978515625 943.9995727539062 -115.19927978515625Q994.5999145507812 -115.19927978515625 1021.9001159667969 -155.29946899414062Q1049.2003173828125 -195.399658203125 1049.2003173828125 -268.5999450683594Z M1282.80029296875 -537.9998779296875H1447.9989013671875L1453.598876953125 -375.2003173828125L1440.7989501953125 -377.40032958984375Q1454.7988891601562 -462.800048828125 1487.7988891601562 -500.39996337890625Q1520.7988891601562 -537.9998779296875 1580.1988525390625 -537.9998779296875H1627.39892578125V-398.80078125H1578.7988891601562Q1534.7989501953125 -398.80078125 1507.8989562988281 -388.7007141113281Q1480.9989624023438 -378.60064697265625 1467.8989562988281 -356.00054931640625Q1454.7989501953125 -333.40045166015625 1454.7989501953125 -295.20037841796875V0.0H1282.80029296875Z M1644.2000122070312 -537.9998779296875H1822.5986938476562L1940.5992431640625 -172.398681640625L2057.7998046875 -537.9998779296875H2236.198486328125L2038.3985595703125 0.0H1841.199951171875Z M2277.80029296875 -191.39996337890625V-537.9998779296875H2449.7989501953125V-231.19970703125Q2449.7989501953125 -174.19940185546875 2466.4991149902344 -148.0992431640625Q2483.1992797851562 -121.99908447265625 2518.599609375 -121.99908447265625Q2559.199951171875 -121.99908447265625 2580.8001708984375 -150.89926147460938Q2602.400390625 -179.7994384765625 2602.400390625 -239.599609375V-537.9998779296875H2774.3990478515625V0.0H2619.2001953125L2613.6002807617188 -162.19952392578125L2633.8001708984375 -159.199462890625Q2624.2000732421875 -73.3997802734375 2579.2000732421875 -30.69989013671875Q2534.2000732421875 12.0 2455.000244140625 12.0Q2371.0003051757812 12.0 2324.4002990722656 -41.100006103515625Q2277.80029296875 -94.20001220703125 2277.80029296875 -191.39996337890625Z M2830.8001708984375 -166.59918212890625H3010.1991577148438V0.0H2830.8001708984375Z"></path><g transform="translate(3346 0)"><path class="lb" d="M75.19970703125 -532.0001220703125H175.40106201171875L177.80108642578125 -418.20013427734375L165.60107421875 -424.0001220703125Q184.60107421875 -481.80010986328125 230.74105224609374 -512.9001159667969Q276.8810302734375 -544.0001220703125 338.4010009765625 -544.0001220703125Q413.200927734375 -544.0001220703125 464.6009216308594 -506.900146484375Q516.0009155273438 -469.8001708984375 541.200927734375 -406.60015869140625Q566.4009399414062 -343.400146484375 566.4009399414062 -266.00006103515625Q566.4009399414062 -188.5999755859375 541.1009216308594 -125.39996337890625Q515.8009033203125 -62.199951171875 464.4009094238281 -25.0999755859375Q413.00091552734375 12.0 338.05204350897606 12.0Q297.61909939380405 12.0 262.610086806277 -2.100006103515625Q227.60107421875 -16.20001220703125 203.10107421875 -42.000030517578125Q178.60107421875 -67.800048828125 169.00103759765625 -101.60009765625L181.2010498046875 -113.5999755859375V150.0H75.19970703125ZM456.1995849609375 -266.00006103515625Q456.1995849609375 -353.5997314453125 419.35875212840546 -402.8995666503906Q382.5179192958734 -452.19940185546875 318.9674826597556 -452.19940185546875Q276.60052490234375 -452.19940185546875 245.41223496657153 -430.9513579633899Q214.22394503079929 -409.70331407131107 197.7124974177434 -368.15158379346803Q181.2010498046875 -326.599853515625 181.2010498046875 -266.0371003327546Q181.2010498046875 -205.47434714988427 197.70095825195312 -163.83745433666087Q214.20086669921875 -122.2005615234375 244.90069580078125 -101.00064086914062Q275.60052490234375 -79.80072021484375 318.95375061035156 -79.80072021484375Q382.5999755859375 -79.80072021484375 419.3997802734375 -129.10055541992188Q456.1995849609375 -178.400390625 456.1995849609375 -266.00006103515625Z M635.1998291015625 -132.800048828125Q635.1998291015625 -201.2000732421875 676.2998962402344 -240.2000732421875Q717.3999633789062 -279.2000732421875 805.4000244140625 -296.0001220703125L988.19970703125 -330.80010986328125Q988.19970703125 -392.7998046875 959.3998718261719 -423.59967041015625Q930.6000366210938 -454.3995361328125 873.8004150390625 -454.3995361328125Q823.8006591796875 -454.3995361328125 794.100830078125 -431.8996276855469Q764.4010009765625 -409.39971923828125 753.8010864257812 -365.39990234375L644.1998291015625 -372.19989013671875Q659.1998291015625 -453.0001220703125 719.5999450683594 -498.5001220703125Q780.0000610351562 -544.0001220703125 873.8004150390625 -544.0001220703125Q981.0007934570312 -544.0001220703125 1037.6009216308594 -487.0001220703125Q1094.2010498046875 -430.0001220703125 1094.2010498046875 -325.199951171875V-118.40069580078125Q1094.2010498046875 -99.0006103515625 1101.0010681152344 -91.30059814453125Q1107.8010864257812 -83.6005859375 1123.0010986328125 -83.6005859375H1142.0009765625V0.0Q1135.4009399414062 1.4000244140625 1124.9007873535156 2.300048828125Q1114.400634765625 3.2000732421875 1102.800537109375 3.2000732421875Q1047.800537109375 3.2000732421875 1021.600341796875 -23.39996337890625Q995.400146484375 -50.0 995.400146484375 -112.8001708984375L1006.2001953125 -108.0Q994.8001098632812 -55.7999267578125 941.7001647949219 -21.89996337890625Q888.6002197265625 12.0 817.4000244140625 12.0Q733.5999755859375 12.0 684.39990234375 -26.300018310546875Q635.1998291015625 -64.60003662109375 635.1998291015625 -132.800048828125ZM988.19970703125 -216.7999267578125V-250.7996826171875L833.000732421875 -220.7998046875Q786.0010375976562 -212.39984130859375 765.7011108398438 -193.19992065429688Q745.4011840820312 -174.0 745.4011840820312 -142.8001708984375Q745.4011840820312 -108.80035400390625 768.6010131835938 -90.20046997070312Q791.8008422851562 -71.6005859375 834.6005859375 -71.6005859375Q881.80029296875 -71.6005859375 916.5000915527344 -90.20046997070312Q951.1998901367188 -108.80035400390625 969.6997985839844 -141.80020141601562Q988.19970703125 -174.800048828125 988.19970703125 -216.7999267578125Z M1230.19970703125 -532.0001220703125H1336.2010498046875V0.0H1230.19970703125ZM1227.9996948242188 -714.8002319335938H1338.4010620117188V-609.1997680664062H1227.9996948242188Z M1466.19970703125 -532.0001220703125H1562.6008911132812L1566.6009521484375 -389.59967041015625L1553.80078125 -397.1995849609375Q1566.8007202148438 -470.99993896484375 1613.2007141113281 -507.5000305175781Q1659.6007080078125 -544.0001220703125 1726.600830078125 -544.0001220703125Q1813.2008056640625 -544.0001220703125 1860.0008544921875 -488.5001525878906Q1906.8009033203125 -433.00018310546875 1906.8009033203125 -342.2000732421875V0.0H1800.799560546875V-309.59954833984375Q1800.799560546875 -382.3994140625 1776.6997375488281 -418.6993103027344Q1752.5999145507812 -454.99920654296875 1698.0001831054688 -454.99920654296875Q1640.4005126953125 -454.99920654296875 1606.30078125 -417.09930419921875Q1572.2010498046875 -379.19940185546875 1572.2010498046875 -309.59954833984375V0.0H1466.19970703125Z M2006.1998291015625 -266.00006103515625Q2006.1998291015625 -349.2000732421875 2036.9999084472656 -412.40008544921875Q2067.7999877929688 -475.60009765625 2124.100128173828 -509.80010986328125Q2180.4002685546875 -544.0001220703125 2255.200439453125 -544.0001220703125Q2327.6006469726562 -544.0001220703125 2382.80078125 -510.7000732421875Q2438.0009155273438 -477.4000244140625 2468.4009704589844 -413.4999694824219Q2498.801025390625 -349.59991455078125 2498.801025390625 -261.9998779296875V-235.19976806640625H2116.6011962890625Q2120.0011596679688 -158.6002197265625 2157.4009704589844 -118.90045166015625Q2194.80078125 -79.20068359375 2259.200439453125 -79.20068359375Q2306.0001831054688 -79.20068359375 2336.800018310547 -100.300537109375Q2367.599853515625 -121.400390625 2380.5997924804688 -160.40020751953125L2491.0010375976562 -152.8001708984375Q2469.801025390625 -77.4000244140625 2407.600860595703 -32.70001220703125Q2345.4006958007812 12.0 2258.400390625 12.0Q2182.000244140625 12.0 2124.900115966797 -22.20001220703125Q2067.7999877929688 -56.4000244140625 2036.9999084472656 -119.20004272460938Q2006.1998291015625 -182.00006103515625 2006.1998291015625 -266.00006103515625ZM2255.200439453125 -453.5994873046875Q2198.000732421875 -453.5994873046875 2161.6009216308594 -417.9996337890625Q2125.2011108398438 -382.3997802734375 2116.6011962890625 -315.20013427734375H2386.3997802734375Q2381.3998413085938 -383.59979248046875 2346.7000122070312 -418.5996398925781Q2312.0001831054688 -453.5994873046875 2255.200439453125 -453.5994873046875Z M2598.19970703125 -113.2008056640625 2598.9996948242188 -710.0H2705.0010375976562V-123.20098876953125Q2705.0010375976562 -104.80084228515625 2714.3010864257812 -95.7008056640625Q2723.6011352539062 -86.60076904296875 2741.4012451171875 -86.60076904296875H2784.0010375976562V0.0H2715.0004272460938Q2659.800048828125 0.0 2628.9998779296875 -27.600189208984375Q2598.19970703125 -55.20037841796875 2598.19970703125 -113.2008056640625Z"></path></g></svg></a>
+    <button class="menu-btn" id="menu-btn" type="button" aria-expanded="false" aria-controls="gaveta">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>Menu</button>
+  </header>
+  <nav class="gaveta" id="gaveta" hidden aria-label="Índice"><ul class="nav"><li><a href="#capa">Início</a></li><li><a href="#arquitetura">Arquitetura</a></li><li><a href="#tecnologia">Tecnologia</a></li><li><a href="#banco">Banco de dados</a></li><li><a href="#backend">Back-end e sincronização</a></li><li><a href="#apis">APIs<span class="cont">7</span></a></li><li><a href="#telas">Tela por tela<span class="cont">9</span></a></li><li><a href="#design">Design system</a></li><li><a href="#qualidade">Qualidade</a></li><li><a href="#instalar">Instalar e reusar</a></li></ul></nav>
+
+  <main id="conteudo">
+  <div class="miolo">
+
+  <!-- 1. CAPA -->
+  <section class="sec capa" id="capa">
+    <div class="capa-topo">
+      <div class="eyebrow"><span class="k-cap">Estúdio de Reels Korvu Studio</span><span class="selo">painel web · só leitura</span></div>
+      <h1>korvu<span class="pt">.</span> <span class="pn">painel</span></h1>
+      <p class="frase">O quadro de comando do estúdio: um site que roda no próprio Mac e mostra, numa olhada, quem é quem na equipe de agentes de IA, em que fase está cada vídeo, se os portões de aprovação deixaram o trabalho passar, o que vai ser publicado e quando, como os vídeos estão indo no Instagram e no Facebook, e quanto a IA consome em tokens e dólares.</p>
+      <p class="nao">Ele não cria, não edita e não publica nada. Os arquivos do projeto são a fonte da verdade; o painel só lê. Onde antes havia um botão que “criava” algo, a tela mostra o comando para copiar e colar no Claude Code.</p>
+      <ul class="selos" aria-label="A pilha"><li class="selo">Next.js <b>15.5.28</b></li><li class="selo">React <b>19.1.10</b></li><li class="selo">TypeScript <b>5.9.3</b></li><li class="selo">Tailwind CSS <b>4.3.3</b></li><li class="selo">supabase-js <b>2.58.0</b></li><li class="selo">Supabase local <b>Postgres 17</b></li><li class="selo">Python <b>≥3.12</b></li><li class="selo">psycopg <b>≥3.2</b></li><li class="selo">PyYAML <b>≥6.0.3</b></li><li class="selo">uv</li><li class="selo">launchd</li><li class="selo">Geist</li></ul>
+      <div class="contas" aria-label="O sistema em números">
+        <div><b>9</b><span>telas</span></div><div><b>32</b><span>tabelas</span></div><div><b>10</b><span>views</span></div><div><b>18</b><span>migrações</span></div><div><b>7</b><span>APIs</span></div>
+      </div>
+    </div>
+    <figure class="moldura marfim">
+      <img src="capturas/inicio-1440.png" width="2880" height="3734" alt="A tela Visão geral do painel a 1440 px: barra lateral escura com o menu, quatro números do perfil, próximas publicações, desempenho de 28 dias, público por país, tokens e custos de 30 dias e os cartões da equipe.">
+      <figcaption>Visão geral, a 1440 px. Foto do app rodando em 12/11/2026 (não é maquete).</figcaption>
+    </figure>
+  </section>
+
+  <!-- 2. ARQUITETURA -->
+  <section class="sec" id="arquitetura">
+    <div class="sec-cab">
+      <p class="k-cap">Como um dado chega à tela</p>
+      <h2>arquitetura.</h2>
+      <p class="lead">Arquivos do projeto → sincronizador → Postgres → Next.js → navegador. Tudo em 127.0.0.1, sem nada aberto para a rede. O sincronizador roda a cada 15 minutos; o app só lê o banco.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama da arquitetura, role para o lado"><svg class="dg" viewBox="0 0 1200 490" role="img" aria-label="Arquitetura do korvu. painel: os arquivos do projeto são lidos pelo sincronizar.py, que grava numa transação no Postgres 17 local; o Next.js lê pela API do Supabase com a chave service_role e entrega HTML ao navegador, tudo em 127.0.0.1. Os números 1 a 7 seguem o veredicto de um portão até a tela." style="--dg-w:1200px"><defs><marker id="arq-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="arq-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="arq-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="dg-zone" x="8" y="76" width="1184" height="404" rx="14"/>
+<text class="dg-cap" x="24" y="98">SÓ NO MAC · TUDO EM 127.0.0.1</text>
+<rect class="dg-soft" x="24" y="10" width="220" height="44" rx="10"/>
+<text class="dg-t" x="40" y="29">Meta Graph API</text>
+<text class="dg-s" x="40" y="46">internet · v23.0 (padrão)</text>
+<text class="dg-s" x="258" y="29">scripts/metricas.py · perfil.py · publicar.py (área Automação Meta)</text>
+<text class="dg-s" x="258" y="46">gravam .json em 07-publicados/ e _controle/perfil/ — o painel só lê</text>
+<path class="dg-dash" d="M224 54 V106" marker-end="url(#arq-n)"/>
+<rect class="dg-box" x="24" y="110" width="220" height="232" rx="10"/>
+<text class="dg-t" x="40" y="134">arquivos do projeto</text>
+<text class="dg-m" x="40" y="162">.claude/agents/*.md</text>
+<rect class="dg-hl" x="32" y="172" width="204" height="20" rx="4"/>
+<text class="dg-hlt" x="40" y="186">videos/&lt;slug&gt;/portoes.json</text>
+<text class="dg-m" x="40" y="210">videos/&lt;slug&gt;/status.json</text>
+<text class="dg-m" x="40" y="234">05-render-pronto/</text>
+<text class="dg-m" x="40" y="258">06-publicar/ · 07-publicados/</text>
+<text class="dg-m" x="40" y="282">_controle/ · painel/*.yaml</text>
+<text class="dg-m" x="40" y="306">00-marca/cor/</text>
+<circle class="dg-num" cx="244" cy="158" r="11"/><text class="dg-numt" x="244" y="162" text-anchor="middle">1</text>
+<rect class="dg-box" x="24" y="382" width="220" height="64" rx="10"/>
+<text class="dg-t" x="40" y="406">registros do Claude Code</text>
+<text class="dg-m" x="40" y="426">~/.claude/projects/…/*.jsonl</text>
+<rect class="dg-box" x="320" y="110" width="180" height="50" rx="10"/>
+<text class="dg-t" x="336" y="131">launchd</text>
+<text class="dg-m" x="336" y="149">uk.korvu.painel · 900 s</text>
+<circle class="dg-num" cx="500" cy="110" r="11"/><text class="dg-numt" x="500" y="114" text-anchor="middle">2</text>
+<path class="dg-acc" d="M410 160 V196" marker-end="url(#arq-a)"/>
+<text class="dg-lbl" x="418" y="183">roda</text>
+<rect class="dg-box" x="320" y="200" width="180" height="112" rx="10"/>
+<text class="dg-t" x="336" y="224">sincronizar.py</text>
+<text class="dg-s" x="336" y="243">Python 3.12 · psycopg</text>
+<text class="dg-m" x="336" y="266">import portoes</text>
+<text class="dg-m" x="336" y="284">SO_LEITURA = True</text>
+<circle class="dg-num" cx="500" cy="200" r="11"/><text class="dg-numt" x="500" y="204" text-anchor="middle">3</text>
+<path class="dg-acc" d="M244 256 H316" marker-end="url(#arq-a)"/>
+<text class="dg-lbl" x="280" y="248" text-anchor="middle">lê</text>
+<path class="dg-dash" d="M244 414 H282 V292 H316" marker-end="url(#arq-n)"/>
+<text class="dg-lbl" x="24" y="464">só números, ids, modelo, horário</text>
+<rect class="dg-soft" x="320" y="382" width="180" height="64" rx="10"/>
+<text class="dg-t" x="336" y="406">previas_looks.py</text>
+<text class="dg-s" x="336" y="426">ffmpeg + LUTs → .jpg</text>
+<text class="dg-lbl" x="320" y="464">o único passo que grava arquivo</text>
+<path class="dg-dash" d="M500 414 H925 V344" marker-end="url(#arq-n)"/>
+<text class="dg-lbl" x="712" y="406" text-anchor="middle">GET /look/[id]</text>
+<rect class="dg-box" x="580" y="180" width="170" height="160" rx="10"/>
+<text class="dg-t" x="596" y="204">Postgres 17</text>
+<text class="dg-m" x="596" y="223">127.0.0.1:55322</text>
+<text class="dg-s" x="596" y="250">32 tabelas · 10 views</text>
+<text class="dg-s" x="596" y="269">RLS ligado em todas</text>
+<text class="dg-s" x="596" y="288">0 políticas</text>
+<text class="dg-m" x="596" y="316">portoes_estado</text>
+<text class="dg-m" x="596" y="331">veredictos</text>
+<circle class="dg-num" cx="750" cy="180" r="11"/><text class="dg-numt" x="750" y="184" text-anchor="middle">4</text>
+<path class="dg-acc" d="M500 262 H576" marker-end="url(#arq-a)"/>
+<text class="dg-lbl" x="540" y="254" text-anchor="middle">1 transação</text>
+<rect class="dg-box" x="840" y="180" width="170" height="160" rx="10"/>
+<text class="dg-t" x="856" y="204">Next.js 15</text>
+<text class="dg-s" x="856" y="223">Server Components</text>
+<text class="dg-m" x="856" y="242">127.0.0.1:3456</text>
+<text class="dg-m" x="856" y="268">db.portoesEstado()</text>
+<text class="dg-m" x="856" y="285">db.veredictos()</text>
+<text class="dg-s" x="856" y="310">páginas de 1.000</text>
+<text class="dg-s" x="856" y="327">contagem exata</text>
+<circle class="dg-num" cx="1010" cy="180" r="11"/><text class="dg-numt" x="1010" y="184" text-anchor="middle">5</text>
+<path class="dg-acc" d="M750 262 H836" marker-end="url(#arq-a)"/>
+<text class="dg-lbl" x="795" y="254" text-anchor="middle">PostgREST</text>
+<text class="dg-lbl" x="795" y="280" text-anchor="middle">só SELECT</text>
+<rect class="dg-box" x="1080" y="190" width="104" height="144" rx="10"/>
+<text class="dg-t" x="1090" y="214">navegador</text>
+<text class="dg-s" x="1090" y="240">Produção</text>
+<text class="dg-s" x="1090" y="258">ficha do agente</text>
+<text class="dg-s" x="1090" y="276">sino de avisos</text>
+<text class="dg-s" x="1090" y="304">rodapé: hora</text>
+<text class="dg-s" x="1090" y="320">da passagem</text>
+<circle class="dg-num" cx="1184" cy="190" r="11"/><text class="dg-numt" x="1184" y="194" text-anchor="middle">6</text>
+<circle class="dg-num" cx="1184" cy="310" r="11"/><text class="dg-numt" x="1184" y="314" text-anchor="middle">7</text>
+<path class="dg-acc" d="M1010 262 H1076" marker-end="url(#arq-a)"/>
+<text class="dg-lbl" x="1043" y="254" text-anchor="middle">HTML</text>
+</svg></div>
+      <figcaption>As setas laranja são o caminho de um veredicto do GAUNTLET até a tela; as tracejadas são entradas e saídas laterais. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/arquitetura.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>O caminho de um dado, com o exemplo real</h3><p>o veredicto de um portão até a tela</p></div>
+    <ol class="passos">
+      <li><p>Um agente-portão audita um vídeo e o <code>scripts/portoes.py</code> grava o veredicto no <code>portoes.json</code> do alvo (ex.: <code>videos/&lt;slug&gt;/portoes.json</code>).</p></li>
+      <li><p>A cada 15 min o launchd <code>uk.korvu.painel</code> roda <code>uv run python painel/sync/sincronizar.py</code> (<code>StartInterval 900</code>, <code>RunAtLoad</code>).</p></li>
+      <li><p>O sincronizador importa o próprio <code>portoes.py</code> com <code>portoes.SO_LEITURA = True</code> e <code>sys.dont_write_bytecode = True</code>; <code>portoes_e_veredictos()</code> devolve as linhas.</p></li>
+      <li><p>Numa transação só: <code>truncate</code> das tabelas-espelho e <code>insert</code> em <code>portoes_estado</code> (alvo × portão) e <code>veredictos</code> (chave <code>alvo, ordem</code>).</p></li>
+      <li><p>No Next.js, <code>db.portoesEstado()</code> e <code>db.veredictos()</code> leem pela API do Supabase, página a página de 1.000 linhas, conferindo a contagem exata.</p></li>
+      <li><p>A tela Produção (“Portões” e “Precisam de atenção”), a ficha do agente e o sino de avisos mostram o resultado.</p></li>
+      <li><p>O rodapé de toda página diz a hora da última passagem (<code>sincronizacoes.em</code>).</p></li>
+    </ol>
+  </section>
+
+  <!-- 3. TECNOLOGIA -->
+  <section class="sec" id="tecnologia">
+    <div class="sec-cab">
+      <p class="k-cap">A pilha</p>
+      <h2>tecnologia.</h2>
+      <p class="lead">Versões lidas do <code>package.json</code>, do <code>pyproject.toml</code> e do <code>config.toml</code>. Na coluna “por quê” só entra o motivo que está escrito no projeto; sem motivo escrito, fica o traço.</p>
+    </div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela de tecnologia, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Camada</th><th scope="col">Tecnologia</th><th scope="col">Versão</th><th scope="col">Por quê</th></tr></thead>
+      <tbody><tr><td class="cam">Framework web</td><td>Next.js (App Router)</td><td class="v">15.5.28</td><td>—</td></tr><tr><td class="cam">UI</td><td>React / React DOM</td><td class="v">19.1.10</td><td>—</td></tr><tr><td class="cam">Linguagem (web)</td><td>TypeScript (<code>strict</code>)</td><td class="v">5.9.3</td><td>—</td></tr><tr><td class="cam">Estilo</td><td>Tailwind CSS (+ <code>@tailwindcss/postcss</code>)</td><td class="v">4.3.3</td><td>—</td></tr><tr><td class="cam">CSS do design system</td><td>CSS próprio “korvu. painel” (tokens, componentes, acréscimos, movimento)</td><td class="v">—</td><td>cópia sem mudar de <code>painel/design/</code></td></tr><tr><td class="cam">Cliente do banco</td><td><code>@supabase/supabase-js</code></td><td class="v">2.58.0</td><td>lê do lado do servidor com a chave de serviço</td></tr><tr><td class="cam">Trava de servidor</td><td><code>server-only</code></td><td class="v">0.0.1</td><td>impede importar o acesso ao banco em componente de cliente</td></tr><tr><td class="cam">Lint</td><td>ESLint + <code>eslint-config-next</code></td><td class="v">9.39.5 / 15.5.28</td><td>—</td></tr><tr><td class="cam">Banco</td><td>Supabase local (CLI), Postgres</td><td class="v">Postgres 17</td><td>banco próprio, isolado do outro projeto do Mac (portas 553xx)</td></tr><tr><td class="cam">Sincronizador</td><td>Python</td><td class="v">≥ 3.12</td><td>—</td></tr><tr><td class="cam">Driver Postgres</td><td>psycopg (binary)</td><td class="v">≥ 3.2</td><td>—</td></tr><tr><td class="cam">YAML</td><td>PyYAML</td><td class="v">≥ 6.0.3</td><td>ler <code>equipe.yaml</code>, <code>cambio.yaml</code>, <code>biblioteca.yaml</code></td></tr><tr><td class="cam">Gerenciador Python</td><td>uv</td><td class="v">—</td><td>“rodar sempre com <code>uv run</code>”</td></tr><tr><td class="cam">Agendador</td><td>launchd (macOS)</td><td class="v">—</td><td>sincronização a cada 15 min</td></tr><tr><td class="cam">Docker</td><td>Colima</td><td class="v">—</td><td>o encaminhador dele define o endereço publicado; daí a rede só-no-Mac</td></tr><tr><td class="cam">Prévias dos looks</td><td>ffmpeg</td><td class="v">—</td><td>aplica as LUTs num quadro de amostra</td></tr><tr><td class="cam">Capturas de tela</td><td>Chrome sem janela via CDP + Node</td><td class="v">Node ≥ 22</td><td>olhar a tela de verdade a 1440 e 375 px</td></tr><tr><td class="cam">Fontes</td><td>Geist e Geist Mono (variáveis, OFL 1.1)</td><td class="v">—</td><td>locais, nada do Google</td></tr></tbody>
+    </table></div>
+  </section>
+
+  <!-- 4. BANCO -->
+  <section class="sec" id="banco">
+    <div class="sec-cab">
+      <p class="k-cap">Supabase local próprio · Postgres 17</p>
+      <h2>banco de dados.</h2>
+      <p class="lead">32 tabelas e 10 views criadas por 18 migrações em <code>painel/supabase/migrations/</code>. A maioria é espelho dos arquivos e é refeita a cada passagem; <code>execucoes</code> e <code>uso_execucao</code> são arquivo e nunca são truncadas. O custo não fica guardado nas linhas: as views calculam a partir de <code>precos_modelo</code>.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama entidade-relação, role para o lado"><svg class="dg" viewBox="0 0 1210 732" role="img" aria-label="Diagrama entidade-relação do banco do painel: 32 tabelas em cinco grupos e as 10 views. Linhas laranja são chaves estrangeiras; tracejadas são relações lógicas sem chave." style="--dg-w:1210px"><defs><marker id="er-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="er-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="er-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<text class="dg-cap" x="20" y="30">EQUIPE E GAUNTLET · 4</text>
+<rect class="dg-box" x="20" y="42" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="32" y="62">departamentos</text>
+<text class="dg-m" x="32" y="80">PK id</text>
+<text class="dg-fk" x="32" y="95">FK gerente_id → agentes</text>
+<rect class="dg-box" x="20" y="120" width="210" height="96" rx="8"/>
+<text class="dg-mi" x="32" y="140">agentes</text>
+<text class="dg-m" x="32" y="158">PK id</text>
+<text class="dg-fk" x="32" y="173">FK departamento_id</text>
+<text class="dg-fk" x="32" y="188">   → departamentos</text>
+<text class="dg-fk" x="32" y="203">FK fiscalizado_por → agentes</text>
+<rect class="dg-box" x="20" y="228" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="248">portoes_estado</text>
+<text class="dg-m" x="32" y="266">PK alvo, portao</text>
+<rect class="dg-box" x="20" y="291" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="311">veredictos</text>
+<text class="dg-m" x="32" y="329">PK alvo, ordem</text>
+<text class="dg-cap" x="20" y="388">PERFIL IG/FB · 3</text>
+<rect class="dg-box" x="20" y="400" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="420">perfil_snapshots</text>
+<text class="dg-m" x="32" y="438">PK lido_em</text>
+<rect class="dg-box" x="20" y="463" width="210" height="81" rx="8"/>
+<text class="dg-mi" x="32" y="483">perfil_demografia</text>
+<text class="dg-m" x="32" y="501">PK lido_em, publico, dimensao,</text>
+<text class="dg-m" x="32" y="516">   chave</text>
+<text class="dg-fk" x="32" y="531">FK lido_em → perfil_snapshots</text>
+<rect class="dg-box" x="20" y="556" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="32" y="576">perfil_diario</text>
+<text class="dg-m" x="32" y="594">PK dia, metrica</text>
+<text class="dg-cap" x="260" y="30">TOKENS E CUSTOS · 4</text>
+<rect class="dg-box" x="260" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="62">precos_modelo</text>
+<text class="dg-m" x="272" y="80">PK modelo</text>
+<rect class="dg-box" x="260" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="125">execucoes</text>
+<text class="dg-m" x="272" y="143">PK arquivo</text>
+<rect class="dg-box" x="260" y="168" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="272" y="188">uso_execucao</text>
+<text class="dg-m" x="272" y="206">PK arquivo, dia, modelo</text>
+<text class="dg-fk" x="272" y="221">FK arquivo → execucoes</text>
+<rect class="dg-box" x="260" y="246" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="266">cambio</text>
+<text class="dg-m" x="272" y="284">PK moeda, data</text>
+<text class="dg-cap" x="260" y="343">OPERAÇÃO · 1</text>
+<rect class="dg-box" x="260" y="355" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="272" y="375">sincronizacoes</text>
+<text class="dg-m" x="272" y="393">PK em</text>
+<text class="dg-cap" x="500" y="30">VÍDEOS, FILA E PUBLICAÇÃO · 7</text>
+<rect class="dg-box" x="500" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="62">videos</text>
+<text class="dg-m" x="512" y="80">PK slug</text>
+<rect class="dg-box" x="500" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="125">prontos</text>
+<text class="dg-m" x="512" y="143">PK slug</text>
+<rect class="dg-box" x="500" y="168" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="188">fila</text>
+<text class="dg-m" x="512" y="206">PK slug</text>
+<rect class="dg-box" x="500" y="231" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="251">nao_publicar</text>
+<text class="dg-m" x="512" y="269">PK slug</text>
+<rect class="dg-box" x="500" y="294" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="314">publicacoes</text>
+<text class="dg-m" x="512" y="332">PK slug</text>
+<rect class="dg-box" x="500" y="357" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="512" y="377">metricas</text>
+<text class="dg-m" x="512" y="395">PK slug, lido_em</text>
+<text class="dg-fk" x="512" y="410">FK slug → publicacoes</text>
+<rect class="dg-box" x="500" y="435" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="512" y="455">calendario_vagas</text>
+<text class="dg-m" x="512" y="473">PK dia_semana, hora</text>
+<text class="dg-cap" x="740" y="30">BIBLIOTECA · MATERIAL · 4</text>
+<rect class="dg-box" x="740" y="42" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="752" y="62">biblioteca_materiais</text>
+<text class="dg-m" x="752" y="80">PK id</text>
+<text class="dg-fk" x="752" y="95">FK video_slug → videos</text>
+<rect class="dg-box" x="740" y="120" width="210" height="96" rx="8"/>
+<text class="dg-mi" x="752" y="140">biblioteca_arquivos</text>
+<text class="dg-m" x="752" y="158">PK caminho</text>
+<text class="dg-fk" x="752" y="173">FK material_id</text>
+<text class="dg-fk" x="752" y="188">   → biblioteca_materiais</text>
+<text class="dg-fk" x="752" y="203">FK video_slug → videos</text>
+<rect class="dg-box" x="740" y="228" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="752" y="248">biblioteca_referencias</text>
+<text class="dg-m" x="752" y="266">PK pasta</text>
+<rect class="dg-box" x="740" y="291" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="752" y="311">biblioteca_mais_utilizados</text>
+<text class="dg-m" x="752" y="329">PK arquivo</text>
+<text class="dg-cap" x="980" y="30">BIBLIOTECA · ACERVO DE ESTILOS · 9</text>
+<rect class="dg-box" x="980" y="42" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="62">looks</text>
+<text class="dg-m" x="992" y="80">PK id</text>
+<rect class="dg-box" x="980" y="105" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="125">capa_estilos</text>
+<text class="dg-m" x="992" y="143">PK id</text>
+<rect class="dg-box" x="980" y="168" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="992" y="188">capa_estilos_exemplos</text>
+<text class="dg-m" x="992" y="206">PK estilo_id, ordem</text>
+<text class="dg-fk" x="992" y="221">FK estilo_id → capa_estilos</text>
+<rect class="dg-box" x="980" y="246" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="266">legenda_estilos</text>
+<text class="dg-m" x="992" y="284">PK id</text>
+<rect class="dg-box" x="980" y="309" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="329">fontes</text>
+<text class="dg-m" x="992" y="347">PK familia</text>
+<rect class="dg-box" x="980" y="372" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="392">sistema_ferramentas</text>
+<text class="dg-m" x="992" y="410">PK nome</text>
+<rect class="dg-box" x="980" y="435" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="455">modelos_descricao</text>
+<text class="dg-m" x="992" y="473">PK modelo</text>
+<rect class="dg-box" x="980" y="498" width="210" height="66" rx="8"/>
+<text class="dg-mi" x="992" y="518">animacoes</text>
+<text class="dg-m" x="992" y="536">PK id</text>
+<text class="dg-fk" x="992" y="551">FK video_slug → videos</text>
+<rect class="dg-box" x="980" y="576" width="210" height="51" rx="8"/>
+<text class="dg-mi" x="992" y="596">sistema_contagens</text>
+<text class="dg-m" x="992" y="614">PK unico</text>
+<rect class="dg-soft" x="260" y="432" width="210" height="230" rx="8"/>
+<text class="dg-mi" x="272" y="452">10 views</text>
+<text class="dg-m" x="272" y="468">security_invoker = true</text>
+<text class="dg-m" x="272" y="490">consumo</text>
+<text class="dg-m" x="272" y="506">consumo_diario</text>
+<text class="dg-m" x="272" y="522">execucoes_custo</text>
+<text class="dg-m" x="272" y="538">biblioteca_materiais_resumo</text>
+<text class="dg-m" x="272" y="554">biblioteca_por_tipo</text>
+<text class="dg-m" x="272" y="570">biblioteca_por_video</text>
+<text class="dg-m" x="272" y="586">videos_producao</text>
+<text class="dg-m" x="272" y="602">modelo_por_agente</text>
+<text class="dg-m" x="272" y="618">armazenamento</text>
+<text class="dg-m" x="272" y="634">sistema_modelos</text>
+<path class="dg-acc" d="M85.0 120 V110" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M165.0 108 V118" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M230 136 H243 V154 H232" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M605.0 357 V347" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M125.0 463 V453" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M365.0 168 V158" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M845.0 120 V110" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M1085.0 168 V158" marker-end="url(#er-a)"/>
+<path class="dg-dash" d="M605.0 105 V95" marker-end="url(#er-n)"/>
+<path class="dg-dash" d="M500 186 H488 V79 H498" marker-end="url(#er-n)"/>
+<path class="dg-acc" d="M740 58 H731 V58 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M740 136 H723 V72 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M980 514 H715 V86 H712" marker-end="url(#er-a)"/>
+<path class="dg-acc" d="M20 702 H60" marker-end="url(#er-a)"/>
+<text class="dg-lbl" x="68" y="706">chave estrangeira (FK), da filha para a mãe</text>
+<path class="dg-dash" d="M360 702 H400" marker-end="url(#er-n)"/>
+<text class="dg-lbl" x="408" y="706">relação lógica, sem FK (prontos e fila → videos)</text>
+<text class="dg-lbl" x="760" y="706">RLS ligado nas 32, sem nenhuma política</text>
+</svg></div>
+      <figcaption>Cada caixa mostra a chave primária (PK) e as chaves estrangeiras (FK) da tabela; as colunas completas estão no dossiê. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/banco.svg">Abrir o SVG</a></figcaption>
+    </figure>
+
+    <div class="sub-cab"><h3>Portas</h3><p>de <code>painel/supabase/config.toml</code>, <code>project_id = "korvu-studio-painel"</code></p></div>
+    <ul class="selos" aria-label="Portas"><li class="selo">app Next.js <b>127.0.0.1:3456</b></li><li class="selo">API Supabase (PostgREST/Kong) <b>127.0.0.1:55321</b></li><li class="selo">Postgres <b>127.0.0.1:55322</b></li><li class="selo">shadow <b>55320</b></li><li class="selo">Studio, desligado <b>127.0.0.1:55323</b></li></ul>
+
+    <div class="sub-cab"><h3>Segurança: papéis e RLS</h3><p>ninguém de fora lê, e o app não escreve</p></div>
+    <figure class="fig dg-estreito">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Diagrama de papéis e RLS, role para o lado"><svg class="dg" viewBox="0 0 1000 300" role="img" aria-label="Quem acessa o banco: o papel postgres (o sincronizador) escreve; service_role (o app) só lê; anon e authenticated não têm nenhum privilégio. RLS ligado em todas as tabelas, sem políticas." style="--dg-w:1000px"><defs><marker id="seg-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="seg-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="seg-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="dg-box" x="390" y="80" width="220" height="140" rx="10"/>
+<text class="dg-t" x="406" y="106">banco do painel</text>
+<text class="dg-s" x="406" y="128">32 tabelas · 10 views</text>
+<text class="dg-s" x="406" y="148">RLS ligado em todas</text>
+<text class="dg-s" x="406" y="168">0 políticas</text>
+<text class="dg-m" x="406" y="196">127.0.0.1:55322 / :55321</text>
+<rect class="dg-box" x="20" y="30" width="260" height="62" rx="10"/>
+<text class="dg-mi" x="36" y="55">postgres</text>
+<text class="dg-s" x="36" y="76">sincronizador · dono das tabelas</text>
+<path class="dg-acc" d="M280 61 H330 V120 H386" marker-end="url(#seg-a)"/>
+<text class="dg-lbl" x="305" y="52" text-anchor="middle">escreve</text>
+<rect class="dg-soft" x="20" y="190" width="260" height="80" rx="10"/>
+<text class="dg-t" x="36" y="214">o que for criado depois</text>
+<text class="dg-s" x="36" y="236">default privileges do postgres</text>
+<text class="dg-s" x="36" y="254">EXECUTE de PUBLIC revogado</text>
+<path class="dg-dash" d="M280 230 H330 V180 H386" marker-end="url(#seg-n)"/>
+<text class="dg-lbl" x="288" y="248">mesma regra</text>
+<rect class="dg-box" x="720" y="30" width="260" height="62" rx="10"/>
+<text class="dg-mi" x="736" y="55">service_role</text>
+<text class="dg-s" x="736" y="76">o app Next.js · só no servidor</text>
+<path class="dg-acc" d="M610 120 H660 V61 H716" marker-end="url(#seg-a)"/>
+<text class="dg-lbl" x="688" y="52" text-anchor="middle">só SELECT</text>
+<rect class="dg-errb" x="720" y="190" width="260" height="80" rx="10"/>
+<text class="dg-errt" x="736" y="214">anon · authenticated</text>
+<text class="dg-errs" x="736" y="236">nenhum privilégio</text>
+<text class="dg-errs" x="736" y="254">em tabela, sequência ou função</text>
+<path class="dg-err" d="M610 180 H660 V230 H716"/>
+<circle class="dg-errb" cx="660" cy="205" r="10"/>
+<path d="M655 200 L665 210 M665 200 L655 210" class="dg-err" style="stroke-dasharray:none;stroke-width:2"/>
+</svg></div>
+      <figcaption>RLS ligado em todas as tabelas, sem nenhuma política: só passa quem ignora RLS (<code>postgres</code> e <code>service_role</code>). Fora do alcance, escrito na própria migração: os default privileges do papel <code>supabase_admin</code>. <a href="diagramas/seguranca.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="grade2" style="margin-top:16px">
+      <div class="card papel"><h4>Só no Mac</h4><p>App em <code>127.0.0.1:3456</code>; banco e API só em 127.0.0.1 por uma rede Docker com <code>host_binding_ipv4=127.0.0.1</code>. O <code>iniciar.sh</code> e o <code>studio.sh</code> param com erro se uma porta ficar aberta para a rede; <code>/pg/*</code> responde 503 com o Studio desligado.</p></div>
+      <div class="card papel"><h4>Chaves só no servidor</h4><p><code>SUPABASE_URL</code> e <code>SUPABASE_SERVICE_ROLE_KEY</code> ficam em <code>painel/web/.env.local</code>, fora do git. O <code>lib/db.ts</code> tem <code>import "server-only"</code>; os comandos das telas de erro moram em <code>lib/comandos.ts</code> para nenhum componente de cliente importar o acesso ao banco.</p></div>
+      <div class="card papel"><h4>Rotas de arquivo endurecidas</h4><p><code>GET /capa/[pasta]/[slug]</code>: pasta numa lista fixa (<code>Object.hasOwn</code>) e slug por regex. <code>GET /look/[id]</code>: caminho vindo do banco e preso a <code>painel/previas/looks/</code>.</p></div>
+      <div class="card papel"><h4>Sem login, sem texto de conversa</h4><p>Não há login no app e ele não usa a chave <code>anon</code>. Dos registros do Claude Code, só entram números, ids, modelo, horário, slug e a descrição curta do <code>.meta.json</code>.</p></div>
+    </div>
+
+    <div class="sub-cab"><h3>Linha do tempo das migrações</h3><p>18 migrações em 4 dias, pela data do nome do arquivo</p></div>
+    <div class="card" style="padding:20px 24px">
+      <ol class="linha-tempo"><li class="dia"><div class="dia-rot"><b>22/10</b><span>3 migrações</span></div><ol class="migs"><li><span class="res"><span class="hora">19:00</span>Inicial: 11 tabelas-espelho com RLS</span><span class="arq">20261022190000_inicial.sql</span></li><li><span class="res"><span class="hora">20:00</span>Leitura do app: SELECT para service_role</span><span class="arq">20261022200000_leitura_do_app.sql</span></li><li><span class="res"><span class="hora">22:57</span>Revoga privilégios da API: anon/authenticated sem nada, service_role só SELECT, também para objetos futuros</span><span class="arq">20261022225715_revogar_privilegios_da_api.sql</span></li></ol></li><li class="dia"><div class="dia-rot"><b>23/10</b><span>8 migrações</span></div><ol class="migs"><li><span class="res"><span class="hora">15:33</span>Tokens e custos do Claude Code: precos_modelo, execucoes, uso_execucao e views de consumo</span><span class="arq">20261023153330_tokens_e_custos_do_claude_code.sql</span></li><li><span class="res"><span class="hora">15:41</span>Cache gravado por TTL (5 min 1,25x, 1 h 2x)</span><span class="arq">20261023154146_cache_gravado_por_ttl.sql</span></li><li><span class="res"><span class="hora">15:41</span>Tabela cambio</span><span class="arq">20261023154151_cambio_do_custo_de_ia.sql</span></li><li><span class="res"><span class="hora">16:05</span>Fila: origem, selo e erros_gauntlet</span><span class="arq">20261023160517_fila_origem_selo_e_conferencia.sql</span></li><li><span class="res"><span class="hora">16:09</span>Fases da Produção, publicados pelo post.json e nao_publicar</span><span class="arq">20261023160956_fases_publicados_e_nao_publicar.sql</span></li><li><span class="res"><span class="hora">16:13</span>Data de chegada e data suspeita da gravação</span><span class="arq">20261023161339_gravacao_chegada_e_data_suspeita.sql</span></li><li><span class="res"><span class="hora">19:50</span>FKs deferrable de gerente e fiscal; usage pela última linha</span><span class="arq">20261023195043_fk_gerente_e_fiscal_e_uso_pela_ultima_linha.sql</span></li><li><span class="res"><span class="hora">20:33</span>Biblioteca (índice de material) e chave (alvo, ordem) dos veredictos</span><span class="arq">20261023203320_biblioteca_e_ordem_dos_veredictos.sql</span></li></ol></li><li class="dia"><div class="dia-rot"><b>24/10</b><span>5 migrações</span></div><ol class="migs"><li><span class="res"><span class="hora">04:29</span>Produção, calendário e desempenho: roteiro, prontos, calendario_vagas, perfil_diario, videos_producao</span><span class="arq">20261024042911_producao_calendario_e_desempenho.sql</span></li><li><span class="res"><span class="hora">05:52</span>Gravação no Mac e no HD</span><span class="arq">20261024055255_gravacao_no_mac_e_no_hd.sql</span></li><li><span class="res"><span class="hora">21:31</span>View modelo_por_agente</span><span class="arq">20261024213122_modelo_por_agente.sql</span></li><li><span class="res"><span class="hora">21:59</span>Acervo de estilos: looks, capas, legendas, fontes, ferramentas, modelos, animações, contagens, armazenamento, sistema_modelos</span><span class="arq">20261024215907_biblioteca_acervo_de_estilos.sql</span></li><li><span class="res"><span class="hora">23:36</span>Rosto do look pelo biblioteca.yaml (só comentários)</span><span class="arq">20261024233631_rosto_do_look_pelo_biblioteca_yaml.sql</span></li></ol></li><li class="dia"><div class="dia-rot"><b>25/10</b><span>2 migrações</span></div><ol class="migs"><li><span class="res"><span class="hora">21:40</span>Nome e frase dos looks; nota do HD</span><span class="arq">20261025214021_nome_e_frase_dos_looks_e_nota_do_hd.sql</span></li><li><span class="res"><span class="hora">22:28</span>HD externo fora do painel (tira a nota do HD)</span><span class="arq">20261025222838_hd_externo_fora_do_painel.sql</span></li></ol></li></ol>
+    </div>
+  </section>
+
+  <!-- 5. BACK-END -->
+  <section class="sec" id="backend">
+    <div class="sec-cab">
+      <p class="k-cap">painel/sync/sincronizar.py</p>
+      <h2>back-end e sincronização.</h2>
+      <p class="lead">Um script Python lê o projeto e regrava o espelho do banco numa transação. Ele nunca escreve nos arquivos do estúdio. Se algo dá errado, nada é gravado e o painel continua com a passagem anterior.</p>
+    </div>
+    <figure class="fig">
+      <div class="rolagem" tabindex="0" role="region" aria-label="Fluxograma da sincronização, role para o lado"><svg class="dg" viewBox="0 0 1100 790" role="img" aria-label="Fluxograma do sincronizar.py: três gatilhos, a leitura só de leitura dos arquivos, a gravação numa transação, os três erros que param a passagem e o que ele nunca toca." style="--dg-w:1100px"><defs><marker id="sync-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-aha" d="M0 0L10 5L0 10z"/></marker><marker id="sync-n" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahn" d="M0 0L10 5L0 10z"/></marker><marker id="sync-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="dg-ahe" d="M0 0L10 5L0 10z"/></marker></defs>
+<rect class="dg-box" x="150" y="16" width="200" height="54" rx="10"/>
+<text class="dg-t" x="166" y="38">launchd</text>
+<text class="dg-s" x="166" y="57">a cada 900 s</text>
+<rect class="dg-box" x="380" y="16" width="240" height="54" rx="10"/>
+<text class="dg-t" x="396" y="38">RunAtLoad</text>
+<text class="dg-s" x="396" y="57">ao entrar na sessão do Mac</text>
+<rect class="dg-box" x="650" y="16" width="330" height="54" rx="10"/>
+<text class="dg-t" x="666" y="38">manual</text>
+<text class="dg-m" x="666" y="57">uv run python painel/sync/sincronizar.py</text>
+<path class="dg-acc" d="M250 70 V90 H510 M815 70 V90 H510"/>
+<path class="dg-acc" d="M510 70 V106" marker-end="url(#sync-a)"/>
+<rect class="dg-box" x="360" y="110" width="300" height="52" rx="10"/>
+<text class="dg-t" x="376" y="132">ler_projeto()</text>
+<text class="dg-s" x="376" y="151">lê os arquivos do quadro à esquerda</text>
+<rect class="dg-box" x="20" y="110" width="310" height="333" rx="10"/>
+<text class="dg-t" x="36" y="134">o que lê (só leitura)</text>
+<text class="dg-m" x="36" y="158">.claude/agents/*.md · painel/equipe.yaml</text>
+<text class="dg-m" x="36" y="177">videos/*/portoes.json (portoes.py)</text>
+<text class="dg-m" x="36" y="196">_controle/tracker.md · status.json</text>
+<text class="dg-m" x="36" y="215">roteiro.json · ARQUIVADO.json</text>
+<text class="dg-m" x="36" y="234">brutos/principal/ (só listagem e stat)</text>
+<text class="dg-m" x="36" y="253">05-render-pronto/*/pacote.json</text>
+<text class="dg-m" x="36" y="272">06-publicar/* · 07-publicados/*</text>
+<text class="dg-m" x="36" y="291">_controle/perfil/ · calendario.md</text>
+<text class="dg-m" x="36" y="310">_controle/nao-publicar.json</text>
+<text class="dg-m" x="36" y="329">videos/*/material/** · brutos/extras/**</text>
+<text class="dg-m" x="36" y="348">00-marca/cor/ · painel/biblioteca.yaml</text>
+<text class="dg-m" x="36" y="367">remotion/src/brand.ts · animacoes/*/brief.md</text>
+<text class="dg-m" x="36" y="386">.claude/agents · skills · commands</text>
+<text class="dg-m" x="36" y="405">painel/cambio.yaml · PRECOS (no código)</text>
+<text class="dg-m" x="36" y="424">registros .jsonl + agent-&lt;id&gt;.meta.json</text>
+<path class="dg-ln" d="M330 136 H356" marker-end="url(#sync-n)"/>
+<rect class="dg-dec" x="360" y="200" width="300" height="48" rx="24"/>
+<text class="dg-t" x="510" y="229" text-anchor="middle">todo arquivo legível?</text>
+<path class="dg-acc" d="M510 162 V196" marker-end="url(#sync-a)"/>
+<rect class="dg-errb" x="700" y="198" width="380" height="52" rx="10"/>
+<text class="dg-errt" x="716" y="220">✗ … nada gravado</text>
+<text class="dg-errs" x="716" y="238">exit 1</text>
+<path class="dg-err" d="M660 224 H696" marker-end="url(#sync-e)"/>
+<text class="dg-lbl" x="678" y="216" text-anchor="middle">não</text>
+<path class="dg-acc" d="M510 248 V286" marker-end="url(#sync-a)"/>
+<text class="dg-lbl" x="518" y="272">sim</text>
+<rect class="dg-box" x="360" y="290" width="300" height="52" rx="10"/>
+<text class="dg-t" x="376" y="312">gravar()</text>
+<text class="dg-s" x="376" y="332">abre o Postgres pelo PAINEL_DB_URL (psycopg)</text>
+<path class="dg-acc" d="M510 342 V376" marker-end="url(#sync-a)"/>
+<rect class="dg-dec" x="360" y="380" width="300" height="48" rx="24"/>
+<text class="dg-t" x="510" y="409" text-anchor="middle">banco no ar?</text>
+<rect class="dg-errb" x="700" y="378" width="380" height="52" rx="10"/>
+<text class="dg-errt" x="716" y="400">✗ banco do painel fora do ar</text>
+<text class="dg-errs" x="716" y="418">ligar com: bash painel/iniciar.sh · exit 1</text>
+<path class="dg-err" d="M660 404 H696" marker-end="url(#sync-e)"/>
+<text class="dg-lbl" x="678" y="396" text-anchor="middle">não</text>
+<path class="dg-acc" d="M510 428 V466" marker-end="url(#sync-a)"/>
+<text class="dg-lbl" x="518" y="452">sim</text>
+<rect class="dg-box" x="360" y="470" width="300" height="104" rx="10"/>
+<text class="dg-t" x="376" y="492">uma transação só</text>
+<text class="dg-s" x="376" y="512">truncate das 29 tabelas-espelho + insert</text>
+<text class="dg-s" x="376" y="530">execucoes e uso_execucao: nunca truncadas</text>
+<text class="dg-s" x="376" y="548">regrava o que o .jsonl ainda mostra; o que</text>
+<text class="dg-s" x="376" y="566">sumiu fica com registro_presente = false</text>
+<rect class="dg-soft" x="700" y="482" width="380" height="52" rx="10"/>
+<text class="dg-t" x="716" y="504">⚠ anomalia que não para a passagem</text>
+<text class="dg-s" x="716" y="522">vira uma linha ⚠ na saída</text>
+<path class="dg-dash" d="M660 508 H696" marker-end="url(#sync-n)"/>
+<path class="dg-acc" d="M510 574 V606" marker-end="url(#sync-a)"/>
+<rect class="dg-dec" x="360" y="610" width="300" height="48" rx="24"/>
+<text class="dg-t" x="510" y="639" text-anchor="middle">o banco aceitou?</text>
+<rect class="dg-errb" x="700" y="608" width="380" height="52" rx="10"/>
+<text class="dg-errt" x="716" y="630">✗ recusa do banco (FK, chave repetida)</text>
+<text class="dg-errs" x="716" y="648">DETAIL do Postgres · transação desfeita</text>
+<path class="dg-err" d="M660 634 H696" marker-end="url(#sync-e)"/>
+<text class="dg-lbl" x="678" y="626" text-anchor="middle">não</text>
+<path class="dg-acc" d="M510 658 V696" marker-end="url(#sync-a)"/>
+<text class="dg-lbl" x="518" y="682">sim</text>
+<rect class="dg-okb" x="360" y="700" width="300" height="56" rx="10"/>
+<text class="dg-okt" x="376" y="723">passagem gravada</text>
+<text class="dg-oks" x="376" y="742">1 linha em sincronizacoes (guarda 7 dias)</text>
+<text class="dg-lbl" x="700" y="690">Em todo erro, o painel continua mostrando</text>
+<text class="dg-lbl" x="700" y="706">a passagem anterior.</text>
+<rect class="dg-ink" x="20" y="483" width="310" height="177" rx="10"/>
+<text class="dg-inkt" x="36" y="507">nunca escreve em / nunca faz</text>
+<text class="dg-inks" x="36" y="531">videos/ · 00-marca/</text>
+<text class="dg-inks" x="36" y="550">_controle/ · scripts/</text>
+<text class="dg-inks" x="36" y="569">~/.claude (só lê os registros)</text>
+<text class="dg-inks" x="36" y="588">portoes.SO_LEITURA = True</text>
+<text class="dg-inks" x="36" y="607">sys.dont_write_bytecode = True</text>
+<text class="dg-inks" x="36" y="626">vídeos: nenhum é aberto</text>
+<text class="dg-inks" x="36" y="645">nenhum texto de conversa no banco</text>
+</svg></div>
+      <figcaption>Quando roda: launchd <code>uk.korvu.painel</code> a cada 900 s e ao entrar na sessão do Mac; o launchd anota uma linha por passagem em <code>_controle/logs/painel.log</code>. Manual: <code>--seco</code> lê sem gravar; <code>--ate</code> e <code>--regra-do-script</code> servem só para reconciliar e são recusados no banco real sem <code>--seco</code>. <span class="arraste">Arraste o diagrama para o lado para ver tudo.</span> <a href="diagramas/sincronizacao.svg">Abrir o SVG</a></figcaption>
+    </figure>
+    <div class="sub-cab"><h3>O que cada origem vira</h3><p><code>ler_projeto()</code></p></div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela: origem de cada dado, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Origem (só leitura)</th><th scope="col">Vira</th></tr></thead>
+      <tbody><tr><td><code>.claude/agents/*.md</code> (frontmatter) + <code>painel/equipe.yaml</code></td><td><code>departamentos</code>, <code>agentes</code> (skills e comandos achados no texto)</td></tr><tr><td><code>videos/*/portoes.json</code> e demais alvos, via <code>scripts/portoes.py</code> (só leitura)</td><td><code>portoes_estado</code>, <code>veredictos</code></td></tr><tr><td><code>_controle/tracker.md</code>, <code>videos/&lt;slug&gt;/status.json</code>, <code>roteiro.json</code>, <code>brutos/principal/</code> (só listagem e <code>stat()</code>), <code>ARQUIVADO.json</code></td><td><code>videos</code></td></tr><tr><td><code>05-render-pronto/&lt;slug&gt;/pacote.json</code></td><td><code>prontos</code>, <code>videos.pronto</code></td></tr><tr><td><code>06-publicar/&lt;slug&gt;/</code> (pacote + post) + <code>portoes.conferir_pacote(...)</code></td><td><code>fila</code></td></tr><tr><td><code>07-publicados/&lt;slug&gt;/post.json</code> e <code>metricas.json</code></td><td><code>publicacoes</code>, <code>metricas</code></td></tr><tr><td><code>_controle/perfil/*.json</code> e <code>_controle/perfil/diario/*.json</code> (proposta)</td><td><code>perfil_snapshots</code>, <code>perfil_demografia</code>, <code>perfil_diario</code></td></tr><tr><td><code>_controle/calendario.md</code> (1.º bloco yaml)</td><td><code>calendario_vagas</code></td></tr><tr><td><code>_controle/nao-publicar.json</code> (proposta)</td><td><code>nao_publicar</code></td></tr><tr><td><code>videos/*/material/**</code>, <code>videos/*/brutos/extras/**</code>, <code>00-marca/referencias</code>, <code>painel/referencias</code></td><td><code>biblioteca_*</code></td></tr><tr><td><code>00-marca/cor/luts/*</code>, <code>00-marca/cor/cor.md</code>, <code>painel/biblioteca.yaml</code>, <code>remotion/src/brand.ts</code></td><td><code>looks</code>, <code>capa_estilos(+_exemplos)</code>, <code>legenda_estilos</code>, <code>fontes</code>, <code>sistema_ferramentas</code>, <code>modelos_descricao</code></td></tr><tr><td><code>videos/*/animacoes/Exx/brief.md</code></td><td><code>animacoes</code></td></tr><tr><td><code>.claude/agents</code>, <code>.claude/skills</code>, <code>.claude/commands</code></td><td><code>sistema_contagens</code></td></tr><tr><td><code>painel/cambio.yaml</code></td><td><code>cambio</code></td></tr><tr><td><code>PRECOS</code> no próprio código</td><td><code>precos_modelo</code></td></tr><tr><td>registros do Claude Code <code>~/.claude/projects/&lt;projeto&gt;/**/*.jsonl</code> + <code>agent-&lt;id&gt;.meta.json</code></td><td><code>execucoes</code>, <code>uso_execucao</code></td></tr></tbody>
+    </table></div>
+    <div class="grade2" style="margin-top:16px">
+      <div class="card papel"><h4>No app (back-end do Next.js)</h4><p>Todas as páginas são Server Components com <code>dynamic = "force-dynamic"</code>. A leitura usa <code>todos()</code>: pagina por 1.000 linhas, confere <code>count: "exact"</code>, relê uma vez se a tabela mudar no meio (sincronização rodando) e lança erro se vier menos linha do que o banco diz ter. O <code>cache()</code> do React faz cada leitura ir ao banco uma vez por pedido.</p></div>
+      <div class="card papel"><h4>Prévias dos looks</h4><p><code>uv run python painel/sync/previas_looks.py</code> gera um JPEG 640×800 por look a partir de um quadro de amostra + a LUT de entrada + a LUT do look, com nome por hash, e só refaz o que mudou. É o único passo que grava arquivo (em <code>painel/previas/looks/</code>).</p></div>
+      <div class="card papel"><h4>Rotas que não são telas</h4><p><code>/videos</code> redireciona (307) para <code>/producao</code>. <code>/sistema</code> é a vitrine dos componentes e dá 404 sem <code>PAINEL_VITRINE=1</code>. <code>GET /capa/[pasta]/[slug]</code> (PNG) e <code>GET /look/[id]</code> (JPEG) servem imagens, só leitura.</p></div>
+      <div class="card papel"><h4>Como roda tudo</h4><p><code>bash painel/iniciar.sh</code>: garante a rede Docker só em 127.0.0.1 → <code>supabase start</code> → confere as portas 553xx → uma passagem do sincronizador → <code>npm run dev</code> em <code>painel/web</code>. Studio: <code>bash painel/studio.sh liga|desliga</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- 6. APIs -->
+  <section class="sec" id="apis">
+    <div class="sec-cab">
+      <p class="k-cap">Quem chama · o que traz · onde guarda</p>
+      <h2>APIs.</h2>
+      <p class="lead">Sete integrações. Só duas são de rede dentro do painel (a API do Supabase e o Postgres); a Meta é indireta, pelos arquivos que a área Automação Meta grava.</p>
+    </div>
+    <div class="apis"><article class="card api"><h3>Supabase / PostgREST</h3><div class="tipo"><span class="tabchip">rede local</span><span class="tabchip">HTTP</span></div><dl><div><dt>Quem chama</dt><dd>o app Next.js, só no servidor, com <code>SUPABASE_URL</code> + <code>SUPABASE_SERVICE_ROLE_KEY</code></dd></div><div><dt>O que traz</dt><dd>as 32 tabelas e 10 views, só SELECT (127.0.0.1:55321)</dd></div><div><dt>Onde guarda</dt><dd>— (lê o banco)</dd></div><div><dt>Fonte</dt><dd class="ink2"><code>web/src/lib/db.ts</code></dd></div></dl></article><article class="card api"><h3>Postgres direto (psycopg)</h3><div class="tipo"><span class="tabchip">rede local</span></div><dl><div><dt>Quem chama</dt><dd>o sincronizador (<code>PAINEL_DB_URL</code>, padrão o banco local)</dd></div><div><dt>O que traz</dt><dd>— (escreve)</dd></div><div><dt>Onde guarda</dt><dd>banco do painel, 127.0.0.1:55322</dd></div><div><dt>Fonte</dt><dd class="ink2"><code>sync/sincronizar.py</code></dd></div></dl></article><article class="card api"><h3>Meta Graph API v23.0</h3><div class="tipo"><span class="tabchip">indireta</span><span class="tabchip">internet</span></div><dl><div><dt>Quem chama</dt><dd><code>scripts/metricas.py</code> (métricas de cada Reel aos 5 dias), <code>scripts/perfil.py</code> (insights da conta, quebras por país/cidade/idade), <code>scripts/publicar.py</code> (publica) — área Automação Meta, não o painel</dd></div><div><dt>O que traz</dt><dd>métricas de Reels, perfil e demografia, permalinks; versão por <code>META_GRAPH_VERSION</code> (padrão <code>v23.0</code>)</dd></div><div><dt>Onde guarda</dt><dd><code>07-publicados/&lt;slug&gt;/metricas.json</code> e <code>post.json</code>, <code>_controle/perfil/*.json</code> → o painel lê e grava em <code>metricas</code>, <code>publicacoes</code>, <code>perfil_*</code></dd></div><div><dt>Fonte</dt><dd class="ink2"><code>scripts/publicar.py</code>, <code>scripts/perfil.py</code>, <code>scripts/metricas.py</code></dd></div></dl></article><article class="card api"><h3>Registros do Claude Code</h3><div class="tipo"><span class="tabchip">arquivos locais</span></div><dl><div><dt>Quem chama</dt><dd>o sincronizador</dd></div><div><dt>O que traz</dt><dd><code>message.usage</code>, <code>message.model</code>, <code>message.id</code>, <code>timestamp</code>; tipo do subagente no <code>.meta.json</code></dd></div><div><dt>Onde guarda</dt><dd><code>execucoes</code>, <code>uso_execucao</code>; o custo sai das views</dd></div><div><dt>Fonte</dt><dd class="ink2"><code>sync/sincronizar.py</code></dd></div></dl></article><article class="card api"><h3>Preço de tabela da API da Anthropic</h3><div class="tipo"><span class="tabchip">copiado no código</span></div><dl><div><dt>Quem chama</dt><dd>— (não é chamada)</dd></div><div><dt>O que traz</dt><dd>US$ por milhão de tokens: Opus 5.5 4/20, Sonnet 5.5 2/10, Fable 5.1 10/50, Opus 5 5/25; cache 5 min 1,25×, 1 h 2×</dd></div><div><dt>Onde guarda</dt><dd><code>PRECOS</code> → <code>precos_modelo</code></dd></div><div><dt>Fonte</dt><dd class="ink2"><code>sync/sincronizar.py</code></dd></div></dl></article><article class="card api"><h3><code>scripts/portoes.py</code></h3><div class="tipo"><span class="tabchip">Python interno</span></div><dl><div><dt>Quem chama</dt><dd>o sincronizador, importado em modo só leitura</dd></div><div><dt>O que traz</dt><dd>estado dos portões, veredictos, <code>conferir_pacote</code> da fila</dd></div><div><dt>Onde guarda</dt><dd><code>portoes_estado</code>, <code>veredictos</code>, <code>fila.erros_gauntlet</code></dd></div><div><dt>Fonte</dt><dd class="ink2"><code>sync/sincronizar.py</code></dd></div></dl></article><article class="card api"><h3>Rotas do próprio app</h3><div class="tipo"><span class="tabchip">HTTP</span><span class="tabchip">só leitura</span></div><dl><div><dt>Quem chama</dt><dd>o navegador</dd></div><div><dt>O que traz</dt><dd><code>GET /capa/[pasta]/[slug]</code> (PNG), <code>GET /look/[id]</code> (JPEG)</dd></div><div><dt>Onde guarda</dt><dd>—</dd></div><div><dt>Fonte</dt><dd class="ink2"><code>app/capa/…/route.ts</code>, <code>app/look/[id]/route.ts</code></dd></div></dl></article></div>
+    <div class="nota" style="margin-top:16px">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg></span>
+      <div><b>Não usados pelo painel</b><p>A chave <code>anon</code>, Supabase Auth, Storage e Realtime (Realtime desligado no <code>config.toml</code>; Auth e Storage ligados por padrão, mas nenhum código do app chama). O ElevenLabs aparece só na lista da stack da Biblioteca: o consumo dele não é medido. Há também o otimizador de imagens do Next, que guarda a versão reduzida das capas em <code>.next*/cache/images</code>.</p></div>
+    </div>
+  </section>
+
+  <!-- 7. TELAS -->
+  <section class="sec" id="telas">
+    <div class="sec-cab">
+      <p class="k-cap">9 telas · computador e celular</p>
+      <h2>tela por tela.</h2>
+      <p class="lead">Fotos do app rodando, a 1440 px e a 375 px, página inteira. Os números laranja sobre a foto do computador são os blocos da lista ao lado; no celular aparece a primeira tela, e o botão abre a página inteira.</p>
+    </div>
+    <div class="texto">
+      <p>A casca é a mesma em todas: barra lateral escura com o menu (Visão geral · Equipe · Produção de conteúdo · Calendário · Desempenho · Biblioteca · Tokens e custos), busca global ⌘K (vídeos, agentes, portões), sino de avisos com os portões que pedem ação, e o rodapé com a hora da última sincronização. No celular, a barra lateral vira o botão “Menu” no topo e os blocos empilham.</p>
+      <p>Cada bloco tem o próprio carregamento (esqueleto), erro de bloco e vazio com frase. Sem banco ou nunca sincronizado, uma nota de alerta aparece no topo; erro geral mostra “Não deu para ler os dados” com os passos para ligar o banco e sincronizar.</p>
+    </div>
+    <ul class="indice-telas" aria-label="As telas"><li><a href="#tela-inicio">Visão geral</a></li><li><a href="#tela-equipe">Equipe</a></li><li><a href="#tela-equipe-portao-imagem">Ficha do agente</a></li><li><a href="#tela-equipe-contratar">Contratar</a></li><li><a href="#tela-producao">Produção de conteúdo</a></li><li><a href="#tela-calendario">Calendário</a></li><li><a href="#tela-desempenho">Desempenho</a></li><li><a href="#tela-biblioteca">Biblioteca</a></li><li><a href="#tela-tokens">Tokens e custos</a></li></ul>
+    <article class="tela" id="tela-inicio">
+  <div class="tela-cab"><div class="t"><h3>Visão geral</h3><span class="rota">/</span></div>
+  <p class="pergunta">Como está o estúdio hoje: perfil, próximas publicações, últimos 28 dias, consumo de IA e equipe.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/inicio-1440.png" width="2880" height="3734" alt="Tela Visão geral no computador, a 1440 px, com os blocos numerados de 1 a 6."><span class="marca" style="left:15.1%;top:8.4%" aria-hidden="true">1</span><span class="marca" style="left:49.5%;top:20.9%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:39.6%" aria-hidden="true">3</span><span class="marca" style="left:15.1%;top:51.6%" aria-hidden="true">4</span><span class="marca" style="left:57.6%;top:51.6%" aria-hidden="true">5</span><span class="marca" style="left:43.0%;top:71.9%" aria-hidden="true">6</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-inicio"><div class="tela-cel"><img src="capturas/inicio-375.png" width="750" height="6944" alt="Tela Visão geral no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-inicio">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>4 números do perfil: seguidores, alcance 28 dias, alcance fora da bolha, melhor vídeo</li><li>Próximas publicações</li><li>Desempenho · 28 dias</li><li>Público · top 10 países (quem segue × quem os vídeos alcançam)</li><li>Tokens e custos · 30 dias (rosca por modelo + custo estimado)</li><li>Equipe (filtro por departamento, 5 cartões com foto)</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">perfil_snapshots</span><span class="tabchip">perfil_demografia</span><span class="tabchip">metricas</span><span class="tabchip">publicacoes</span><span class="tabchip">fila</span><span class="tabchip">consumo_diario</span><span class="tabchip">execucoes_custo</span><span class="tabchip">agentes</span><span class="tabchip">departamentos</span><span class="tabchip">modelo_por_agente</span></div>
+      <p class="vazio-tela">Vazio: “Nada agendado” na fila (aparece na foto).</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-equipe">
+  <div class="tela-cab"><div class="t"><h3>Equipe</h3><span class="rota">/equipe</span></div>
+  <p class="pergunta">Quem é quem por departamento, quem é portão, com que modelo trabalha e quanto consumiu em 30 dias.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/equipe-1440.png" width="2880" height="3634" alt="Tela Equipe no computador, a 1440 px, com os blocos numerados de 1 a 5."><span class="marca" style="left:38.5%;top:5.8%" aria-hidden="true">1</span><span class="marca" style="left:54.5%;top:8.1%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:11.6%" aria-hidden="true">3</span><span class="marca" style="left:15.1%;top:21.4%" aria-hidden="true">4</span><span class="marca" style="left:15.1%;top:32.2%" aria-hidden="true">5</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-equipe"><div class="tela-cel"><img src="capturas/equipe-375.png" width="750" height="8428" alt="Tela Equipe no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-equipe">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Busca de agente</li><li>Filtros: Todos · Portões · Opus 5.5 · Sonnet 5.5 · Ainda não rodou</li><li>4 números: agentes, departamentos, portões, tokens 30 dias</li><li>Direção (o Atlas)</li><li>Um cartão por departamento, gerente primeiro: modelo que rodou, consumo, tarefas</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">agentes</span><span class="tabchip">departamentos</span><span class="tabchip">consumo_diario</span><span class="tabchip">execucoes_custo</span><span class="tabchip">modelo_por_agente</span></div>
+      <p class="vazio-tela">Vazio: “Equipe ainda não sincronizada”; sem consumo, o número mostra “—”. Sem foto, o cartão mostra as iniciais.</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-equipe-portao-imagem">
+  <div class="tela-cab"><div class="t"><h3>Ficha do agente</h3><span class="rota">/equipe/[id]</span></div>
+  <p class="pergunta">O que essa pessoa faz e, se for portão, o que passou por ela.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/equipe-portao-imagem-1440.png" width="2880" height="7154" alt="Tela Ficha do agente no computador, a 1440 px, com os blocos numerados de 1 a 4."><span class="marca" style="left:15.1%;top:4.0%" aria-hidden="true">1</span><span class="marca" style="left:15.1%;top:9.0%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:26.3%" aria-hidden="true">3</span><span class="marca" style="left:15.1%;top:74.1%" aria-hidden="true">4</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px · foto: /equipe/portao-imagem</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-equipe-portao-imagem"><div class="tela-cel"><img src="capturas/equipe-portao-imagem-375.png" width="750" height="9078" alt="Tela Ficha do agente no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-equipe-portao-imagem">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Cabeçalho com foto, departamento e cargo</li><li>A função: papel, o que faz, modelo, skills, comandos, ferramentas, quem fiscaliza, arquivo</li><li>O que passa por aqui: o estado do portão em cada alvo</li><li>Veredictos recentes (os 12 mais novos)</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">agentes</span><span class="tabchip">departamentos</span><span class="tabchip">portoes_estado</span><span class="tabchip">veredictos</span><span class="tabchip">videos</span></div>
+      <p class="vazio-tela">Vazio: “Nenhum alvo com este portão ainda”, “Nenhum veredicto ainda”; id inexistente = 404; erro de banco nunca vira 404.</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-equipe-contratar">
+  <div class="tela-cab"><div class="t"><h3>Contratar</h3><span class="rota">/equipe/contratar</span></div>
+  <p class="pergunta">Como pedir um agente novo já ligado ao portão do departamento.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/equipe-contratar-1440.png" width="2880" height="1930" alt="Tela Contratar no computador, a 1440 px, com os blocos numerados de 1 a 3."><span class="marca" style="left:15.1%;top:27.7%" aria-hidden="true">1</span><span class="marca" style="left:57.6%;top:27.7%" aria-hidden="true">2</span><span class="marca" style="left:57.6%;top:62.8%" aria-hidden="true">3</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-equipe-contratar"><div class="tela-cel"><img src="capturas/equipe-contratar-375.png" width="750" height="3258" alt="Tela Contratar no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-equipe-contratar">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Formulário: nome, cargo, departamento, o que faz, o que entrega, quando é chamado, modelo</li><li>Pedido de contratação, montado ao vivo</li><li>Botão “Copiar pedido”: o pedido é colado numa conversa com o Claude Code; o painel não cria arquivo</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">departamentos</span><span class="tabchip">agentes</span></div>
+      </div>
+  </div>
+</article>
+<article class="tela" id="tela-producao">
+  <div class="tela-cab"><div class="t"><h3>Produção de conteúdo</h3><span class="rota">/producao</span></div>
+  <p class="pergunta">Em que fase está cada conteúdo e o que precisa de atenção.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/producao-1440.png" width="2880" height="5008" alt="Tela Produção de conteúdo no computador, a 1440 px, com os blocos numerados de 1 a 6."><span class="marca" style="left:38.5%;top:4.25%" aria-hidden="true">1</span><span class="marca" style="left:43.0%;top:5.95%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:7.6%" aria-hidden="true">3</span><span class="marca" style="left:15.1%;top:16.4%" aria-hidden="true">4</span><span class="marca" style="left:15.1%;top:79.0%" aria-hidden="true">5</span><span class="marca" style="left:56.6%;top:79.0%" aria-hidden="true">6</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-producao"><div class="tela-cel"><img src="capturas/producao-375.png" width="750" height="6498" alt="Tela Produção de conteúdo no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-producao">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Busca</li><li>Filtro de formato (Todos · Reels · Stories · Carrossel) e a fonte lida</li><li>5 fases com os elos: você grava, pós e QA, você agenda, publica no horário</li><li>Tabela da fase escolhida</li><li>Precisam de atenção</li><li>Portões (resumo por área)</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">videos</span><span class="tabchip">videos_producao</span><span class="tabchip">prontos</span><span class="tabchip">fila</span><span class="tabchip">publicacoes</span><span class="tabchip">nao_publicar</span><span class="tabchip">portoes_estado</span><span class="tabchip">agentes</span></div>
+      <p class="vazio-tela">Fase: Roteiros = sem gravação; Gravados = gravado sem pronto; Prontos = QA PASS; Agendados = fila; Publicados = publicações. Vazio: “Nada em produção”, “Nada pede atenção agora”, “Nenhum portão no banco”.</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-calendario">
+  <div class="tela-cab"><div class="t"><h3>Calendário</h3><span class="rota">/calendario</span></div>
+  <p class="pergunta">O que sai em cada dia, onde, as vagas livres e se cada post da fila vai sair.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/calendario-1440.png" width="2880" height="3108" alt="Tela Calendário no computador, a 1440 px, com os blocos numerados de 1 a 5."><span class="marca" style="left:15.1%;top:6.75%" aria-hidden="true">1</span><span class="marca" style="left:51.5%;top:6.75%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:14.0%" aria-hidden="true">3</span><span class="marca" style="left:15.1%;top:68.5%" aria-hidden="true">4</span><span class="marca" style="left:56.8%;top:68.5%" aria-hidden="true">5</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-calendario"><div class="tela-cel"><img src="capturas/calendario-375.png" width="750" height="5306" alt="Tela Calendário no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-calendario">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Navegação: Hoje, ‹ ›, Mês | Semana</li><li>Legenda dos canais e estados</li><li>Eventos publicados e agendados com capa e canais, e as vagas livres</li><li>Fila (com a linha “Portões:”)</li><li>Melhores horários</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">publicacoes</span><span class="tabchip">fila</span><span class="tabchip">calendario_vagas</span><span class="tabchip">rota /capa</span></div>
+      <p class="vazio-tela">Hora do fuso de publicação. Vazio: “Nada programado neste mês”, “Fila vazia”, “Sem print de horários”. Sem vagas, o calendário continua.</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-desempenho">
+  <div class="tela-cab"><div class="t"><h3>Desempenho</h3><span class="rota">/desempenho</span></div>
+  <p class="pergunta">O que cresce, quem os vídeos alcançam e qual conteúdo funciona.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/desempenho-1440.png" width="2880" height="4312" alt="Tela Desempenho no computador, a 1440 px, com os blocos numerados de 1 a 6."><span class="marca" style="left:71.4%;top:4.9%" aria-hidden="true">1</span><span class="marca" style="left:15.1%;top:6.6%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:13.7%" aria-hidden="true">3</span><span class="marca" style="left:70.6%;top:13.7%" aria-hidden="true">4</span><span class="marca" style="left:15.1%;top:32.8%" aria-hidden="true">5</span><span class="marca" style="left:15.1%;top:51.0%" aria-hidden="true">6</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-desempenho"><div class="tela-cel"><img src="capturas/desempenho-375.png" width="750" height="7034" alt="Tela Desempenho no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-desempenho">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Período</li><li>4 números com delta: seguidores, visualizações, contas alcançadas, visitas ao perfil</li><li>Crescimento: curva por dia (hoje vazia: a Meta só manda o total de 28 dias)</li><li>Fora da bolha: rosca não seguidores × seguidores</li><li>De onde vem o público: quem segue × quem os vídeos alcançam</li><li>Conteúdo que funciona: ranking dos Reels (views, alcance, % assistido, engajamento)</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">perfil_snapshots</span><span class="tabchip">perfil_demografia</span><span class="tabchip">perfil_diario</span><span class="tabchip">metricas</span><span class="tabchip">publicacoes</span></div>
+      <p class="vazio-tela">Leitura marcada como suspeita nunca entra em gráfico, ranking nem conta. Vazio: “Ainda não há dia a dia”.</p></div>
+  </div>
+</article>
+<article class="tela" id="tela-biblioteca">
+  <div class="tela-cab"><div class="t"><h3>Biblioteca</h3><span class="rota">/biblioteca</span></div>
+  <p class="pergunta">Escolher o estilo do próximo vídeo e ver quanto espaço o estúdio ocupa e o que o faz rodar.</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/biblioteca-1440.png" width="2880" height="4062" alt="Tela Biblioteca no computador, a 1440 px, com os blocos numerados de 1 a 8."><span class="marca" style="left:63.0%;top:5.1%" aria-hidden="true">1</span><span class="marca" style="left:15.1%;top:7.45%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:29.7%" aria-hidden="true">3</span><span class="marca" style="left:61.6%;top:29.7%" aria-hidden="true">4</span><span class="marca" style="left:15.1%;top:44.2%" aria-hidden="true">5</span><span class="marca" style="left:61.6%;top:44.2%" aria-hidden="true">6</span><span class="marca" style="left:15.1%;top:65.2%" aria-hidden="true">7</span><span class="marca" style="left:57.2%;top:65.2%" aria-hidden="true">8</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-biblioteca"><div class="tela-cel"><img src="capturas/biblioteca-375.png" width="750" height="8014" alt="Tela Biblioteca no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-biblioteca">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Abas: Tudo · Looks de cor · Capas · Legendas · Fontes · Animações · Sistema</li><li>Looks de cor (5 cartões com a prévia)</li><li>Capas</li><li>Legendas</li><li>Fontes</li><li>Animações (roteirizada × renderizada)</li><li>Armazenamento (GB no Mac)</li><li>Sistema: modelos de IA dos 30 dias, ferramentas, contagem de agentes, habilidades e comandos</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">looks</span><span class="tabchip">capa_estilos</span><span class="tabchip">capa_estilos_exemplos</span><span class="tabchip">legenda_estilos</span><span class="tabchip">fontes</span><span class="tabchip">animacoes</span><span class="tabchip">armazenamento</span><span class="tabchip">sistema_modelos</span><span class="tabchip">sistema_ferramentas</span><span class="tabchip">sistema_contagens</span><span class="tabchip">rotas /look e /capa</span></div>
+      </div>
+  </div>
+</article>
+<article class="tela" id="tela-tokens">
+  <div class="tela-cab"><div class="t"><h3>Tokens e custos</h3><span class="rota">/tokens</span></div>
+  <p class="pergunta">Quanto a operação de IA consome, onde, quem e quanto custa em dólar (preço de tabela da API).</p></div>
+  <div class="fotos marfim-fotos">
+    <figure class="foto-pc"><div class="sobre"><img src="capturas/tokens-1440.png" width="2880" height="4258" alt="Tela Tokens e custos no computador, a 1440 px, com os blocos numerados de 1 a 8."><span class="marca" style="left:45.6%;top:4.95%" aria-hidden="true">1</span><span class="marca" style="left:15.1%;top:6.65%" aria-hidden="true">2</span><span class="marca" style="left:15.1%;top:14.05%" aria-hidden="true">3</span><span class="marca" style="left:70.8%;top:14.05%" aria-hidden="true">4</span><span class="marca" style="left:15.1%;top:36.1%" aria-hidden="true">5</span><span class="marca" style="left:57.0%;top:36.1%" aria-hidden="true">6</span><span class="marca" style="left:57.0%;top:57.8%" aria-hidden="true">7</span><span class="marca" style="left:15.1%;top:66.85%" aria-hidden="true">8</span></div>
+      <figcaption class="foto-rot">Computador · 1440 px</figcaption></figure>
+    <figure class="foto-cel"><div class="celular" id="cel-tokens"><div class="tela-cel"><img src="capturas/tokens-375.png" width="750" height="7302" alt="Tela Tokens e custos no celular, a 375 px, página inteira."></div></div>
+      <figcaption class="foto-rot">Celular · 375 px</figcaption>
+      <button class="ver-cel" type="button" aria-expanded="false" aria-controls="cel-tokens">Ver a página inteira</button></figure>
+  </div>
+  <div class="blocos-dados">
+    <div><p class="k-cap">Os blocos, na ordem dos números</p><ol class="blocos"><li>Período</li><li>4 números: tokens, custo estimado, agentes, custo médio por agente</li><li>Consumo por dia (Tokens | Custo)</li><li>Por modelo</li><li>Por departamento</li><li>Custo por vídeo</li><li>Projeção mensal (média dos 30 dias × 30)</li><li>Quem mais consome (Gerentes | Ranking geral)</li></ol></div>
+    <div><p class="k-cap">De onde vem cada dado</p><div class="dados-tela"><span class="tabchip">consumo_diario</span><span class="tabchip">consumo</span><span class="tabchip">execucoes_custo</span><span class="tabchip">precos_modelo</span></div>
+      <p class="vazio-tela">Custo = equivalente na API pelo preço de tabela, não a fatura da assinatura.</p></div>
+  </div>
+</article>
+  </section>
+
+  <!-- 8. DESIGN SYSTEM -->
+  <section class="sec" id="design">
+    <div class="sec-cab">
+      <p class="k-cap">painel/design/</p>
+      <h2>design system.</h2>
+      <p class="lead">“korvu. painel”: desenhado pelo dono no Claude Design em 23/10/2026 e importado em PT-BR com os valores exatos. Um tema só, claro, chamado Marfim. As amostras abaixo usam o CSS do próprio painel e ficam no Marfim mesmo com esta página no escuro.</p>
+    </div>
+
+    <div class="sub-cab"><h3>Tipografia</h3><p>Geist e Geist Mono, arquivos variáveis locais, licença OFL 1.1 · números tabulares em tudo</p></div>
+    <div class="amostra marfim">
+      <div class="escala">
+        <div class="lin"><span class="meta">display 56/60 · 800</span><span class="ex" style="font-size:56px;line-height:60px;font-weight:800;letter-spacing:-.035em">korvu. painel</span></div>
+        <div class="lin"><span class="meta">h1 44/48 · 800</span><span class="ex" style="font-size:44px;line-height:48px;font-weight:800;letter-spacing:-.03em">Contratar</span></div>
+        <div class="lin"><span class="meta">h2 30/36 · 700</span><span class="ex" style="font-size:30px;line-height:36px;font-weight:700;letter-spacing:-.02em">Próximas publicações</span></div>
+        <div class="lin"><span class="meta">h3 22/28 · 700</span><span class="ex" style="font-size:22px;line-height:28px;font-weight:700;letter-spacing:-.015em">por departamento.</span></div>
+        <div class="lin"><span class="meta">body 15/22 · 400</span><span class="ex">O painel só lê os arquivos do projeto.</span></div>
+        <div class="lin"><span class="meta">small 13/18 · 500</span><span class="ex" style="font-size:13px;line-height:18px;font-weight:500">Rótulos de botão, chips e barra lateral.</span></div>
+        <div class="lin"><span class="meta">caption 11/14 · 600</span><span class="ex k-cap">Tokens · 30 dias</span></div>
+        <div class="lin"><span class="meta">metric-xl 40/44 · 700</span><span class="ex" style="font-size:40px;line-height:44px;font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums">32</span></div>
+        <div class="lin"><span class="meta">metric-l 24/28 · 700</span><span class="ex" style="font-size:24px;line-height:28px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums">18 migrações</span></div>
+        <div class="lin"><span class="meta">mono 12/16 · 500</span><span class="ex" style="font:500 12px/16px var(--font-mono)">Opus 5.5 · #FF4D00 · 127.0.0.1:3456</span></div>
+      </div>
+    </div>
+
+    <div class="sub-cab"><h3>Cores-token</h3><p>de <code>tokens.css</code> · “não alterar sem decisão do autor”</p></div>
+    <div class="cores"><div class="cor"><i style="background:#f5f2e8"></i><div><b>--bg</b><span>#F5F2E8</span><span>fundo marfim</span></div></div><div class="cor"><i style="background:#fbf9f4"></i><div><b>--surface</b><span>#FBF9F4</span><span>cartões</span></div></div><div class="cor"><i style="background:#efebe0"></i><div><b>--surface-sunken</b><span>#EFEBE0</span><span>trilhos, iniciais</span></div></div><div class="cor"><i style="background:#e4dfd2"></i><div><b>--line</b><span>#E4DFD2</span><span>divisórias</span></div></div><div class="cor"><i style="background:#928874"></i><div><b>--line-strong</b><span>#928874</span><span>bordas de controle</span></div></div><div class="cor"><i style="background:#111111"></i><div><b>--ink</b><span>#111111</span><span>texto</span></div></div><div class="cor"><i style="background:#6b6458"></i><div><b>--ink-2</b><span>#6B6458</span><span>texto auxiliar</span></div></div><div class="cor"><i style="background:#111111"></i><div><b>--sidebar</b><span>#111111</span><span>barra lateral</span></div></div><div class="cor"><i style="background:#1d1c1a"></i><div><b>--sidebar-raised</b><span>#1D1C1A</span><span>item ativo</span></div></div><div class="cor"><i style="background:#ff4d00"></i><div><b>--accent</b><span>#FF4D00</span><span>a cor da marca</span></div></div><div class="cor"><i style="background:#e64500"></i><div><b>--accent-hover</b><span>#E64500</span><span>hover do primário</span></div></div><div class="cor"><i style="background:#ffe8dc"></i><div><b>--accent-soft</b><span>#FFE8DC</span><span>fundo de portão</span></div></div><div class="cor"><i style="background:#b33600"></i><div><b>--accent-ink</b><span>#B33600</span><span>laranja sobre claro, foco</span></div></div><div class="cor"><i style="background:#1e7a45"></i><div><b>--positive</b><span>#1E7A45</span><span>aprovado, alta</span></div></div><div class="cor"><i style="background:#c2271b"></i><div><b>--danger</b><span>#C2271B</span><span>bloqueado, queda</span></div></div><div class="cor"><i style="background:#a39b8b"></i><div><b>--chart-3</b><span>#A39B8B</span><span>gráfico 3</span></div></div><div class="cor"><i style="background:#d6ccb5"></i><div><b>--chart-4</b><span>#D6CCB5</span><span>gráfico 4</span></div></div><div class="cor"><i style="background:#4f6475"></i><div><b>--chart-5</b><span>#4F6475</span><span>gráfico 5, Facebook</span></div></div></div>
+
+    <div class="sub-cab"><h3>Componentes</h3><p>48 arquivos em <code>painel/web/src/components/</code> · amostras vivas com as classes <code>k-*</code></p></div>
+    <div class="amostra marfim">
+      <div class="comp-grade">
+        <div class="comp"><p class="k-cap">Botão · k-btn</p>
+          <div class="fila-comp"><button class="k-btn k-btn-primary" type="button">Copiar pedido</button><button class="k-btn k-btn-secondary" type="button">Ver produção</button><button class="k-btn k-btn-ghost" type="button">Ver os números</button><button class="k-btn k-btn-dark" type="button">Aprovar</button><button class="k-btn k-btn-secondary" type="button" disabled>Desativado</button></div></div>
+        <div class="comp"><p class="k-cap">Chip de estado · k-chip</p>
+          <div class="fila-comp"><span class="k-chip k-chip--aprovado">Aprovado</span><span class="k-chip k-chip--bloqueado">Bloqueado</span><span class="k-chip k-chip--producao">Em produção</span><span class="k-chip k-chip--agendado">Agendado</span><span class="k-chip k-chip--publicado">Publicado</span><span class="k-chip k-chip--portao">Portão</span><span class="k-chip k-chip--opus">Opus 5.5</span><span class="k-chip k-chip--model">Sonnet 5.5</span></div></div>
+        <div class="comp"><p class="k-cap">KPI · k-card k-kpi</p>
+          <div class="k-card k-kpi"><span class="k-cap">Tabelas no banco</span><span class="k-kpi-value">32</span><div class="k-kpi-foot"><span class="k-delta k-delta--flat">+10 views</span><span>18 migrações</span></div></div></div>
+        <div class="comp"><p class="k-cap">Notificação · k-note</p>
+          <div class="k-card k-note k-note--alert"><span class="k-note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><div class="k-note-title">Portão dos dados vencido</div><div class="k-note-body">1 arquivo mudou depois do APROVADO.</div></div></div>
+          <div class="k-card k-note k-note--gate"><span class="k-note-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><div><div class="k-note-title">Portão do roteiro ainda não rodou</div><div class="k-note-body">O portão revisa cada um antes da gravação.</div></div></div></div>
+        <div class="comp"><p class="k-cap">Portão de aprovação · k-gate</p>
+          <div class="k-card k-gate"><div class="fila-comp"><span class="k-gate-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><b style="font-size:15px">Quem faz não aprova</b></div>
+          <div class="k-check is-on"><b aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b><span>Construtor terminou</span></div>
+          <div class="k-check is-on"><b aria-hidden="true"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></b><span>Portão da área auditou</span></div>
+          <div class="k-check"><b aria-hidden="true"></b><span>APROVADO preso aos arquivos</span></div>
+          <div class="k-steps" aria-label="Etapa 3 de 4"><i class="on"></i><i class="on"></i><i class="now"></i><i></i></div></div></div>
+        <div class="comp"><p class="k-cap">Evento do calendário · k-event</p>
+          <div class="fila-comp"><div class="k-event k-event--ig"><b>19:00 · Agendado</b><span>Instagram</span></div><div class="k-event k-event--fb"><b>21:00 · Agendado</b><span>Facebook</span></div><div class="k-event k-event--gate"><b>Portão</b><span>Publicação</span></div></div></div>
+        <div class="comp"><p class="k-cap">Busca e dica · k-search · k-tooltip</p>
+          <label class="k-search" for="busca-amostra"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg><input id="busca-amostra" type="search" placeholder="Buscar vídeos, agentes, portões…"><span class="k-kbd">⌘K</span></label>
+          <span class="k-tooltip">Opus 5.5<small>o modelo que rodou nos 30 dias</small></span></div>
+        <div class="comp"><p class="k-cap">Estado vazio · k-empty</p>
+          <div class="k-empty"><span class="k-empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg></span><h4>Nada agendado</h4><p>Quando um pacote entrar na fila, aparece aqui com dia, hora e canal.</p></div></div>
+      </div>
+      <div class="comp"><p class="k-cap">Os 48 componentes</p><div class="lista-comp"><span class="tabchip">Acervo</span><span class="tabchip">Alternador</span><span class="tabchip">Anel</span><span class="tabchip">Avatar</span><span class="tabchip">Avisos</span><span class="tabchip">BarraApp</span><span class="tabchip">Botao</span><span class="tabchip">Busca</span><span class="tabchip">Calendario</span><span class="tabchip">Campo</span><span class="tabchip">Canais</span><span class="tabchip">Capa</span><span class="tabchip">Card</span><span class="tabchip">CardPessoa</span><span class="tabchip">CartaoAgente</span><span class="tabchip">CartaoPublicacao</span><span class="tabchip">Casca</span><span class="tabchip">Chip</span><span class="tabchip">Contador</span><span class="tabchip">Destaque</span><span class="tabchip">Dica</span><span class="tabchip">Dicas</span><span class="tabchip">Equipe</span><span class="tabchip">ErroBloco</span><span class="tabchip">Escolha</span><span class="tabchip">Esqueleto</span><span class="tabchip">EstadoPagina</span><span class="tabchip">Evento</span><span class="tabchip">FiltroLista</span><span class="tabchip">GraficoLinha</span><span class="tabchip">Graficos</span><span class="tabchip">Icone</span><span class="tabchip">Kpi</span><span class="tabchip">LinhaPortoes</span><span class="tabchip">ListaKv</span><span class="tabchip">Logo</span><span class="tabchip">NavCalendario</span><span class="tabchip">Nota</span><span class="tabchip">Numeros</span><span class="tabchip">Pagina</span><span class="tabchip">Pedido</span><span class="tabchip">Portao</span><span class="tabchip">Progresso</span><span class="tabchip">Revelar</span><span class="tabchip">Selecao</span><span class="tabchip">Tabela</span><span class="tabchip">Texto</span><span class="tabchip">Vazio</span></div></div>
+    </div>
+
+    <div class="sub-cab"><h3>Movimento</h3><p>v0 estados · v1 toque, popovers e gaveta (03/11) · v2 os dados entram (04/11)</p></div>
+    <div class="mov">
+      <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela dos tokens de movimento, role para o lado"><table class="tabela" style="min-width:0">
+        <thead><tr><th scope="col">Token</th><th scope="col">Valor</th><th scope="col">Uso</th></tr></thead>
+        <tbody>
+          <tr><td class="v">duracao-padrao</td><td class="v">150ms</td><td>troca de cor dos estados</td></tr>
+          <tr><td class="v">duracao-linha</td><td class="v">120ms</td><td>hover da linha da tabela</td></tr>
+          <tr><td class="v">atraso-dica</td><td class="v">300ms</td><td>até a dica aparecer</td></tr>
+          <tr><td class="v">duracao-toque</td><td class="v">100ms</td><td>o controle afunda no toque</td></tr>
+          <tr><td class="v">duracao-entrada</td><td class="v">160ms</td><td>popover e gaveta</td></tr>
+          <tr><td class="v">duracao-pagina</td><td class="v">420ms</td><td>o cartão entra</td></tr>
+          <tr><td class="v">duracao-dado</td><td class="v">760ms</td><td>barra cresce, arco gira, linha se revela</td></tr>
+          <tr><td class="v">escalonar</td><td class="v">45ms</td><td>atraso entre irmãos</td></tr>
+        </tbody></table></div>
+      <div class="amostra marfim" id="demo-mov">
+        <p class="k-cap">Amostra: os dados entram</p>
+        <div class="barras" aria-label="Amostra de barras: telas 9, views 10, migrações 18, tabelas 32">
+          <div class="b"><span>telas</span><div class="barra-dado"><span style="width:28%;--i:0"></span></div><b>9</b></div>
+          <div class="b"><span>views</span><div class="barra-dado"><span style="width:31%;--i:1"></span></div><b>10</b></div>
+          <div class="b"><span>migrações</span><div class="barra-dado"><span style="width:56%;--i:2"></span></div><b>18</b></div>
+          <div class="b"><span>tabelas</span><div class="barra-dado"><span style="width:100%;--i:3"></span></div><b>32</b></div>
+        </div>
+        <div class="fila-comp"><button class="k-btn k-btn-secondary k-btn-sm" type="button" id="tocar">Tocar de novo</button><span class="ink2" style="font-size:12px">Só transform e opacity; curva que só desacelera; com “reduzir movimento” o dado aparece pronto.</span></div>
+        <p style="margin:0;font-size:13px;line-height:19px" class="ink2">Toque nos botões das amostras: eles afundam (<code>scale .97</code>) no pointer-down, sem esperar o clique terminar.</p>
+      </div>
+    </div>
+    <div class="texto" style="margin-top:16px"><p class="ink2">Gráficos seguem a skill <code>dataviz</code>: um eixo, tabela gêmea em todo gráfico, hover e foco. Conferência de fidelidade em <code>painel/design/verificacao/fidelidade.py</code> e de contraste em <code>contraste.py</code>.</p></div>
+  </section>
+
+  <!-- 9. QUALIDADE -->
+  <section class="sec" id="qualidade">
+    <div class="sec-cab">
+      <p class="k-cap">GAUNTLET · testes</p>
+      <h2>qualidade.</h2>
+      <p class="lead">Quem faz não aprova. Dois portões fiscalizam três áreas do painel, e a aprovação é presa aos arquivos: se um arquivo muda depois do APROVADO, o veredicto vence.</p>
+    </div>
+    <div class="gauntlet"><article class="card area"><div class="topo"><h4>Área design</h4><span class="chip ok">aprovado</span></div><p class="quem">portao-interface fiscaliza designer-de-produto</p><p>Confere: fidelidade ao design aprovado, telas olhadas a 1440 e 375 px.</p><p>em 04/11</p></article><article class="card area"><div class="topo"><h4>Área interface</h4><span class="chip ok">aprovado</span></div><p class="quem">portao-interface fiscaliza engenheiro-frontend</p><p>Confere: código × design, dados honestos, gráficos, acessibilidade, chave nenhuma no navegador, tipos/lint/build.</p><p>em 04/11</p></article><article class="card area"><div class="topo"><h4>Área dados</h4><span class="chip vencido">vencido</span></div><p class="quem">portao-dados fiscaliza engenheiro-backend</p><p>Confere: migrações versionadas, RLS e permissões, sincronizador que só lê, contagens, segredos, isolamento, testes.</p><p>último APROVADO em 25/10; depois mudou o painel/equipe.yaml (o docs/gauntlet.md diz que esse arquivo fica fora das áreas)</p></article></div>
+    <p class="ink2" style="font-size:13px;margin:10px 0 0">Estado em 12/11, por <code>uv run python scripts/portoes.py estado painel</code>.</p>
+
+    <div class="sub-cab"><h3>Testes</h3><p>scripts Python em <code>painel/tests/</code>, não pytest</p></div>
+    <div class="card rolagem" tabindex="0" role="region" aria-label="Tabela dos testes, role para o lado"><table class="tabela">
+      <thead><tr><th scope="col">Arquivo</th><th scope="col">O que cobre</th><th scope="col">Resultado em 12/11</th></tr></thead>
+      <tbody>
+        <tr><td class="v">test_sincronizar.py<br><span class="ink2">3.167 linhas · ≈ 327 checagens</span></td><td>Raiz temporária + banco descartável <code>painel_teste_&lt;pid&gt;</code>: cada mapeamento arquivo → linha, <code>--seco</code>, porta morta, contrato com os produtores, permissões “do zero”, reconciliação de tokens; confere que as migrações criam as 32 tabelas.</td><td><span class="chip neutro">não rodado</span><p class="ink2" style="margin:6px 0 0;font-size:12px">aplica as migrações num banco de teste; ficou fora do limite do levantamento</p></td></tr>
+        <tr><td class="v">test_previas_looks.py<br><span class="ink2">318 linhas</span></td><td>O gerador de prévias numa raiz temporária, com amostra e <code>.cube</code> sintéticos.</td><td><span class="teste-num">44/44</span> <span class="chip ok">PASS</span></td></tr>
+        <tr><td class="v">test_biblioteca_yaml.py<br><span class="ink2">149 linhas</span></td><td>O <code>biblioteca.yaml</code> real contra a maquete, o <code>brand.ts</code> e o sincronizador (só leitura).
+          <ul class="falhas"><li>A fonte “Inter Tight” do <code>biblioteca.yaml</code> não bate com o <code>remotion/src/brand.ts</code> (<code>confere_brand_ts = false</code>).</li><li>4 briefs de animação de um vídeo (E24, E26, E27, E28) sem duração no cabeçalho.</li><li>Por causa dessas duas, “nenhum aviso ⚠” falha.</li></ul></td><td><span class="teste-num">19/22</span> <span class="chip mal">3 FAIL</span></td></tr>
+      </tbody></table></div>
+    <div class="notas" style="margin-top:16px">
+      <div class="nota alerta"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><b><code>uv run pytest painel/tests -q</code> não roda</b><p><code>error: Failed to spawn: pytest</code>: o pytest não está nas dependências do <code>pyproject.toml</code>. Os testes rodam como <code>uv run python painel/tests/&lt;arquivo&gt;.py</code>.</p></div></div>
+      <div class="nota ok"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></span><div><b>Olhar a tela de verdade</b><p><code>bash painel/capturar.sh</code> fotografa no Chrome sem janela a 1440 e 375 px, mede <code>innerWidth</code>/<code>scrollWidth</code> e falha se houver rolagem lateral: 0 casos nas 18 fotos desta documentação.</p></div></div>
+    </div>
+  </section>
+
+  <!-- 10. INSTALAR -->
+  <section class="sec" id="instalar">
+    <div class="sec-cab">
+      <p class="k-cap">Do zero, num Mac</p>
+      <h2>instalar e reusar.</h2>
+      <p class="lead">Pré-requisitos: macOS (launchd), Docker (aqui o Colima), Supabase CLI, Node ≥ 22 e npm, Python ≥ 3.12 com <code>uv</code>, Google Chrome (só para as capturas) e ffmpeg (só para as prévias dos looks). Os comandos rodam na raiz do projeto.</p>
+    </div>
+    <ol class="passos-inst">
+      <li><div><h4>Dependências</h4><p>Python pelo <code>pyproject.toml</code> da raiz; Next.js pelo <code>package-lock.json</code>.</p>
+        <div class="codigo"><pre id="c1">uv sync
+cd painel/web &amp;&amp; npm ci &amp;&amp; cd ../..</pre><button class="copiar" type="button" data-alvo="c1">Copiar</button></div></div></li>
+      <li><div><h4>Banco, primeira sincronização e app</h4><p>Sobe o Supabase local, confere as portas, roda uma passagem e abre o app em <code>http://localhost:3456</code>.</p>
+        <div class="codigo"><pre id="c2">bash painel/iniciar.sh</pre><button class="copiar" type="button" data-alvo="c2">Copiar</button></div>
+        <div class="nota alerta" style="margin-top:10px"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 4 3 19.5h18L12 4Z"/><path d="M12 10v4.5M12 17h.01"/></svg></span><div><b>Use sempre <code>bash painel/iniciar.sh</code>, nunca um <code>supabase start</code> solto</b><p>O comando solto pode recriar a rede Docker aberta para a rede local. A tela de erro do app ainda sugere <code>cd painel &amp;&amp; supabase start</code> (em <code>web/src/lib/comandos.ts</code>); o <code>README.md</code> e o próprio sincronizador dizem para usar o <code>iniciar.sh</code>.</p></div></div></div></li>
+      <li><div><h4>Chaves do app</h4><p>Criar <code>painel/web/.env.local</code> com as duas variáveis abaixo. Nenhum script do painel cria esse arquivo; este passo foi deduzido do <code>lib/db.ts</code> e do <code>README.md</code> e não foi confirmado.</p>
+        <div class="codigo"><pre id="c3">SUPABASE_URL=&lt;API URL local&gt;
+SUPABASE_SERVICE_ROLE_KEY=&lt;service_role do supabase status&gt;</pre><button class="copiar" type="button" data-alvo="c3">Copiar</button></div></div></li>
+      <li><div><h4>Sincronização automática a cada 15 min</h4>
+        <div class="codigo"><pre id="c4">bash scripts/launchd/instalar.sh uk.korvu.painel
+launchctl kickstart -k gui/$(id -u)/uk.korvu.painel   <span class="c"># forçar agora</span></pre><button class="copiar" type="button" data-alvo="c4">Copiar</button></div></div></li>
+      <li><div><h4>Testes</h4>
+        <div class="codigo"><pre id="c5">uv run python painel/tests/test_sincronizar.py
+uv run python painel/tests/test_previas_looks.py
+uv run python painel/tests/test_biblioteca_yaml.py</pre><button class="copiar" type="button" data-alvo="c5">Copiar</button></div></div></li>
+    </ol>
+    <div class="notas" style="margin-top:20px">
+      <div class="nota"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8.5"/><path d="M12 11v5M12 8h.01"/></svg></span><div><b>Ao instalar, saiba também</b><p>O <code>config.toml</code> aponta <code>sql_paths = ["./seed.sql"]</code>, mas não existe <code>painel/supabase/seed.sql</code>. Auth e Storage estão ligados no <code>config.toml</code> (<code>enable_signup = true</code>), embora o painel não use login nem arquivos no Supabase. Que o primeiro <code>supabase start</code> aplica as 18 migrações sozinho é provável (<code>[db.migrations] enabled = true</code>), mas não foi testado no levantamento.</p></div></div>
+      <div class="nota portao"><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V8a4 4 0 0 1 8 0v2.5"/><path d="M12 14.5v2"/></svg></span><div><b>Antes de expor na internet</b><p>Trocar as chaves de demonstração do Supabase, criar um projeto Supabase na nuvem e rodar <code>supabase db push</code>, trocar o <code>web/.env.local</code> e pôr login antes de abrir. Hoje o painel foi feito para rodar só no Mac.</p></div></div>
+    </div>
+    <div class="sub-cab"><h3>Para usar fora do Korvu Studio</h3><p>o que é preso ao estúdio e o que se reusa</p></div>
+    <div class="reuso">
+      <div class="card"><h4>O que trocar</h4><ul>
+        <li><b>A leitura do sincronizador</b> é presa às pastas do estúdio (<code>videos/&lt;slug&gt;/…</code>, <code>05-render-pronto</code>, <code>06-publicar</code>, <code>07-publicados</code>, <code>_controle/…</code>, <code>00-marca/cor</code>, <code>remotion/src/brand.ts</code>) e aos contratos de <code>docs/contratos.md</code>. Para outro projeto: reescrever as funções de leitura de <code>sincronizar.py</code>.</li>
+        <li><b><code>scripts/portoes.py</code></b> é importado do projeto (o GAUNTLET). Sem ele, o sincronizador não abre.</li>
+        <li><b>Pessoas e nomes:</b> <code>painel/equipe.yaml</code>, <code>painel/biblioteca.yaml</code>, <code>painel/cambio.yaml</code>, os retratos em <code>web/public/equipe/</code> e os textos fixos (“o autor · Proprietário”, <code>@korvu_oficial</code>).</li>
+        <li><b>Registros do Claude Code:</b> pasta derivada da raiz do projeto (<code>PAINEL_REGISTROS</code> troca); preços em <code>PRECOS</code>.</li>
+        <li><b>Ambiente:</b> raiz por <code>PAINEL_PROJETO</code>/<code>CONTENT_AI_ROOT</code>, banco por <code>PAINEL_DB_URL</code>, fuso de publicação no calendário, <code>so-no-mac.sh</code> pensado para o Colima, launchd (só macOS).</li>
+      </ul></div>
+      <div class="card"><h4>O que se reusa quase sem mudança</h4><ul>
+        <li><b>O padrão</b> “arquivos → sincronizador em transação → Postgres com RLS fechado → Server Components com paginação conferida”.</li>
+        <li><b>O design system</b> “korvu. painel” (tokens, componentes, movimento) e os componentes de <code>painel/web/src/components/</code>.</li>
+        <li><b>O <code>capturar.sh</code></b>, que fotografa qualquer página a 1440 e 375 px e acusa rolagem lateral.</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <footer class="rodape"><span>Documentação feita a partir do dossiê técnico de 12/11/2026, que cita o arquivo de origem de cada fato.</span><span><a href="../../estudio/site/index.html">Volume 1 · Estúdio ↗</a> · korvu. painel · o painel só lê os arquivos do projeto</span></footer>
+  </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var btn=document.getElementById('menu-btn'),gav=document.getElementById('gaveta');
+  function fechar(){gav.hidden=true;btn.setAttribute('aria-expanded','false')}
+  btn.addEventListener('click',function(){var abrir=gav.hidden;gav.hidden=!abrir;btn.setAttribute('aria-expanded',String(abrir))});
+  gav.addEventListener('click',function(e){if(e.target.closest('a'))fechar()});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!gav.hidden){fechar();btn.focus()}});
+
+  // índice: marca a seção que está na tela
+  var links=[].slice.call(document.querySelectorAll('.nav a[href^="#"]'));
+  var secoes=[].slice.call(document.querySelectorAll('main .sec'));
+  if('IntersectionObserver' in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){var id=e.target.id;links.forEach(function(a){var on=a.getAttribute('href')==='#'+id;a.classList.toggle('ativo',on);if(on)a.setAttribute('aria-current','true');else a.removeAttribute('aria-current')})}})},{rootMargin:'-30% 0px -60% 0px'});
+    secoes.forEach(function(s){io.observe(s)});
+  }
+
+  // copiar
+  document.querySelectorAll('.copiar').forEach(function(b){b.addEventListener('click',function(){
+    var pre=document.getElementById(b.getAttribute('data-alvo')),txt=pre.innerText;
+    function marcar(m){b.textContent=m;setTimeout(function(){b.textContent='Copiar'},1600)}
+    function selecionar(){var r=document.createRange();r.selectNodeContents(pre);var s=getSelection();s.removeAllRanges();s.addRange(r);marcar('Selecionado')}
+    try{navigator.clipboard.writeText(txt).then(function(){marcar('Copiado')},selecionar)}catch(e){selecionar()}
+  })});
+
+  // celular: abre e fecha a página inteira
+  document.querySelectorAll('.ver-cel').forEach(function(b){b.addEventListener('click',function(){
+    var c=document.getElementById(b.getAttribute('aria-controls')),ab=!c.classList.contains('aberto');
+    c.classList.toggle('aberto',ab);b.setAttribute('aria-expanded',String(ab));b.textContent=ab?'Mostrar só a primeira tela':'Ver a página inteira';
+    if(!ab)c.scrollIntoView({block:'nearest'});
+  })});
+  // movimento: as barras entram quando a amostra chega à tela; "tocar de novo" repete
+  var demo=document.getElementById('demo-mov');
+  function tocar(){demo.classList.remove('tocando');void demo.offsetWidth;demo.classList.add('tocando')}
+  document.getElementById('tocar').addEventListener('click',tocar);
+  if('IntersectionObserver' in window){var io2=new IntersectionObserver(function(es){if(es[0].isIntersecting){tocar();io2.disconnect()}},{threshold:.4});io2.observe(demo)}
+})();
+</script>

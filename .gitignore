@@ -1,0 +1,75 @@
+# segredos
+.env
+.env.*
+!.env.example
+
+# mídia pesada (fica só no disco)
+*.mp4
+*.mov
+*.MOV
+*.m4v
+*.mkv
+*.wav
+*.mp3
+*.m4a
+*.aac
+*.braw
+*.r3d
+videos/*/brutos/
+videos/*/edicao/*.mp4
+videos/*/edicao/frames/
+05-render-pronto/*/video/
+06-publicar/*/video/
+07-publicados/*/video/
+02-calibracao/amostras/*
+!02-calibracao/amostras/.gitkeep
+
+# saídas de testes (regeneráveis)
+tests/render/
+tests/cor/_saida/
+tests/publicar/_saida/
+videos/_teste-*/
+*.png.tmp
+
+# prévias dos looks do painel (painel/sync/previas_looks.py gera de novo quando precisa)
+painel/previas/
+
+# ambientes
+.venv/
+__pycache__/
+*.pyc
+node_modules/
+remotion/out/
+remotion/public/_render/
+remotion/public/_marca/
+.DS_Store
+
+# dados do SEU estúdio (vídeos, fila, métricas, quem comentou) — nunca vão para o repositório público.
+# A demonstração fica em exemplos/estudio-demo/.
+/videos/
+/05-render-pronto/
+/06-publicar/
+/07-publicados/
+/_controle/
+/01-ideias/
+/02-calibracao/
+/carrosseis/
+/HANDOFF.md
+painel/web/.next*/
+painel/web/.env.local
+painel/portoes/
+painel/portoes.json
+painel/trabalho/
+estudio-contexto/logs/
+# material pessoal e de terceiros que nunca vai ao repositório
+00-marca/cor/amostras/
+00-marca/cor/analises/
+00-marca/cor/referencias/
+00-marca/referencias/
+00-marca/assets/logos-terceiros/
+painel/web/public/equipe/
+painel/referencias/
+transcricoes.json
+BG VIDEO/
+/linkedin/
+/ai-engineer/

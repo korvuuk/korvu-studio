@@ -1,0 +1,27 @@
+{
+ "slug": "2026-11-10-prompt-claro",
+ "estado": "edicao",
+ "atualizado": "2026-11-11T11:00:00-03:00",
+ "historico": [
+  {
+   "estado": "roteiro",
+   "em": "2026-11-03T10:00:00-03:00",
+   "nota": "roteiro v1"
+  },
+  {
+   "estado": "roteiro",
+   "em": "2026-11-05T10:00:00-03:00",
+   "nota": "roteiro v3 (dramaturgo)"
+  },
+  {
+   "estado": "gravacao",
+   "em": "2026-11-10T16:00:00-03:00",
+   "nota": "gravado em 2 partes"
+  },
+  {
+   "estado": "edicao",
+   "em": "2026-11-11T11:00:00-03:00",
+   "nota": "EDL v1 aguardando aprovação"
+  }
+ ]
+}

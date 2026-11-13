@@ -1,0 +1,2109 @@
+{
+  "gerado_em": "2026-11-12",
+  "origem_capturas": "app rodando em http://localhost:3456 (não maquetes)",
+  "stack": [
+    {
+      "camada": "web",
+      "tecnologia": "Next.js (App Router)",
+      "versao": "15.5.28",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "React / React DOM",
+      "versao": "19.1.10",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "TypeScript",
+      "versao": "5.9.3",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "Tailwind CSS",
+      "versao": "4.3.3",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "@supabase/supabase-js",
+      "versao": "2.58.0",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "server-only",
+      "versao": "0.0.1",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "web",
+      "tecnologia": "ESLint",
+      "versao": "9.39.5",
+      "fonte": "painel/web/package.json"
+    },
+    {
+      "camada": "banco",
+      "tecnologia": "Supabase local / Postgres",
+      "versao": "Postgres 17",
+      "fonte": "painel/supabase/config.toml"
+    },
+    {
+      "camada": "sync",
+      "tecnologia": "Python",
+      "versao": "≥3.12",
+      "fonte": "pyproject.toml"
+    },
+    {
+      "camada": "sync",
+      "tecnologia": "psycopg[binary]",
+      "versao": "≥3.2",
+      "fonte": "pyproject.toml"
+    },
+    {
+      "camada": "sync",
+      "tecnologia": "PyYAML",
+      "versao": "≥6.0.3",
+      "fonte": "pyproject.toml"
+    },
+    {
+      "camada": "sync",
+      "tecnologia": "uv",
+      "versao": null,
+      "fonte": "CLAUDE.md"
+    },
+    {
+      "camada": "agendador",
+      "tecnologia": "launchd (macOS)",
+      "versao": null,
+      "fonte": "scripts/launchd/uk.korvu.painel.plist"
+    },
+    {
+      "camada": "infra",
+      "tecnologia": "Docker (Colima)",
+      "versao": null,
+      "fonte": "painel/README.md"
+    },
+    {
+      "camada": "previas",
+      "tecnologia": "ffmpeg",
+      "versao": null,
+      "fonte": "painel/sync/previas_looks.py"
+    },
+    {
+      "camada": "capturas",
+      "tecnologia": "Node + Chrome (CDP)",
+      "versao": "Node ≥22",
+      "fonte": "painel/capturar.sh"
+    },
+    {
+      "camada": "design",
+      "tecnologia": "Geist / Geist Mono (OFL 1.1)",
+      "versao": null,
+      "fonte": "painel/design/design-system.md"
+    }
+  ],
+  "portas": {
+    "app": "127.0.0.1:3456",
+    "api_supabase": "127.0.0.1:55321",
+    "postgres": "127.0.0.1:55322",
+    "shadow": 55320,
+    "studio_desligado": "127.0.0.1:55323"
+  },
+  "tabelas": [
+    {
+      "nome": "departamentos",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "gerente_id",
+          "tipo": "text",
+          "chave": "FK agentes.id"
+        }
+      ],
+      "relaciona_com": [
+        "agentes"
+      ]
+    },
+    {
+      "nome": "agentes",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "cargo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "departamento_id",
+          "tipo": "text",
+          "chave": "FK departamentos.id"
+        },
+        {
+          "nome": "papel",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "resumo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "modelo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ferramentas",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "skills",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "comandos",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "fiscalizado_por",
+          "tipo": "text",
+          "chave": "FK agentes.id"
+        },
+        {
+          "nome": "fiscaliza",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "retrato",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "arquivo",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "departamentos",
+        "agentes"
+      ]
+    },
+    {
+      "nome": "portoes_estado",
+      "colunas": [
+        {
+          "nome": "alvo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "portao",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "agente",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "status",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "motivos",
+          "tipo": "jsonb",
+          "chave": ""
+        },
+        {
+          "nome": "volta",
+          "tipo": "int",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "veredictos",
+      "colunas": [
+        {
+          "nome": "alvo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "PK"
+        },
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "portao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "agente",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "resultado",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "em",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "volta",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "s0",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "s1",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "s2",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "relatorio",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "videos",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "tema",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "pilar",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "estado",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "historico",
+          "tipo": "jsonb",
+          "chave": ""
+        },
+        {
+          "nome": "gravado",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_arquivos",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_bytes",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_arquivos_no_mac",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_bytes_no_mac",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_arquivados",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_ultima",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_chegou",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_data_suspeita",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "pronto",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "tem_roteiro",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "roteiro_versao",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "cta_palavra",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "roteiro_extras",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "gravacao_prevista",
+          "tipo": "date",
+          "chave": ""
+        },
+        {
+          "nome": "nome_curto",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "prontos",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "qa",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "duracao",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "criado_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "cta_palavra",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "videos (lógica)"
+      ]
+    },
+    {
+      "nome": "fila",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "publicar_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "plataformas",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "estado",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "trial",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "palavra",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "legado",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "confirmar",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "origem",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "selado",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "erros_gauntlet",
+          "tipo": "jsonb",
+          "chave": ""
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "videos (lógica)"
+      ]
+    },
+    {
+      "nome": "publicacoes",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "publicado_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "tema",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "pilar",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "palavra",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "duracao_s",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "trial",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "permalink_instagram",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "permalink_facebook",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "plataformas",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "estado",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "metricas"
+      ]
+    },
+    {
+      "nome": "metricas",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK, FK publicacoes.slug"
+        },
+        {
+          "nome": "lido_em",
+          "tipo": "timestamptz",
+          "chave": "PK"
+        },
+        {
+          "nome": "views",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "alcance",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "tempo_medio_s",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "pct_assistido",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "curtidas",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "comentarios",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "salvamentos",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "compartilhamentos",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "suspeito",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "publicacoes"
+      ]
+    },
+    {
+      "nome": "nao_publicar",
+      "colunas": [
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "motivo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "desde",
+          "tipo": "date",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "calendario_vagas",
+      "colunas": [
+        {
+          "nome": "dia_semana",
+          "tipo": "smallint",
+          "chave": "PK"
+        },
+        {
+          "nome": "hora",
+          "tipo": "time",
+          "chave": "PK"
+        },
+        {
+          "nome": "dia",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "fuso",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "perfil_snapshots",
+      "colunas": [
+        {
+          "nome": "lido_em",
+          "tipo": "timestamptz",
+          "chave": "PK"
+        },
+        {
+          "nome": "seguidores",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "alcance",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "views",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "visitas_perfil",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "alcance_seguidores",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "alcance_nao_seguidores",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "fb_seguidores",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "toques_links_perfil",
+          "tipo": "int",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "perfil_demografia"
+      ]
+    },
+    {
+      "nome": "perfil_demografia",
+      "colunas": [
+        {
+          "nome": "lido_em",
+          "tipo": "timestamptz",
+          "chave": "PK, FK perfil_snapshots.lido_em"
+        },
+        {
+          "nome": "publico",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "dimensao",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "chave",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "valor",
+          "tipo": "int",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "perfil_snapshots"
+      ]
+    },
+    {
+      "nome": "perfil_diario",
+      "colunas": [
+        {
+          "nome": "dia",
+          "tipo": "date",
+          "chave": "PK"
+        },
+        {
+          "nome": "metrica",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "valor",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "lido_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "sincronizacoes",
+      "colunas": [
+        {
+          "nome": "em",
+          "tipo": "timestamptz",
+          "chave": "PK"
+        },
+        {
+          "nome": "resumo",
+          "tipo": "jsonb",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "precos_modelo",
+      "colunas": [
+        {
+          "nome": "modelo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "entrada",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "cache_gravado_5m",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "cache_gravado_1h",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "cache_lido",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "saida",
+          "tipo": "numeric",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "consumo (view)"
+      ]
+    },
+    {
+      "nome": "execucoes",
+      "colunas": [
+        {
+          "nome": "arquivo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "tipo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "sessao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "agente_id",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "agente_tipo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "membro_id",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "departamento_id",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "inicio",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "fim",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "registro_presente",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "visto_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "uso_execucao"
+      ]
+    },
+    {
+      "nome": "uso_execucao",
+      "colunas": [
+        {
+          "nome": "arquivo",
+          "tipo": "text",
+          "chave": "PK, FK execucoes.arquivo"
+        },
+        {
+          "nome": "dia",
+          "tipo": "date",
+          "chave": "PK"
+        },
+        {
+          "nome": "modelo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "respostas",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "entrada",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "cache_gravado_5m",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "cache_gravado_1h",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "cache_gravado_sem_ttl",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "cache_lido",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "saida",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "tokens",
+          "tipo": "bigint (gerada)",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "execucoes"
+      ]
+    },
+    {
+      "nome": "cambio",
+      "colunas": [
+        {
+          "nome": "moeda",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "data",
+          "tipo": "date",
+          "chave": "PK"
+        },
+        {
+          "nome": "valor",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "fonte",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "biblioteca_materiais",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": "FK videos.slug"
+        },
+        {
+          "nome": "grupo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "caminho",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "quem_adicionou_inferido",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "miniatura",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "obra_estudo",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "videos",
+        "biblioteca_arquivos"
+      ]
+    },
+    {
+      "nome": "biblioteca_arquivos",
+      "colunas": [
+        {
+          "nome": "caminho",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "material_id",
+          "tipo": "text",
+          "chave": "FK biblioteca_materiais.id"
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": "FK videos.slug"
+        },
+        {
+          "nome": "area",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "extensao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "tipo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "bytes",
+          "tipo": "bigint",
+          "chave": ""
+        },
+        {
+          "nome": "modificado_em",
+          "tipo": "timestamptz",
+          "chave": ""
+        },
+        {
+          "nome": "data_suspeita",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "obra_estudo",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "biblioteca_materiais",
+        "videos"
+      ]
+    },
+    {
+      "nome": "biblioteca_referencias",
+      "colunas": [
+        {
+          "nome": "pasta",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "arquivos",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "bytes",
+          "tipo": "bigint",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "biblioteca_mais_utilizados",
+      "colunas": [
+        {
+          "nome": "arquivo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "usos",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "unidade",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "regra",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "arquivo_existe",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "looks",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "tipo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "papel",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "aprovada",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "criado_em",
+          "tipo": "date",
+          "chave": ""
+        },
+        {
+          "nome": "ficha",
+          "tipo": "jsonb",
+          "chave": ""
+        },
+        {
+          "nome": "cube",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "cube_sha256",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "rosto_ire",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "previa",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "previa_esperada",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "capa_estilos",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ficha",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ficha_existe",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "em_uso",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "capa_estilos_exemplos"
+      ]
+    },
+    {
+      "nome": "capa_estilos_exemplos",
+      "colunas": [
+        {
+          "nome": "estilo_id",
+          "tipo": "text",
+          "chave": "PK, FK capa_estilos.id"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "PK"
+        },
+        {
+          "nome": "slug",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "pasta",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "caminho",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "capa_estilos"
+      ]
+    },
+    {
+      "nome": "legenda_estilos",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ficha",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "ficha_existe",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "em_uso",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "fontes",
+      "colunas": [
+        {
+          "nome": "familia",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "remotion",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "estilo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "pesos",
+          "tipo": "int[]",
+          "chave": ""
+        },
+        {
+          "nome": "uso",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "reserva",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "confere_brand_ts",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "sistema_ferramentas",
+      "colunas": [
+        {
+          "nome": "nome",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "tipo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "versao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "versao_de",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    },
+    {
+      "nome": "modelos_descricao",
+      "colunas": [
+        {
+          "nome": "modelo",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "ordem",
+          "tipo": "int",
+          "chave": "UNIQUE"
+        },
+        {
+          "nome": "descricao",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "com_preco",
+          "tipo": "bool",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "sistema_modelos (view)"
+      ]
+    },
+    {
+      "nome": "animacoes",
+      "colunas": [
+        {
+          "nome": "id",
+          "tipo": "text",
+          "chave": "PK"
+        },
+        {
+          "nome": "video_slug",
+          "tipo": "text",
+          "chave": "FK videos.slug"
+        },
+        {
+          "nome": "codigo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "titulo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "linhas",
+          "tipo": "text[]",
+          "chave": ""
+        },
+        {
+          "nome": "modo",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "duracao_s",
+          "tipo": "numeric",
+          "chave": ""
+        },
+        {
+          "nome": "renderizada",
+          "tipo": "bool",
+          "chave": ""
+        },
+        {
+          "nome": "mp4",
+          "tipo": "text",
+          "chave": ""
+        },
+        {
+          "nome": "brief",
+          "tipo": "text",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": [
+        "videos"
+      ]
+    },
+    {
+      "nome": "sistema_contagens",
+      "colunas": [
+        {
+          "nome": "unico",
+          "tipo": "bool",
+          "chave": "PK"
+        },
+        {
+          "nome": "agentes",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "habilidades",
+          "tipo": "int",
+          "chave": ""
+        },
+        {
+          "nome": "comandos",
+          "tipo": "int",
+          "chave": ""
+        }
+      ],
+      "relaciona_com": []
+    }
+  ],
+  "views": [
+    {
+      "nome": "consumo",
+      "sobre": "uso_execucao + precos_modelo + execucoes"
+    },
+    {
+      "nome": "consumo_diario",
+      "sobre": "consumo"
+    },
+    {
+      "nome": "execucoes_custo",
+      "sobre": "execucoes + consumo + uso_execucao"
+    },
+    {
+      "nome": "biblioteca_materiais_resumo",
+      "sobre": "biblioteca_materiais + biblioteca_arquivos"
+    },
+    {
+      "nome": "biblioteca_por_tipo",
+      "sobre": "biblioteca_arquivos"
+    },
+    {
+      "nome": "biblioteca_por_video",
+      "sobre": "videos + biblioteca_arquivos"
+    },
+    {
+      "nome": "videos_producao",
+      "sobre": "videos + biblioteca_materiais_resumo + biblioteca_materiais"
+    },
+    {
+      "nome": "modelo_por_agente",
+      "sobre": "agentes + consumo + execucoes"
+    },
+    {
+      "nome": "armazenamento",
+      "sobre": "biblioteca_por_video + sincronizacoes"
+    },
+    {
+      "nome": "sistema_modelos",
+      "sobre": "modelo_por_agente + modelos_descricao"
+    }
+  ],
+  "rls": {
+    "rls_em_todas": true,
+    "politicas": 0,
+    "anon": "nenhum privilégio",
+    "authenticated": "nenhum privilégio",
+    "service_role": "só SELECT",
+    "escreve": "postgres (sincronizador)"
+  },
+  "migracoes": [
+    {
+      "data": "2026-10-22",
+      "arquivo": "20261022190000_inicial.sql",
+      "resumo": "inicial: 11 tabelas-espelho com RLS"
+    },
+    {
+      "data": "2026-10-22",
+      "arquivo": "20261022200000_leitura_do_app.sql",
+      "resumo": "leitura do app: SELECT para service_role"
+    },
+    {
+      "data": "2026-10-22",
+      "arquivo": "20261022225715_revogar_privilegios_da_api.sql",
+      "resumo": "revoga privilégios da API: anon/authenticated sem nada, service_role só SELECT, também para objetos futuros"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023153330_tokens_e_custos_do_claude_code.sql",
+      "resumo": "tokens e custos do Claude Code: precos_modelo, execucoes, uso_execucao e views de consumo"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023154146_cache_gravado_por_ttl.sql",
+      "resumo": "cache gravado por TTL (5 min 1,25x, 1 h 2x)"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023154151_cambio_do_custo_de_ia.sql",
+      "resumo": "tabela cambio"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023160517_fila_origem_selo_e_conferencia.sql",
+      "resumo": "fila: origem, selo e erros_gauntlet"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023160956_fases_publicados_e_nao_publicar.sql",
+      "resumo": "fases da Produção, publicados pelo post.json e nao_publicar"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023161339_gravacao_chegada_e_data_suspeita.sql",
+      "resumo": "data de chegada e data suspeita da gravação"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023195043_fk_gerente_e_fiscal_e_uso_pela_ultima_linha.sql",
+      "resumo": "FKs deferrable de gerente e fiscal; usage pela última linha"
+    },
+    {
+      "data": "2026-10-23",
+      "arquivo": "20261023203320_biblioteca_e_ordem_dos_veredictos.sql",
+      "resumo": "Biblioteca (índice de material) e chave (alvo, ordem) dos veredictos"
+    },
+    {
+      "data": "2026-10-24",
+      "arquivo": "20261024042911_producao_calendario_e_desempenho.sql",
+      "resumo": "Produção, calendário e desempenho: roteiro, prontos, calendario_vagas, perfil_diario, videos_producao"
+    },
+    {
+      "data": "2026-10-24",
+      "arquivo": "20261024055255_gravacao_no_mac_e_no_hd.sql",
+      "resumo": "gravação no Mac e no HD"
+    },
+    {
+      "data": "2026-10-24",
+      "arquivo": "20261024213122_modelo_por_agente.sql",
+      "resumo": "view modelo_por_agente"
+    },
+    {
+      "data": "2026-10-24",
+      "arquivo": "20261024215907_biblioteca_acervo_de_estilos.sql",
+      "resumo": "acervo de estilos: looks, capas, legendas, fontes, ferramentas, modelos, animações, contagens, armazenamento, sistema_modelos"
+    },
+    {
+      "data": "2026-10-24",
+      "arquivo": "20261024233631_rosto_do_look_pelo_biblioteca_yaml.sql",
+      "resumo": "rosto do look pelo biblioteca.yaml (só comentários)"
+    },
+    {
+      "data": "2026-10-25",
+      "arquivo": "20261025214021_nome_e_frase_dos_looks_e_nota_do_hd.sql",
+      "resumo": "nome e frase dos looks; nota do HD"
+    },
+    {
+      "data": "2026-10-25",
+      "arquivo": "20261025222838_hd_externo_fora_do_painel.sql",
+      "resumo": "HD externo fora do painel (tira a nota do HD)"
+    }
+  ],
+  "fluxo": [
+    {
+      "de": "arquivos do projeto (videos/, 05-07, _controle/, .claude/, painel/*.yaml, 00-marca/cor)",
+      "para": "painel/sync/sincronizar.py",
+      "como": "leitura (json, yaml, md, stat); portoes.py em SO_LEITURA"
+    },
+    {
+      "de": "registros do Claude Code (.jsonl)",
+      "para": "painel/sync/sincronizar.py",
+      "como": "leitura de usage/model/timestamp; nenhum texto de conversa"
+    },
+    {
+      "de": "launchd uk.korvu.painel",
+      "para": "painel/sync/sincronizar.py",
+      "como": "a cada 900 s e ao entrar na sessão"
+    },
+    {
+      "de": "painel/sync/sincronizar.py",
+      "para": "Postgres do painel (127.0.0.1:55322)",
+      "como": "psycopg, uma transação: truncate+insert (29 espelhos) e arquivo de execuções"
+    },
+    {
+      "de": "Postgres do painel",
+      "para": "Next.js (Server Components)",
+      "como": "supabase-js via PostgREST (127.0.0.1:55321), chave service_role, paginação de 1.000 com contagem exata"
+    },
+    {
+      "de": "Next.js",
+      "para": "navegador (127.0.0.1:3456)",
+      "como": "HTML renderizado no servidor + rotas /capa e /look"
+    },
+    {
+      "de": "Meta Graph API (scripts/metricas.py, perfil.py, publicar.py)",
+      "para": "07-publicados/*.json e _controle/perfil/*.json",
+      "como": "área Automação Meta; o painel só lê os arquivos"
+    },
+    {
+      "de": "painel/sync/previas_looks.py",
+      "para": "painel/previas/looks/*.jpg",
+      "como": "ffmpeg + LUTs; único passo que grava"
+    }
+  ],
+  "apis": [
+    {
+      "nome": "Supabase PostgREST",
+      "quem_chama": "app Next.js (servidor)",
+      "traz": "32 tabelas e 10 views (SELECT)",
+      "guarda_em": "—"
+    },
+    {
+      "nome": "Postgres (psycopg)",
+      "quem_chama": "sincronizador",
+      "traz": "— (escreve)",
+      "guarda_em": "banco do painel"
+    },
+    {
+      "nome": "Meta Graph API v23.0 (padrão de META_GRAPH_VERSION) — indireta",
+      "quem_chama": "scripts/metricas.py, scripts/perfil.py, scripts/publicar.py",
+      "traz": "métricas de Reels, perfil, demografia, permalinks",
+      "guarda_em": "07-publicados/<slug>/metricas.json e post.json, _controle/perfil/*.json → metricas, publicacoes, perfil_*"
+    },
+    {
+      "nome": "Registros do Claude Code (arquivos .jsonl)",
+      "quem_chama": "sincronizador",
+      "traz": "usage, modelo, id, timestamp; agentType do .meta.json",
+      "guarda_em": "execucoes, uso_execucao"
+    },
+    {
+      "nome": "Tabela de preços da API da Anthropic (copiada no código)",
+      "quem_chama": "—",
+      "traz": "US$/M por modelo",
+      "guarda_em": "precos_modelo"
+    },
+    {
+      "nome": "scripts/portoes.py (Python interno)",
+      "quem_chama": "sincronizador",
+      "traz": "estado dos portões, veredictos, conferir_pacote",
+      "guarda_em": "portoes_estado, veredictos, fila.erros_gauntlet"
+    },
+    {
+      "nome": "Rotas do app",
+      "quem_chama": "navegador",
+      "traz": "GET /capa/[pasta]/[slug] (PNG), GET /look/[id] (JPEG)",
+      "guarda_em": "—"
+    }
+  ],
+  "telas": [
+    {
+      "nome": "Visão geral",
+      "rota": "/",
+      "pergunta": "Como está o estúdio hoje: perfil, próximas publicações, últimos 28 dias, consumo de IA e equipe.",
+      "blocos": [
+        "Números do perfil (4 KPIs)",
+        "Próximas publicações",
+        "Desempenho · 28 dias",
+        "Público · Top 10 países",
+        "Tokens e custos · 30 dias",
+        "Equipe (5 cartões)"
+      ],
+      "dados": [
+        "perfil_snapshots",
+        "perfil_demografia",
+        "metricas",
+        "publicacoes",
+        "fila",
+        "consumo_diario",
+        "execucoes_custo",
+        "agentes",
+        "departamentos",
+        "modelo_por_agente"
+      ],
+      "captura_desktop": "capturas/inicio-1440.png",
+      "captura_celular": "capturas/inicio-375.png"
+    },
+    {
+      "nome": "Equipe",
+      "rota": "/equipe",
+      "pergunta": "Quem é quem por departamento, quem é portão, com que modelo trabalha e quanto consumiu em 30 dias.",
+      "blocos": [
+        "Busca de agente",
+        "Filtros (Todos, Portões, Opus 5.5, Sonnet 5.5, Ainda não rodou)",
+        "4 números",
+        "Direção",
+        "Um cartão por departamento"
+      ],
+      "dados": [
+        "agentes",
+        "departamentos",
+        "consumo_diario",
+        "execucoes_custo",
+        "modelo_por_agente"
+      ],
+      "captura_desktop": "capturas/equipe-1440.png",
+      "captura_celular": "capturas/equipe-375.png"
+    },
+    {
+      "nome": "Ficha do agente",
+      "rota": "/equipe/[id]",
+      "pergunta": "O que essa pessoa faz e, se for portão, o que passou por ela.",
+      "blocos": [
+        "Cabeçalho com foto",
+        "A função",
+        "O que passa por aqui",
+        "Veredictos recentes (12)"
+      ],
+      "dados": [
+        "agentes",
+        "departamentos",
+        "portoes_estado",
+        "veredictos",
+        "videos"
+      ],
+      "captura_desktop": "capturas/equipe-portao-imagem-1440.png",
+      "captura_celular": "capturas/equipe-portao-imagem-375.png"
+    },
+    {
+      "nome": "Contratar",
+      "rota": "/equipe/contratar",
+      "pergunta": "Como pedir um agente novo já ligado ao portão do departamento.",
+      "blocos": [
+        "Formulário",
+        "Pedido de contratação",
+        "Copiar pedido"
+      ],
+      "dados": [
+        "departamentos",
+        "agentes"
+      ],
+      "captura_desktop": "capturas/equipe-contratar-1440.png",
+      "captura_celular": "capturas/equipe-contratar-375.png"
+    },
+    {
+      "nome": "Produção de conteúdo",
+      "rota": "/producao",
+      "pergunta": "Em que fase está cada conteúdo e o que precisa de atenção.",
+      "blocos": [
+        "Busca",
+        "Filtro de formato",
+        "5 fases",
+        "Tabela da fase",
+        "Precisam de atenção",
+        "Portões"
+      ],
+      "dados": [
+        "videos",
+        "videos_producao",
+        "prontos",
+        "fila",
+        "publicacoes",
+        "nao_publicar",
+        "portoes_estado",
+        "agentes"
+      ],
+      "captura_desktop": "capturas/producao-1440.png",
+      "captura_celular": "capturas/producao-375.png"
+    },
+    {
+      "nome": "Calendário",
+      "rota": "/calendario",
+      "pergunta": "O que sai em cada dia, onde, as vagas livres e se cada post da fila vai sair.",
+      "blocos": [
+        "Navegação Mês | Semana",
+        "Legenda",
+        "Eventos e vagas",
+        "Fila",
+        "Melhores horários"
+      ],
+      "dados": [
+        "publicacoes",
+        "fila",
+        "calendario_vagas",
+        "rota /capa"
+      ],
+      "captura_desktop": "capturas/calendario-1440.png",
+      "captura_celular": "capturas/calendario-375.png"
+    },
+    {
+      "nome": "Desempenho",
+      "rota": "/desempenho",
+      "pergunta": "O que cresce, quem os vídeos alcançam e qual conteúdo funciona.",
+      "blocos": [
+        "Período",
+        "4 números",
+        "crescimento",
+        "fora da bolha",
+        "de onde vem o público",
+        "conteúdo que funciona (ranking)"
+      ],
+      "dados": [
+        "perfil_snapshots",
+        "perfil_demografia",
+        "perfil_diario",
+        "metricas",
+        "publicacoes"
+      ],
+      "captura_desktop": "capturas/desempenho-1440.png",
+      "captura_celular": "capturas/desempenho-375.png"
+    },
+    {
+      "nome": "Biblioteca",
+      "rota": "/biblioteca",
+      "pergunta": "Escolher o estilo do próximo vídeo e ver quanto espaço o estúdio ocupa e o que o faz rodar.",
+      "blocos": [
+        "Abas",
+        "looks de cor",
+        "capas",
+        "legendas",
+        "fontes",
+        "animações",
+        "Armazenamento",
+        "Sistema"
+      ],
+      "dados": [
+        "looks",
+        "capa_estilos",
+        "capa_estilos_exemplos",
+        "legenda_estilos",
+        "fontes",
+        "animacoes",
+        "armazenamento",
+        "sistema_modelos",
+        "sistema_ferramentas",
+        "sistema_contagens",
+        "rotas /look e /capa"
+      ],
+      "captura_desktop": "capturas/biblioteca-1440.png",
+      "captura_celular": "capturas/biblioteca-375.png"
+    },
+    {
+      "nome": "Tokens e custos",
+      "rota": "/tokens",
+      "pergunta": "Quanto a operação de IA consome, onde, quem e quanto custa em dólar (preço de tabela da API).",
+      "blocos": [
+        "Período",
+        "4 números",
+        "consumo por dia",
+        "por modelo",
+        "por departamento",
+        "custo por vídeo",
+        "projeção mensal",
+        "quem mais consome"
+      ],
+      "dados": [
+        "consumo_diario",
+        "consumo",
+        "execucoes_custo",
+        "precos_modelo"
+      ],
+      "captura_desktop": "capturas/tokens-1440.png",
+      "captura_celular": "capturas/tokens-375.png"
+    }
+  ],
+  "rotas_extras": [
+    {
+      "rota": "/videos",
+      "o_que": "redirect 307 para /producao"
+    },
+    {
+      "rota": "/sistema",
+      "o_que": "vitrine de componentes; 404 sem PAINEL_VITRINE=1"
+    },
+    {
+      "rota": "/capa/[pasta]/[slug]",
+      "o_que": "capa PNG, só leitura"
+    },
+    {
+      "rota": "/look/[id]",
+      "o_que": "prévia do look JPEG, só leitura"
+    }
+  ],
+  "testes": [
+    {
+      "arquivo": "painel/tests/test_sincronizar.py",
+      "resultado": "não rodado (aplica migrações num banco de teste)"
+    },
+    {
+      "arquivo": "painel/tests/test_previas_looks.py",
+      "resultado": "44/44 PASS"
+    },
+    {
+      "arquivo": "painel/tests/test_biblioteca_yaml.py",
+      "resultado": "19/22 PASS, 3 FAIL"
+    },
+    {
+      "comando": "uv run pytest painel/tests -q",
+      "resultado": "não roda: pytest não está instalado no ambiente uv"
+    }
+  ],
+  "gauntlet_painel_12_11": {
+    "design": "aprovado",
+    "interface": "aprovado",
+    "dados": "vencido (equipe.yaml mudou)"
+  },
+  "comandos_instalacao": [
+    "uv sync",
+    "cd painel/web && npm ci",
+    "bash painel/iniciar.sh",
+    "criar painel/web/.env.local com SUPABASE_URL e SUPABASE_SERVICE_ROLE_KEY",
+    "bash scripts/launchd/instalar.sh uk.korvu.painel",
+    "launchctl kickstart -k gui/$(id -u)/uk.korvu.painel"
+  ]
+}

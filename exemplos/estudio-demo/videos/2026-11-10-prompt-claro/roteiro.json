@@ -1,0 +1,41 @@
+{
+ "slug": "2026-11-10-prompt-claro",
+ "versao": 3,
+ "cta_tipo": "palavra-material",
+ "cta_palavra": "PROMPT",
+ "extras": [
+  {
+   "id": "E01"
+  },
+  {
+   "id": "E02"
+  }
+ ],
+ "linhas": [
+  {
+   "id": "L01",
+   "secao": "gancho",
+   "fala": "A resposta da IA veio genérica? / O problema quase sempre é o pedido."
+  },
+  {
+   "id": "L02",
+   "secao": "contexto",
+   "fala": "Um pedido claro tem três partes: / quem você é, o que precisa e como quer receber."
+  },
+  {
+   "id": "L03",
+   "secao": "virada",
+   "fala": "Olha a diferença / com o mesmo assunto."
+  },
+  {
+   "id": "L04",
+   "secao": "climax",
+   "fala": "Mesma IA, / resposta muito melhor."
+  },
+  {
+   "id": "L05",
+   "secao": "cta",
+   "fala": "Comenta PROMPT / que eu te mando o roteiro das três partes."
+  }
+ ]
+}

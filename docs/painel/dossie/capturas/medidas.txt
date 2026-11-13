@@ -1,0 +1,20 @@
+# capturar.sh · 2026-11-12T16:15:18.521Z
+# alvo	largura pedida	innerWidth	scrollWidth	altura	HTTP	png	passa da borda
+/	1440	1440	1440	1867	200	painel/documentacao/dossie/capturas/inicio-1440.png	
+/	375	375	375	3472	200	painel/documentacao/dossie/capturas/inicio-375.png	
+/equipe	1440	1440	1440	1817	200	painel/documentacao/dossie/capturas/equipe-1440.png	
+/equipe	375	375	375	4214	200	painel/documentacao/dossie/capturas/equipe-375.png	
+/equipe/portao-imagem	1440	1440	1440	3577	200	painel/documentacao/dossie/capturas/equipe-portao-imagem-1440.png	
+/equipe/portao-imagem	375	375	375	4539	200	painel/documentacao/dossie/capturas/equipe-portao-imagem-375.png	
+/equipe/contratar	1440	1440	1440	965	200	painel/documentacao/dossie/capturas/equipe-contratar-1440.png	
+/equipe/contratar	375	375	375	1629	200	painel/documentacao/dossie/capturas/equipe-contratar-375.png	
+/producao	1440	1440	1440	2504	200	painel/documentacao/dossie/capturas/producao-1440.png	
+/producao	375	375	375	3249	200	painel/documentacao/dossie/capturas/producao-375.png	
+/calendario	1440	1440	1440	1554	200	painel/documentacao/dossie/capturas/calendario-1440.png	
+/calendario	375	375	375	2653	200	painel/documentacao/dossie/capturas/calendario-375.png	
+/desempenho	1440	1440	1440	2156	200	painel/documentacao/dossie/capturas/desempenho-1440.png	
+/desempenho	375	375	375	3517	200	painel/documentacao/dossie/capturas/desempenho-375.png	
+/tokens	1440	1440	1440	2129	200	painel/documentacao/dossie/capturas/tokens-1440.png	
+/tokens	375	375	375	3651	200	painel/documentacao/dossie/capturas/tokens-375.png	
+/biblioteca	1440	1440	1440	2031	200	painel/documentacao/dossie/capturas/biblioteca-1440.png	
+/biblioteca	375	375	375	4007	200	painel/documentacao/dossie/capturas/biblioteca-375.png	

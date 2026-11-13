@@ -1,0 +1,94 @@
+{
+  "versao": 1,
+  "veredictos": [
+    {
+      "portao": "pauta",
+      "agente": "portao-pauta",
+      "resultado": "APROVADO",
+      "impressao": "8e51b2d05f77",
+      "em": "2026-10-30T10:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-06-planilha-com-ia/qa/portoes/pauta-v1.md",
+      "arquivos": {
+        "material/dossie.md": "274f9259b1ac94ee9eec347bbe4eda1fb4483f1b2a6859ef6c5311165c8a4005",
+        "material/fontes.json": "66593c58cfdbcb6b4a0f0c5c94abf2bf9a4b24c97f2b389155e3e64d16357018"
+      }
+    },
+    {
+      "portao": "roteiro",
+      "agente": "revisor-de-roteiro",
+      "resultado": "BLOQUEADO",
+      "impressao": "9de832d18d9e",
+      "em": "2026-10-31T14:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 1,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-06-planilha-com-ia/qa/portoes/roteiro-v1.md",
+      "arquivos": {
+        "roteiro.md": "arquivo:a19f51e79eab499718e7a8d89b223a25fb4d18d524e8954c8cde33cc50fe9cab",
+        "material/dez-pedidos-de-planilha.pdf": "c5bb5f90dada7a871208b118ca5193aa29992ea6bdb9aa3c0c4099fd4b495e05"
+      },
+      "nota": "S1: o CTA prometia um material que não existia"
+    },
+    {
+      "portao": "roteiro",
+      "agente": "revisor-de-roteiro",
+      "resultado": "APROVADO",
+      "impressao": "9de832d18d9e",
+      "em": "2026-10-31T17:00:00-03:00",
+      "volta": 2,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-06-planilha-com-ia/qa/portoes/roteiro-v2.md",
+      "arquivos": {
+        "roteiro.md": "arquivo:a19f51e79eab499718e7a8d89b223a25fb4d18d524e8954c8cde33cc50fe9cab",
+        "material/dez-pedidos-de-planilha.pdf": "c5bb5f90dada7a871208b118ca5193aa29992ea6bdb9aa3c0c4099fd4b495e05"
+      }
+    },
+    {
+      "portao": "imagem",
+      "agente": "portao-imagem",
+      "resultado": "APROVADO",
+      "impressao": "9b2957e759f7",
+      "em": "2026-11-08T11:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-06-planilha-com-ia/qa/portoes/imagem-v1.md",
+      "arquivos": {
+        "capa/capa.png": "b8c72b71f9a6f55cc90db45aca4b84cdfff48ac0c54ead09fe185d37459760be"
+      }
+    },
+    {
+      "portao": "corte",
+      "agente": "revisor-de-video",
+      "resultado": "APROVADO",
+      "impressao": "4a343dd3e409",
+      "em": "2026-11-08T16:00:00-03:00",
+      "volta": 1,
+      "achados": {
+        "S0": 0,
+        "S1": 0,
+        "S2": 0
+      },
+      "relatorio": "videos/2026-11-06-planilha-com-ia/qa/portoes/corte-v1.md",
+      "arquivos": {
+        "edicao/legendas.srt": "8e5dccaaa7a5d0694b6898197025ae4b627aac6d59b8c0b63b0156e3f43cba66"
+      }
+    }
+  ]
+}

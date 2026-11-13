@@ -1,0 +1,26 @@
+{
+ "slug": "2026-11-06-planilha-com-ia",
+ "publicar_em": "2026-11-15T19:00:00-03:00",
+ "plataformas": [
+  "instagram",
+  "facebook"
+ ],
+ "estado": "agendado",
+ "confirmar": false,
+ "instagram": {
+  "legenda_arquivo": "legenda-instagram.txt",
+  "capa": "capa/capa.png",
+  "share_to_feed": true,
+  "trial": {
+   "graduation_strategy": "SS_PERFORMANCE"
+  }
+ },
+ "facebook": {
+  "legenda_arquivo": "legenda-facebook.txt"
+ },
+ "material": {
+  "palavra": "TABELA",
+  "arquivo": "material/dez-pedidos-de-planilha.pdf",
+  "titulo": "dez pedidos de planilha"
+ }
+}

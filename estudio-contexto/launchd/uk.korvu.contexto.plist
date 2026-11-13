@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!--
+  TEMPLATE — não copiar à mão. `estudio-contexto/launchd/instalar.sh` substitui __UV__, __PROJETO__ e __HOME__
+  e instala em ~/Library/LaunchAgents/uk.korvu.contexto.plist.
+  Roda "python -m contexto.sincronizar" a cada 30 min (1800 s) e ao entrar na sessão: reindexa (incremental) e
+  recalcula o grafo do contexto do estúdio. Só lê o projeto e o public do painel; só escreve no schema `contexto`.
+  Sem rede (HF_HUB_OFFLINE=1). Se o Postgres do painel estiver desligado, registra uma linha no log e tenta na
+  passagem seguinte.
+-->
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>uk.korvu.contexto</string>
+
+  <key>ProgramArguments</key>
+  <array>
+    <string>__UV__</string>
+    <string>run</string>
+    <string>--quiet</string>
+    <string>python</string>
+    <string>-m</string>
+    <string>contexto.sincronizar</string>
+  </array>
+
+  <key>WorkingDirectory</key>
+  <string>__PROJETO__/estudio-contexto</string>
+
+  <key>StartInterval</key>
+  <integer>1800</integer>
+
+  <key>RunAtLoad</key>
+  <true/>
+
+  <key>ProcessType</key>
+  <string>Background</string>
+
+  <key>LowPriorityIO</key>
+  <true/>
+
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>PATH</key>
+    <string>/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:__HOME__/bin:__HOME__/.local/bin</string>
+    <key>LANG</key>
+    <string>pt_BR.UTF-8</string>
+    <key>PYTHONUNBUFFERED</key>
+    <string>1</string>
+    <key>HF_HUB_OFFLINE</key>
+    <string>1</string>
+    <key>TOKENIZERS_PARALLELISM</key>
+    <string>false</string>
+  </dict>
+
+  <key>StandardOutPath</key>
+  <string>__PROJETO__/estudio-contexto/logs/contexto.log</string>
+  <key>StandardErrorPath</key>
+  <string>__PROJETO__/estudio-contexto/logs/contexto.log</string>
+</dict>
+</plist>

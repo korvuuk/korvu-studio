@@ -1,0 +1,36 @@
+# Conjunto de avaliação (ESPECIFICACAO.md §9) — EXEMPLO para o repositório público.
+# O estúdio original avalia com 30 perguntas tiradas dos próprios vídeos e decisões; aqui ficam perguntas que o
+# repositório consegue responder sozinho (docs/). Troque pelas do seu estúdio: cada resposta tem de ser conferida
+# no arquivo de origem antes de entrar aqui.
+#
+# busca:      `fontes` = caminhos aceitos (um item terminado em "/" aceita a pasta inteira);
+#             `resposta` = textos que provam a resposta (basta UM aparecer no trecho, sem diferença de maiúsculas).
+#             Conta como acerto de recall se um dos 5 primeiros trechos vier de uma fonte aceita; como resposta
+#             correta se esse mesmo trecho também contiver a resposta.
+# ferramenta: chama a ferramenta do MCP e confere que TODOS os textos de `contem` aparecem na saída.
+
+busca:
+  - id: b01
+    pergunta: qual é a regra principal do GAUNTLET?
+    fontes: [docs/gauntlet.md, CLAUDE.md, docs/decisoes.md]
+    resposta: [quem faz não aprova]
+  - id: b02
+    pergunta: o que acontece na terceira volta bloqueada de um portão?
+    fontes: [docs/gauntlet.md]
+    resposta: [ESCALADO]
+  - id: b03
+    pergunta: qual é o formato do status.json de um vídeo?
+    fontes: [docs/contratos.md]
+    resposta: [status.json]
+
+ferramenta:
+  - id: t01
+    pergunta: quem fiscaliza o publicador?
+    chamada: quem_fiscaliza
+    args: {agente: publicador}
+    contem: [portao-publicacao]
+  - id: t02
+    pergunta: de que depende o painel e quem trabalha nele?
+    chamada: contexto_do_projeto
+    args: {projeto: painel}
+    contem: [projeto:estudio, agente:engenheiro-backend, agente:portao-dados]

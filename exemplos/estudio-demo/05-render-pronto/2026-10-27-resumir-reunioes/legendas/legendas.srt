@@ -1,0 +1,19 @@
+1
+00:00:00,000 --> 00:00:03,600
+Você sai de uma reunião de uma hora e não lembra o que ficou decidido?
+
+2
+00:00:04,000 --> 00:00:07,600
+Dá pra pedir pra IA transformar a transcrição numa ata de cinco linhas.
+
+3
+00:00:08,000 --> 00:00:11,600
+O segredo é dizer o formato: decisões, responsáveis e prazos.
+
+4
+00:00:12,000 --> 00:00:15,600
+Em dois minutos você tem o resumo que ninguém tinha paciência de escrever.
+
+5
+00:00:16,000 --> 00:00:19,600
+Salva esse vídeo e comenta ATA que eu te mando o modelo de pedido.

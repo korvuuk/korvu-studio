@@ -1,0 +1,26 @@
+name: Melhoria
+description: Ideia para um agente, etapa, tela ou script
+labels: ["melhoria", "triagem"]
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Que problema isto resolve
+      description: Conte a situação real em que faltou. Melhorias que nascem de um problema concreto entram mais rápido.
+    validations: {required: true}
+  - type: textarea
+    id: proposta
+    attributes:
+      label: O que você propõe
+    validations: {required: true}
+  - type: dropdown
+    id: portao
+    attributes:
+      label: Que portão do GAUNTLET revisaria isto
+      options: [PORTÃO-PAUTA, PORTÃO-ROTEIRO, PORTÃO-IMAGEM, PORTÃO-CORTE, PORTÃO-PUBLICACAO, PORTÃO-INTERFACE, PORTÃO-DADOS, não sei]
+  - type: checkboxes
+    id: ajuda
+    attributes:
+      label: Contribuição
+      options:
+        - label: Posso abrir o pull request

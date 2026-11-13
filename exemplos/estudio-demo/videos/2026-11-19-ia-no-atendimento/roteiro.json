@@ -1,0 +1,34 @@
+{
+ "slug": "2026-11-19-ia-no-atendimento",
+ "versao": 1,
+ "cta_tipo": "palavra-material",
+ "cta_palavra": "RESPOSTA",
+ "extras": [],
+ "linhas": [
+  {
+   "id": "L01",
+   "secao": "gancho",
+   "fala": "Responder a mesma pergunta vinte vezes por dia / cansa qualquer um."
+  },
+  {
+   "id": "L02",
+   "secao": "contexto",
+   "fala": "Uma loja pequena pode usar IA / pra rascunhar as respostas mais comuns."
+  },
+  {
+   "id": "L03",
+   "secao": "virada",
+   "fala": "Você revisa, ajusta o tom / e só depois envia."
+  },
+  {
+   "id": "L04",
+   "secao": "climax",
+   "fala": "A IA ajuda, / mas quem atende continua sendo você."
+  },
+  {
+   "id": "L05",
+   "secao": "cta",
+   "fala": "Comenta RESPOSTA / que eu te mando os modelos de mensagem."
+  }
+ ]
+}

@@ -1,0 +1,42 @@
+{
+ "slug": "2026-11-06-planilha-com-ia",
+ "qa": "PASS",
+ "duracao": 37.2,
+ "criado_em": "2026-11-09T18:00:00-03:00",
+ "cta_palavra": "TABELA",
+ "tema": "Planilha com IA, sem fórmula",
+ "pilar": "tutoriais-rapidos",
+ "arquivos": {
+  "capa": "capa/capa.png",
+  "legendas": "legendas/legendas.srt",
+  "material": "material/dez-pedidos-de-planilha.pdf"
+ },
+ "gauntlet": {
+  "versao": 1,
+  "origem": "videos/2026-11-06-planilha-com-ia",
+  "selado_em": "2026-11-09T18:00:00-03:00",
+  "veredictos": {
+   "pauta": {
+    "impressao": "8e51b2d05f77",
+    "em": "2026-10-30T10:00:00-03:00"
+   },
+   "roteiro": {
+    "impressao": "9de832d18d9e",
+    "em": "2026-10-31T17:00:00-03:00"
+   },
+   "imagem": {
+    "impressao": "9b2957e759f7",
+    "em": "2026-11-08T11:00:00-03:00"
+   },
+   "corte": {
+    "impressao": "4a343dd3e409",
+    "em": "2026-11-08T16:00:00-03:00"
+   }
+  },
+  "arquivos": {
+   "capa/capa.png": "b8c72b71f9a6f55cc90db45aca4b84cdfff48ac0c54ead09fe185d37459760be",
+   "legendas/legendas.srt": "8e5dccaaa7a5d0694b6898197025ae4b627aac6d59b8c0b63b0156e3f43cba66",
+   "material/dez-pedidos-de-planilha.pdf": "c5bb5f90dada7a871208b118ca5193aa29992ea6bdb9aa3c0c4099fd4b495e05"
+  }
+ }
+}

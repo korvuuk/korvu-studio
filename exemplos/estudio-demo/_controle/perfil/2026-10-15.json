@@ -1,0 +1,188 @@
+{
+ "lido_em": "2026-10-15T09:30:00-03:00",
+ "instagram": {
+  "conta": {
+   "followers_count": 1180,
+   "follows_count": 210,
+   "media_count": 18
+  },
+  "janela": {
+   "dias": 28
+  },
+  "metricas_conta": {
+   "reach": {
+    "valor": 900
+   },
+   "views": {
+    "valor": 2700
+   },
+   "accounts_engaged": {
+    "valor": 60
+   },
+   "total_interactions": {
+    "valor": 140
+   },
+   "profile_views": {
+    "valor": 80
+   },
+   "profile_links_taps": {
+    "valor": 6
+   },
+   "reach_por_follow_type": {
+    "valor": 900,
+    "quebras": [
+     {
+      "dimensao": [
+       "follow_type"
+      ],
+      "resultados": [
+       {
+        "chave": [
+         "NON_FOLLOWER"
+        ],
+        "valor": 495
+       },
+       {
+        "chave": [
+         "FOLLOWER"
+        ],
+        "valor": 405
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "demografia": {
+   "follower_demographics": {
+    "country": [
+     {
+      "chave": [
+       "BR"
+      ],
+      "valor": 731
+     },
+     {
+      "chave": [
+       "PT"
+      ],
+      "valor": 165
+     },
+     {
+      "chave": [
+       "US"
+      ],
+      "valor": 94
+     },
+     {
+      "chave": [
+       "ES"
+      ],
+      "valor": 47
+     }
+    ],
+    "city": [
+     {
+      "chave": [
+       "São Paulo, São Paulo"
+      ],
+      "valor": 212
+     },
+     {
+      "chave": [
+       "Rio de Janeiro, Rio de Janeiro"
+      ],
+      "valor": 106
+     },
+     {
+      "chave": [
+       "Lisboa, Lisboa"
+      ],
+      "valor": 70
+     }
+    ],
+    "age": [
+     {
+      "chave": [
+       "18-24"
+      ],
+      "valor": 247
+     },
+     {
+      "chave": [
+       "25-34"
+      ],
+      "valor": 460
+     },
+     {
+      "chave": [
+       "35-44"
+      ],
+      "valor": 283
+     },
+     {
+      "chave": [
+       "45-54"
+      ],
+      "valor": 118
+     }
+    ],
+    "gender": [
+     {
+      "chave": [
+       "F"
+      ],
+      "valor": 554
+     },
+     {
+      "chave": [
+       "M"
+      ],
+      "valor": 601
+     }
+    ]
+   },
+   "reached_audience_demographics": {
+    "country": [
+     {
+      "chave": [
+       "BR"
+      ],
+      "valor": 522
+     },
+     {
+      "chave": [
+       "PT"
+      ],
+      "valor": 108
+     },
+     {
+      "chave": [
+       "US"
+      ],
+      "valor": 81
+     }
+    ],
+    "gender": [
+     {
+      "chave": [
+       "F"
+      ],
+      "valor": 441
+     },
+     {
+      "chave": [
+       "M"
+      ],
+      "valor": 450
+     }
+    ]
+   }
+  }
+ },
+ "facebook": {
+  "pagina": {
+   "followers_count": 310
+  }
+ }
+}

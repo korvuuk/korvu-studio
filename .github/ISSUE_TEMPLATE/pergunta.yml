@@ -1,0 +1,16 @@
+name: Pergunta
+description: Dúvida sobre como usar ou como algo funciona
+labels: ["pergunta"]
+body:
+  - type: markdown
+    attributes:
+      value: Antes de perguntar, dê uma olhada nos dois volumes em `docs/` — muita coisa está lá com diagrama.
+  - type: textarea
+    id: pergunta
+    attributes:
+      label: Sua pergunta
+    validations: {required: true}
+  - type: textarea
+    id: tentou
+    attributes:
+      label: O que você já tentou ou leu
