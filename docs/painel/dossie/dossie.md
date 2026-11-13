@@ -389,7 +389,7 @@ Fonte: `painel/design/design-system.md` (922 linhas), `tokens.json`, `tokens.css
 `movimento.css`, `handoff.md`; prévias de cada componente em `painel/design/previas/` (28 arquivos). Copiado sem
 mudar para `painel/web/src/app/design/`.
 - **Origem:** desenhado pelo dono no Claude Design em 23/10/2026 e importado em PT-BR com os valores exatos; conferência
-  de fidelidade em `painel/design/verificacao/fidelidade.py`, contraste em `contraste.py`/`contraste.md`.
+  de fidelidade em `painel/design/verificacao/fidelidade.py` (só no estúdio de origem), contraste em `contraste.py`/`contraste.md`.
 - **Fontes:** Geist (texto) e Geist Mono (modelos, IDs, HEX, tokens), arquivos variáveis locais, licença OFL 1.1.
   Escala: display 56/60 · h1 44/48 · h2 30/36 · h3 22/28 · body 15/22 · small 13/18 · caption 11/14 · metric-xl 40/44 ·
   metric-l 24/28 · mono 12/16. Números tabulares em tudo (§3).
@@ -449,7 +449,7 @@ no cabeçalho; e, por causa dessas duas, "nenhum aviso ⚠" falha.
 do `pyproject.toml`; os testes são executados como `uv run python painel/tests/<arquivo>.py` (`painel/README.md`).
 
 Outras conferências: `bash painel/capturar.sh` mede `innerWidth`/`scrollWidth` e falha se houver rolagem lateral (0
-casos nas 18 fotos deste dossiê); `painel/design/verificacao/fidelidade.py` e `contraste.py`.
+casos nas 18 fotos deste dossiê); `painel/design/verificacao/contraste.py` (e o `fidelidade.py`, só no estúdio de origem).
 
 ## 11. Como instalar e rodar do zero
 
@@ -530,7 +530,7 @@ Os PNG mostram dados reais da operação. Nada foi editado nas imagens.
 - **Rosto do dono** (pessoa real) em todos os cartões de looks: `capturas/biblioteca-1440.png`, `biblioteca-375.png`;
   e nas capas de vídeo em miniatura: `inicio-*.png`, `calendario-*.png`, `desempenho-*.png`, `tokens-*.png`,
   `biblioteca-*.png`.
-- **Fotos realistas da equipe** (origem a confirmar, ver "Não confirmado" 4): `inicio-*.png`, `equipe-*.png`,
+- **Fotos da equipe** (geradas por IA, não são pessoas reais; ver "Não confirmado" 4, resolvido): `inicio-*.png`, `equipe-*.png`,
   `equipe-portao-imagem-*.png`, `tokens-*.png`.
 - **Métricas reais da conta** (seguidores, alcance, visualizações, ranking dos Reels) e **público por país** (de onde vêm
   os seguidores): `inicio-*.png`, `desempenho-*.png`. Decidir se vão a público.

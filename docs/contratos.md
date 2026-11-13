@@ -123,7 +123,7 @@ Marcas permitidas na coluna FALA (removidas em `fala`, preservadas em `fala_orig
       "tela": "TEXTO: \"CHATGPT ERRADO?\" | ZOOM",
       "animacao": null,
       "alternativa_de": null,
-      "tempo_estimado": [0.0, 2.6]
+      "tempo_estimado": [0.0, 3.21]
     }
   ]
 }

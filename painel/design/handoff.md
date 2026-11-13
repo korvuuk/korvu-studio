@@ -127,7 +127,7 @@ pelos `.md`; o artboard (`painel/referencias/claude-design/telas-2026-10-23/*.dc
 | `telas/*.html` + `telas/*.md` | **as 7 telas** (§0): maquete com dados reais + especificação; `telas.css`/`telas.js` são só da maquete |
 | `dados-2026-10-23.json` | os números reais das prévias, com a consulta SQL de cada bloco |
 | `contraste.md` | pares medidos; o que falha não foi trocado (vai ao autor) |
-| `verificacao/fidelidade.py` | confere que nada divergiu da fonte |
+| `verificacao/fidelidade.py` | confere que nada divergiu da fonte (só no estúdio de origem: compara com `painel/referencias/`, que não vem no repositório público) |
 
 Não precisa do `korvu.js` no app (ele só alimenta as prévias): faça um componente `<Icone nome tamanho />` a partir de
 `icones/icones.json` (ou importe os SVG) e use os SVG de `marca/` para o logotipo.
@@ -334,5 +334,5 @@ portão como lista com o estado escrito no chip do mapa único; dica por foco e 
    `painel/design/telas/` e com a prévia do componente em `painel/design/previas/` (mesma largura: 1440 e 375).
    `scrollWidth` = largura da janela em todas.
 2. Os três estados vistos num servidor seu (o `portao-interface.md` diz como).
-3. `uv run python -I painel/design/verificacao/fidelidade.py` (e `cmp` das cópias em `painel/web`).
+3. `cmp` das cópias em `painel/web` (e o `verificacao/fidelidade.py` (só no estúdio de origem: compara com `painel/referencias/`, que não vem no repositório público)).
 4. `npx tsc --noEmit`, `npx eslint src`, build em `.next-verificacao`.

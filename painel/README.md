@@ -151,7 +151,7 @@ a lado, no corte de 23/10 15:02:49.958Z (janela 24/09–23/10):
   1.ª linha era provisória (Claude Code 2.1.284/2.1.295/2.1.304; só a saída muda).
 
 O `tokens-custos.py` de referência foi reescrito em 23/10 21:32 (outra sessão): já fica com a ÚLTIMA linha e tem o corte
-`2026-10-23T15:02:49Z` embutido. A suíte segue a regra que ele usar (compara o script com o banco do painel quando ele usa
+`2026-10-23T15:00:00Z` embutido. A suíte segue a regra que ele usar (compara o script com o banco do painel quando ele usa
 a última linha, e com o `--regra-do-script` quando usa a 1.ª). Diferença que sobra: ele data a resposta pela última linha
 e o painel pela 1.ª (1 resposta nos registros reais atravessa a meia-noite UTC). O rascunho `reconciliar_tokens.py` foi
 escrito para a versão de 16:41 e recusa rodar com a nova (confere o corte embutido) até ser ajustado.

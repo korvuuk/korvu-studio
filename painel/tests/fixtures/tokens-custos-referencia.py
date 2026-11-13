@@ -16,7 +16,7 @@ import os
 import re
 
 P = os.path.expanduser('~/.claude/projects/-Users-voce-Documents-korvu-studio')
-CORTE = '2026-10-23T15:02:49Z'
+CORTE = '2026-10-23T15:00:00Z'
 FIM = dt.date(2026, 10, 23)
 INI = FIM - dt.timedelta(days=29)
 CAMBIO = 0.7465

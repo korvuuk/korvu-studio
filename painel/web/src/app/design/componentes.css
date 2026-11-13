@@ -5,7 +5,7 @@
    do `:focus-visible` — anel accent (--focus-on-dark) na barra lateral escura. A cópia em painel/referencias/ continua o
    retrato original de 23/10; o fidelidade.py aceita só esta regra, neste lugar.
    Carregue nesta ordem:  tokens.css → componentes.css → acrescimos.css
-   Conferir que nada mudou:  uv run python -I painel/design/verificacao/fidelidade.py
+   Conferir que nada mudou:  uv run python -I painel/design/verificacao/fidelidade.py  (só no estúdio de origem)
    Comentário original da fonte: "korvu. painel — componentes. Todos os valores vêm de tokens.css (var(--…))." */
 
 /* ========== Base ==========

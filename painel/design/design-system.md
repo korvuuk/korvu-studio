@@ -3,7 +3,7 @@
 > **Fonte:** o design system "korvu. painel" que o autor fez no Claude Design em 23/10/2026
 > (cópia exata e intocada em `painel/referencias/claude-design/korvu-painel-2026-10-23/`). Importado para cá **em PT-BR**
 > pela designer-de-produto, com os **valores exatos** da fonte. Conferir a fidelidade:
-> `uv run python -I painel/design/verificacao/fidelidade.py`.
+> `uv run python -I painel/design/verificacao/fidelidade.py` (só no estúdio de origem: compara com `painel/referencias/`, que não vem no repositório público).
 >
 > **Como ler as marcas deste livro**
 > - sem marca = o que o autor desenhou, só traduzido para PT-BR;
@@ -373,12 +373,12 @@ só transform/opacity/recorte/traço); nenhuma cor, fonte ou medida muda.
 ## 10. Imagens e avatares
 
 - **Retrato = foto realista** (decisão do autor de 23/10, `docs/decisoes.md` §5; resolve o pendente de 22/10 — a
-  ilustração editorial sai). As 10 fotos que ele mandou estão em `painel/web/public/equipe/<id do agente>.jpg` (eram
-  `painel/web/src/app/equipe/img equipe/`); as cópias 512×512 das maquetes ficam em `telas/img/retratos/`. Regras do sistema
+  ilustração editorial sai). As fotos (geradas por IA, não são pessoas reais — decisão de 13/11) estão em
+  `painel/web/public/equipe/<id do agente>.jpg`, 26 arquivos de 512×512. Regras do sistema
   do Claude Design para as próximas: headshot 1:1, cabeça no topo a ~18%, olhos a ~40%, ombros cortando a base, fundo liso
   perto de `surface-sunken`, luz suave, 512×512; recorte na tela com `object-position: 50% 22–24%`.
 - **Quem ainda não tem foto: iniciais** (2 letras) em `ink-2` sobre `surface-sunken`, no mesmo quadro e no mesmo tamanho
-  da foto — a página nunca muda de forma quando a foto chega. Hoje 16 das 26 pessoas estão em iniciais.
+  da foto — a página nunca muda de forma quando a foto chega. Hoje só o multiplicador de acertos está em iniciais (26 fotos para 27 pessoas).
 - A foto é sempre de pessoa fictícia; nenhuma foto de pessoa real além do autor (CLAUDE.md, regra 3).
 - `alt="Retrato de <nome>"`; nas listas em que o nome está ao lado, a foto pode ser `alt=""` (o nome já é lido).
 - Miniatura de vídeo: o frame real quando existe; sem frame, `k-thumb` neutro com o ícone `play`.
@@ -735,8 +735,8 @@ lugar para isso. Proposta:
 
 ## 13. Pendências — vão ao autor (pelo agente principal)
 
-1. ~~**Avatar**~~ — **resolvido em 23/10**: retrato = foto realista; sem foto, iniciais (§10). Fica a pergunta: **quer
-   foto para as 16 pessoas que ainda estão em iniciais?**
+1. ~~**Avatar**~~ — **resolvido em 23/10**: retrato = foto realista; sem foto, iniciais (§10). Desde 13/11 são 26 fotos (geradas
+   por IA) para 27 pessoas; só o multiplicador de acertos segue em iniciais.
 2. **Contraste** (`contraste.md`): ~~`line-strong` → #928874; anel de foco em `accent-ink` nas superfícies claras~~ —
    **aprovados em 23/10** (§2). Continuam com ele: laranja como texto só na barra lateral; `chart-3` → #968D7B; `chart-4` só para "Outros" rotulado; tirar o `opacity:.8` do
    `k-sidebar-label`; contorno nas etapas futuras do `k-steps`.
@@ -773,7 +773,7 @@ lugar para isso. Proposta:
 | `dados-2026-10-23.json` | os números reais das prévias e das telas, com a consulta (ou o arquivo) de cada bloco; os blocos `telas_*` são da 2.ª rodada |
 | `telas/` | as 7 telas: `<tela>.md` (especificação) + `<tela>.html` (maquete com dados reais), `telas.css` e `telas.js` (só da maquete) e `img/` (cópias de retratos, capas e miniaturas) |
 | `icones/telas/` | os 4 ícones que as telas pediram (§8) |
-| `verificacao/` | `fidelidade.py` (confere contra a fonte) e `contraste.py` (mede os pares) |
+| `verificacao/` | `contraste.py` (mede os pares); o `fidelidade.py` (confere contra a fonte) fica no estúdio de origem |
 | `handoff.md` | o que o engenheiro-frontend faz com tudo isso |
 | `README.md` | por onde começar |
 

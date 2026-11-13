@@ -1739,7 +1739,7 @@ def _banco_do_apresentador(url: str) -> bool:
 def _iso(txt: str) -> dt.datetime:
     t = _instante(txt)
     if t is None:
-        raise argparse.ArgumentTypeError(f"instante ISO inválido: {txt!r} (ex.: 2026-10-23T15:02:49.958Z)")
+        raise argparse.ArgumentTypeError(f"instante ISO inválido: {txt!r} (ex.: 2026-10-23T15:00:00.000Z)")
     return t
 
 
