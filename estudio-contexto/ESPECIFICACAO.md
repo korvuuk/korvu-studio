@@ -213,7 +213,7 @@ Verificação feita com `git ls-files`, `git grep` e `git show`. Nenhum valor fo
 - **Chaves e `.env`:** `.env` e `painel/web/.env.local` não estão versionados nem aparecem no histórico. Verificado.
 - **Dado de contato pessoal no histórico (ação necessária):** o commit inicial (`67c894c`) contém um dado de contato pessoal que foi removido do arquivo atual no commit `71522e0`, mas continua no histórico público. Segundo o autor, o contato não está mais em uso. Removido de `linkedin/perfil-final-2026-10-23.md` e `00-marca/sobre-autor.md`. Ainda aparece em `pyproject.toml` (campo `email` de `authors`), que precisa de decisão antes da publicação.
 - **Dados de conta versionados:** `07-publicados/*/metricas.json`, `_controle/perfil/*.json` e prints em `_controle/perfil/prints-2026-10-17/`. Não verificado se há dado pessoal além de métricas.
-- **Retratos** em `painel/design/telas/img/retratos/` (10 arquivos). Não verificado se são fotos de pessoas reais.
+- **Retratos** (maquetes e `painel/web/public/equipe/`): imagens geradas por IA, não são pessoas reais (confirmado pelo autor em 13/11).
 
 Itens de publicação, **adiados** (não bloqueiam o projeto interno). Ordem quando retomar:
 

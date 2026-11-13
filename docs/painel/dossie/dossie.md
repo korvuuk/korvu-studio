@@ -500,9 +500,8 @@ Fontes: `painel/iniciar.sh`, `painel/README.md` ("Rodar", "Sincronização autom
    rodei, por limite).
 3. Como o `web/.env.local` é preenchido pela primeira vez: nenhum script do painel o cria; o passo 3 da instalação é
    dedução a partir de `lib/db.ts` e do `README.md`. O arquivo não foi lido.
-4. Origem das fotos da equipe (`web/public/equipe/*.jpg`, 26 arquivos): o `README.md` diz "foto realista 512×512" com
-   originais em `painel/referencias/fotos-equipe-originais/`; o `equipe.yaml` fala em "ilustração editorial gerada pelo
-   painel". Não confirmei se são imagens geradas por IA.
+4. ~~Origem das fotos da equipe~~ — resolvido em 13/11: as 26 fotos de `web/public/equipe/` são imagens geradas por IA
+   (não são pessoas reais), de uso livre no projeto por decisão do autor.
 5. Resultado do `test_sincronizar.py` (não rodado).
 6. Versões de uv, ffmpeg, Colima e Chrome: não há arquivo que as fixe.
 

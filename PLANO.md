@@ -12,7 +12,7 @@ histórico do repositório privado tem dados pessoais, então este começa com h
 | `skills-lock.json` | as skills de terceiros (Remotion, Supabase, `watch`, `apple-design`) **por referência** | não copiadas |
 | `scripts/` | publicação, comentários, métricas, portões, PDF, carrossel… | e-mail, conta, domínio e fuso → `.env` (`CONTA_INSTAGRAM`, `TZ_PUBLICACAO`) |
 | `remotion/` | composições do Reel | sem `node_modules`, `out/`, renders e a gravação de demonstração |
-| `painel/` | painel web + Supabase + sincronizador + design | sem `node_modules`, `.next*`, `trabalho/`, `previas/`, `portoes/`, referências e retratos da equipe; conta e fuso configuráveis (`painel/web/src/lib/estudio.ts`); `project_id` próprio |
+| `painel/` | painel web + Supabase + sincronizador + design | sem `node_modules`, `.next*`, `trabalho/`, `previas/`, `portoes/` e referências; conta e fuso configuráveis (`painel/web/src/lib/estudio.ts`); `project_id` próprio |
 | `automacao-meta/` | arquitetura e configuração do app da Meta | URL de webhook antigo e caminho do Mac tirados |
 | `estudio-contexto/` | grafo + busca + MCP só leitura | sem índice, logs e relatórios; perguntas de avaliação trocadas por um exemplo |
 | `docs/` | contratos, GAUNTLET, decisões (genéricas), os dois volumes da documentação | volumes movidos para `docs/estudio/` e `docs/painel/`, regerados pelos geradores, com links entre si |
@@ -27,10 +27,10 @@ histórico do repositório privado tem dados pessoais, então este começa com h
 pessoal), `HANDOFF.md`, `_controle/CONTINUAR.md`, o `docs/decisoes.md` original (virou a versão genérica),
 `.env`, `.mcp.json` original (caminhos locais), toda mídia bruta, o perfil e o dicionário de voz do autor,
 `sobre-autor.md`, `referencias-criadores.md`, `00-marca/cor/{amostras,analises,referencias}`, `assets/logo` e
-`assets/logos-terceiros`, efeitos sonoros gerados (`*.mp3`), `painel/web/public/equipe/` (origem das fotos a confirmar),
+`assets/logos-terceiros`, efeitos sonoros gerados (`*.mp3`), as originais em PNG dos retratos (`painel/referencias/`, por peso),
 `scripts/linkedin.py` e o job `uk.korvu.linkedin` (dependem da pasta pessoal `linkedin/`), `scripts/limpeza/`, a
 pasta `painel/design/telas/` inteira (maquetes e especificações por tela tinham números reais do perfil, consumo de
-IA, temas de vídeos não publicados, quadros do rosto do autor e os retratos da equipe; o design system, os tokens e
+IA, temas de vídeos não publicados, quadros do rosto do autor e os retratos das maquetes; o design system, os tokens e
 os componentes ficam).
 
 O `.gitignore` deixa fora do git as pastas de dados de quem usar o estúdio (`videos/`, `_controle/`, `06-publicar/`…).
@@ -53,5 +53,7 @@ O `.gitignore` deixa fora do git as pastas de dados de quem usar o estúdio (`vi
 - Agentes, comentários e o Volume 2 ainda citam `painel/design/telas/` (saiu do repositório; o `painel/design/README.md` explica).
 - `painel/tests/test_biblioteca_yaml.py` confere o `biblioteca.yaml` contra a maquete da Biblioteca e os vídeos do SEU
   estúdio: sem a maquete, é pulado; não roda no CI.
-- O Volume 2 (`docs/painel/`) ainda cita, no "Instalar", o `@` fixo e os retratos de `web/public/equipe/`; na cópia a
-  conta já vem de `NEXT_PUBLIC_CONTA_INSTAGRAM` e, sem retrato, o painel mostra as iniciais.
+- O Volume 2 (`docs/painel/`) ainda cita, no "Instalar", o `@` fixo; na cópia a conta já vem de
+  `NEXT_PUBLIC_CONTA_INSTAGRAM`.
+- Retratos da equipe (`painel/web/public/equipe/`, 26 × 512 px): imagens geradas por IA, não são pessoas reais; uso
+  liberado pelo autor em 13/11, metadados removidos. As originais em PNG ficaram fora por peso.

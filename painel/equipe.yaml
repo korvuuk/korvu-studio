@@ -5,8 +5,8 @@
 # personalidade e retrato. Para trocar um nome, é só editar aqui e rodar o sincronizador.
 #
 # GAUNTLET (docs/gauntlet.md): o GERENTE de cada departamento é o PORTÃO — audita e não constrói.
-# Nomes propostos pelo Claude em 22/10 (o autor pediu "eu proponho, você aprova"); retratos em ilustração editorial
-# gerada pelo painel enquanto não houver arquivo em painel/web/public/equipe/<id>.png.
+# Nomes propostos pelo Claude em 22/10 (o autor pediu "eu proponho, você aprova"). Retratos: imagens geradas por IA
+# (não são pessoas reais) em painel/web/public/equipe/<id>.jpg; sem arquivo, o painel mostra as iniciais.
 
 departamentos:
   - id: direcao

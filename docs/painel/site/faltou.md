@@ -20,7 +20,7 @@ fica sem o dado.
    como "não confirmado".
 7. **`test_sincronizar.py`:** não rodado; o resultado aparece como "não rodado", sem número.
 8. **Primeiro `supabase start` aplicando as 18 migrações:** provável, não testado. Marcado assim no site.
-9. **Origem das fotos da equipe** (`web/public/equipe/*.jpg`): o README do painel e o `equipe.yaml` divergem (foto
+9. ~~**Origem das fotos da equipe**~~ — resolvido em 13/11: imagens geradas por IA, não pessoas reais (decisão do autor). Antes: o README do painel e o `equipe.yaml` divergem (foto
    realista × ilustração gerada); o dossiê não confirma se são imagens geradas por IA. Elas aparecem nas capturas.
 
 ## Decisões de desenho que não vêm do dossiê (para o portão conferir)
