@@ -13,6 +13,8 @@
 *.mp3
 *.m4a
 *.aac
+# exceção: a animação leve de apresentação do README (< 10 MB)
+!assets/apresentacao/*.mp4
 *.braw
 *.r3d
 videos/*/brutos/
